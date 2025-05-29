@@ -1,0 +1,2720 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Agent Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    :root {
+        --primary-color: #4e73df;
+        --secondary-color: #858796;
+        --success-color: #1cc88a;
+        --info-color: #36b9cc;
+        --warning-color: #f6c23e;
+        --danger-color: #e74a3b;
+        --light-color: #f8f9fc;
+        --dark-color: #5a5c69;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    body {
+        background-color: #f8f9fc;
+    }
+    
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+        width: 250px;
+        background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s;
+    }
+    
+    .sidebar-header {
+        padding: 1.5rem 1rem;
+        font-weight: 800;
+        font-size: 1.2rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header i {
+        margin-right: 0.5rem;
+    }
+    
+    .sidebar-menu {
+        flex: 1;
+        list-style: none;
+        padding: 1rem 0;
+    }
+    
+    .sidebar-menu li {
+        padding: 0.75rem 1.5rem;
+        margin: 0.25rem 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    
+    .sidebar-menu li:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-menu li.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-left: 4px solid white;
+    }
+    
+    .sidebar-menu li i {
+        margin-right: 0.75rem;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .sidebar-footer {
+        padding: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 0.75rem;
+    }
+    
+    .user-name {
+        display: block;
+        font-weight: 600;
+    }
+    
+    .user-role {
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
+    
+    .logout-btn {
+        width: 100%;
+        padding: 0.5rem;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .logout-btn i {
+        margin-right: 0.5rem;
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .top-nav {
+        background-color: white;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+    
+    .search-box {
+        position: relative;
+        width: 300px;
+    }
+    
+    .search-box i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary-color);
+    }
+    
+    .search-box input {
+        width: 100%;
+        padding: 0.375rem 0.75rem 0.375rem 2.25rem;
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        font-size: 0.85rem;
+    }
+    
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    
+    .notification {
+        position: relative;
+        cursor: pointer;
+        color: var(--dark-color);
+    }
+    
+    .notification .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: var(--danger-color);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .user-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+    
+    .user-dropdown img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+    
+    .user-dropdown span {
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+    
+    /* Content Sections */
+    .content-section {
+        padding: 1.5rem;
+        display: none;
+    }
+    
+    .content-section.active {
+        display: block;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Dashboard Stats */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+        background-color: white;
+        border-radius: 0.35rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        display: flex;
+        padding: 1rem;
+        align-items: center;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: white;
+    }
+    
+    .stat-icon.bg-primary {
+        background-color: var(--primary-color);
+    }
+    
+    .stat-icon.bg-success {
+        background-color: var(--success-color);
+    }
+    
+    .stat-icon.bg-warning {
+        background-color: var(--warning-color);
+    }
+    
+    .stat-icon.bg-danger {
+        background-color: var(--danger-color);
+    }
+    
+    .stat-info h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+    
+    .stat-info p {
+        color: var(--secondary-color);
+        font-size: 0.85rem;
+        margin-bottom: 0;
+    }
+    
+    /* Activity Items */
+    .activity-item {
+        display: flex;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #f8f9fc;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: var(--primary-color);
+    }
+    
+    .activity-content p {
+        margin-bottom: 0.25rem;
+    }
+    
+    .activity-content small {
+        color: var(--secondary-color);
+        font-size: 0.75rem;
+    }
+    
+    /* Viewing Items */
+    .viewing-item {
+        display: flex;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .viewing-item:last-child {
+        border-bottom: none;
+    }
+    
+    .viewing-time {
+        text-align: center;
+        margin-right: 1rem;
+        min-width: 80px;
+    }
+    
+    .viewing-time .time {
+        display: block;
+        font-weight: 700;
+    }
+    
+    .viewing-time .date {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+    }
+    
+    .viewing-details h5 {
+        margin-bottom: 0.25rem;
+    }
+    
+    .viewing-details p {
+        color: var(--secondary-color);
+        font-size: 0.85rem;
+        margin-bottom: 0;
+    }
+    
+    /* Tables */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: var(--dark-color);
+        background-color: white;
+    }
+    
+    .table th {
+        padding: 1rem;
+        vertical-align: bottom;
+        border-bottom: 1px solid #e3e6f0;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+        color: var(--secondary-color);
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .table .user-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .table .user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 0.75rem;
+    }
+    
+    .table .property-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .table .property-info img {
+        width: 60px;
+        height: 45px;
+        border-radius: 4px;
+        object-fit: cover;
+        margin-right: 0.75rem;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: 0.75em;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+    }
+    
+    .bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+    
+    .bg-secondary {
+        background-color: var(--secondary-color) !important;
+    }
+    
+    .bg-success {
+        background-color: var(--success-color) !important;
+    }
+    
+    .bg-warning {
+        background-color: var(--warning-color) !important;
+    }
+    
+    .bg-danger {
+        background-color: var(--danger-color) !important;
+    }
+    
+    /* Calendar View */
+    .viewing-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .date-navigation {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .calendar-day-view {
+        border: 1px solid #e3e6f0;
+        border-radius: 0.35rem;
+    }
+    
+    .time-slot {
+        display: flex;
+        min-height: 60px;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .time-slot:last-child {
+        border-bottom: none;
+    }
+    
+    .time-label {
+        width: 80px;
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--secondary-color);
+        border-right: 1px solid #e3e6f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .time-events {
+        flex: 1;
+        padding: 0.5rem;
+        position: relative;
+    }
+    
+    .viewing-event {
+        background-color: #f8f9fc;
+        border-left: 3px solid var(--primary-color);
+        padding: 0.5rem;
+        border-radius: 0 0.25rem 0.25rem 0;
+    }
+    
+    .viewing-event .event-time {
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+    }
+    
+    .viewing-event .event-details h5 {
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .viewing-event .event-details p {
+        font-size: 0.8rem;
+        color: var(--secondary-color);
+        margin-bottom: 0;
+    }
+    
+    /* Upcoming Viewings */
+    .upcoming-viewings .viewing-item {
+        display: flex;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .upcoming-viewings .viewing-item:last-child {
+        border-bottom: none;
+    }
+    
+    .viewing-date {
+        text-align: center;
+        margin-right: 1rem;
+        min-width: 50px;
+    }
+    
+    .viewing-date .day {
+        display: block;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+    
+    .viewing-date .month {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+        text-transform: uppercase;
+    }
+    
+    .viewing-info h5 {
+        margin-bottom: 0.25rem;
+    }
+    
+    .viewing-info p {
+        font-size: 0.85rem;
+        color: var(--secondary-color);
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Messages */
+    .message-container {
+        display: flex;
+        height: 600px;
+        border: 1px solid #e3e6f0;
+        border-radius: 0.35rem;
+    }
+    
+    .message-sidebar {
+        width: 300px;
+        border-right: 1px solid #e3e6f0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .message-search {
+        padding: 1rem;
+        position: relative;
+    }
+    
+    .message-search input {
+        width: 100%;
+        padding: 0.5rem 1rem 0.5rem 2.5rem;
+        border: 1px solid #e3e6f0;
+        border-radius: 0.35rem;
+    }
+    
+    .message-search i {
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary-color);
+    }
+    
+    .message-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+    
+    .message-item {
+        padding: 1rem;
+        display: flex;
+        border-bottom: 1px solid #e3e6f0;
+        cursor: pointer;
+    }
+    
+    .message-item:hover {
+        background-color: #f8f9fc;
+    }
+    
+    .message-item.active {
+        background-color: #f0f3ff;
+    }
+    
+    .message-avatar {
+        margin-right: 1rem;
+    }
+    
+    .message-avatar img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+    
+    .message-preview {
+        flex: 1;
+    }
+    
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.25rem;
+    }
+    
+    .message-header h5 {
+        margin-bottom: 0;
+    }
+    
+    .message-time {
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+    }
+    
+    .message-excerpt {
+        font-size: 0.85rem;
+        color: var(--secondary-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .message-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .message-header {
+        padding: 1rem;
+        border-bottom: 1px solid #e3e6f0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .message-recipient {
+        display: flex;
+        align-items: center;
+    }
+    
+    .message-recipient img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+    
+    .message-recipient h4 {
+        margin-bottom: 0;
+    }
+    
+    .message-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .message-thread {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+        background-color: #f8f9fc;
+    }
+    
+    .message-bubble {
+        max-width: 70%;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        border-radius: 1rem;
+        position: relative;
+    }
+    
+    .message-bubble.received {
+        background-color: white;
+        border-top-left-radius: 0;
+        margin-right: auto;
+    }
+    
+    .message-bubble.sent {
+        background-color: var(--primary-color);
+        color: white;
+        border-top-right-radius: 0;
+        margin-left: auto;
+    }
+    
+    .message-time {
+        font-size: 0.7rem;
+        text-align: right;
+        color: var(--secondary-color);
+        margin-top: 0.25rem;
+    }
+    
+    .message-bubble.sent .message-time {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .message-composer {
+        padding: 1rem;
+        border-top: 1px solid #e3e6f0;
+    }
+    
+    .message-composer textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e3e6f0;
+        border-radius: 0.35rem;
+        resize: none;
+        margin-bottom: 0.5rem;
+    }
+    
+    .composer-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .sidebar {
+            width: 80px;
+            overflow: hidden;
+        }
+        
+        .sidebar-header h3 {
+            display: none;
+        }
+        
+        .sidebar-header i {
+            margin-right: 0;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-menu li span {
+            display: none;
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 0;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-footer .user-info > div,
+        .sidebar-footer .logout-btn span {
+            display: none;
+        }
+        
+        .sidebar-footer .user-info img {
+            margin-right: 0;
+        }
+        
+        .sidebar-footer .logout-btn {
+            padding: 0.5rem;
+            text-align: center;
+        }
+        
+        .sidebar-footer .logout-btn i {
+            margin-right: 0;
+        }
+        
+        .message-container {
+            flex-direction: column;
+            height: auto;
+        }
+        
+        .message-sidebar {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid #e3e6f0;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .stats-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .search-box {
+            width: 200px;
+        }
+        
+        .user-dropdown span {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .dashboard-container {
+            flex-direction: column;
+        }
+        
+        .sidebar {
+            width: 100%;
+            flex-direction: row;
+            flex-wrap: wrap;
+            padding: 0.5rem;
+        }
+        
+        .sidebar-header {
+            width: 100%;
+            padding: 0.5rem;
+            border-bottom: none;
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+            margin: 0 -0.25rem;
+        }
+        
+        .sidebar-menu li {
+            padding: 0.5rem;
+            margin: 0.25rem;
+            border-radius: 4px;
+        }
+        
+        .sidebar-menu li.active {
+            border-left: none;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-footer {
+            display: none;
+        }
+        
+        .top-nav {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .search-box {
+            width: 100%;
+        }
+        
+        .nav-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-home"></i> RealEstatePro</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></li>
+                <li data-target="buyers"><i class="fas fa-users"></i> <span>Buyers</span></li>
+                <li data-target="sellers"><i class="fas fa-user-tie"></i> <span>Sellers</span></li>
+                <li data-target="listings"><i class="fas fa-list"></i> <span>Listings</span></li>
+                <li data-target="viewings"><i class="fas fa-calendar-alt"></i> <span>Viewings</span></li>
+                <li data-target="messages"><i class="fas fa-envelope"></i> <span>Messages</span></li>
+                <li data-target="reports"><i class="fas fa-chart-bar"></i> <span>Reports</span></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                    <div>
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <div class="top-nav">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="nav-right">
+                    <div class="notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                        <span>John Doe</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Sections -->
+            <div class="content-section active" id="dashboard">
+                <h2>Dashboard Overview</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Active Buyers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>15</h3>
+                            <p>Active Sellers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>32</h3>
+                            <p>Active Listings</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>8</h3>
+                            <p>Viewings Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Recent Activities</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p>New listing added: <strong>123 Main St</strong></p>
+                                        <small>2 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p>Viewing scheduled for <strong>456 Oak Ave</strong> with Sarah Johnson</p>
+                                        <small>5 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-file-signature"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p>Offer submitted for <strong>789 Pine Rd</strong> by Michael Brown</p>
+                                        <small>1 day ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p>Property <strong>101 Elm St</strong> sold to David Wilson</p>
+                                        <small>2 days ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Upcoming Viewings</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="viewing-item">
+                                    <div class="viewing-time">
+                                        <span class="time">10:00 AM</span>
+                                        <span class="date">Today</span>
+                                    </div>
+                                    <div class="viewing-details">
+                                        <h5>123 Main St</h5>
+                                        <p>With: Robert Chen</p>
+                                    </div>
+                                </div>
+                                <div class="viewing-item">
+                                    <div class="viewing-time">
+                                        <span class="time">2:30 PM</span>
+                                        <span class="date">Today</span>
+                                    </div>
+                                    <div class="viewing-details">
+                                        <h5>456 Oak Ave</h5>
+                                        <p>With: Sarah Johnson</p>
+                                    </div>
+                                </div>
+                                <div class="viewing-item">
+                                    <div class="viewing-time">
+                                        <span class="time">11:00 AM</span>
+                                        <span class="date">Tomorrow</span>
+                                    </div>
+                                    <div class="viewing-details">
+                                        <h5>789 Pine Rd</h5>
+                                        <p>With: Lisa Williams</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyers Section -->
+            <div class="content-section" id="buyers">
+                <div class="section-header">
+                    <h2>Buyers Management</h2>
+                    <button class="btn btn-primary" id="addBuyerBtn" data-bs-toggle="modal" data-bs-target="#addBuyerModal">
+                        <i class="fas fa-plus"></i> Add Buyer
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="search-filter">
+                            <input type="text" id="buyerSearch" placeholder="Search buyers...">
+                            <select id="buyerStatusFilter">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="buyersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Contact</th>
+                                        <th>Budget</th>
+                                        <th>Preferences</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-status="active">
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                                                <span>Sarah Johnson</span>
+                                            </div>
+                                        </td>
+                                        <td>sarah.j@email.com<br>(555) 123-4567</td>
+                                        <td>$500,000 - $700,000</td>
+                                        <td>3-4 beds, Suburban</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-buyer"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-buyer"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-buyer"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="active">
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
+                                                <span>Michael Brown</span>
+                                            </div>
+                                        </td>
+                                        <td>michael.b@email.com<br>(555) 987-6543</td>
+                                        <td>$300,000 - $450,000</td>
+                                        <td>2 beds, Condo</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-buyer"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-buyer"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-buyer"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="pending">
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="User">
+                                                <span>Lisa Williams</span>
+                                            </div>
+                                        </td>
+                                        <td>lisa.w@email.com<br>(555) 456-7890</td>
+                                        <td>$800,000 - $1,200,000</td>
+                                        <td>4+ beds, Waterfront</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-buyer"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-buyer"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-buyer"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sellers Section -->
+            <div class="content-section" id="sellers">
+                <div class="section-header">
+                    <h2>Sellers Management</h2>
+                    <button class="btn btn-primary" id="addSellerBtn" data-bs-toggle="modal" data-bs-target="#addSellerModal">
+                        <i class="fas fa-plus"></i> Add Seller
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="search-filter">
+                            <input type="text" id="sellerSearch" placeholder="Search sellers...">
+                            <select id="sellerStatusFilter">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="sellersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Contact</th>
+                                        <th>Properties</th>
+                                        <th>Price Range</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-status="active">
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
+                                                <span>Robert Chen</span>
+                                            </div>
+                                        </td>
+                                        <td>robert.c@email.com<br>(555) 234-5678</td>
+                                        <td>2</td>
+                                        <td>$400,000 - $750,000</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-seller"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-seller"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-seller"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="active">
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="User">
+                                                <span>Emily Davis</span>
+                                            </div>
+                                        </td>
+                                        <td>emily.d@email.com<br>(555) 345-6789</td>
+                                        <td>1</td>
+                                        <td>$1,200,000</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-seller"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-seller"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-seller"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="inactive">
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="https://randomuser.me/api/portraits/men/60.jpg" alt="User">
+                                                <span>David Wilson</span>
+                                            </div>
+                                        </td>
+                                        <td>david.w@email.com<br>(555) 456-7890</td>
+                                        <td>0 (Recently Sold)</td>
+                                        <td>-</td>
+                                        <td><span class="badge bg-secondary">Inactive</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-seller"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-seller"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-seller"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listings Section -->
+            <div class="content-section" id="listings">
+                <div class="section-header">
+                    <h2>Property Listings</h2>
+                    <button class="btn btn-primary" id="addListingBtn" data-bs-toggle="modal" data-bs-target="#addListingModal">
+                        <i class="fas fa-plus"></i> Add Listing
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="search-filter">
+                            <input type="text" id="listingSearch" placeholder="Search listings...">
+                            <select id="listingStatusFilter">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="sold">Sold</option>
+                            </select>
+                            <select id="listingTypeFilter">
+                                <option value="all">All Types</option>
+                                <option value="house">House</option>
+                                <option value="condo">Condo</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="land">Land</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="listingsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Property</th>
+                                        <th>Address</th>
+                                        <th>Type</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-status="active" data-type="house">
+                                        <td>
+                                            <div class="property-info">
+                                                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=75&q=80" alt="Property">
+                                                <span>123 Main St</span>
+                                            </div>
+                                        </td>
+                                        <td>123 Main St, Anytown, USA</td>
+                                        <td>Single Family</td>
+                                        <td>$575,000</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-listing"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-listing"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-listing"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="active" data-type="townhouse">
+                                        <td>
+                                            <div class="property-info">
+                                                <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=75&q=80" alt="Property">
+                                                <span>456 Oak Ave</span>
+                                            </div>
+                                        </td>
+                                        <td>456 Oak Ave, Somewhere, USA</td>
+                                        <td>Townhouse</td>
+                                        <td>$425,000</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-listing"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-listing"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-listing"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="pending" data-type="condo">
+                                        <td>
+                                            <div class="property-info">
+                                                <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=75&q=80" alt="Property">
+                                                <span>789 Pine Rd</span>
+                                            </div>
+                                        </td>
+                                        <td>789 Pine Rd, Anycity, USA</td>
+                                        <td>Condo</td>
+                                        <td>$350,000</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-listing"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-listing"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-listing"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-status="sold" data-type="house">
+                                        <td>
+                                            <div class="property-info">
+                                                <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=75&q=80" alt="Property">
+                                                <span>101 Elm St</span>
+                                            </div>
+                                        </td>
+                                        <td>101 Elm St, Othertown, USA</td>
+                                        <td>Single Family</td>
+                                        <td>$650,000</td>
+                                        <td><span class="badge bg-secondary">Sold</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary view-listing"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-listing"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-danger delete-listing"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Viewings Section -->
+            <div class="content-section" id="viewings">
+                <div class="section-header">
+                    <h2>Viewings Schedule</h2>
+                    <button class="btn btn-primary" id="addViewingBtn" data-bs-toggle="modal" data-bs-target="#addViewingModal">
+                        <i class="fas fa-plus"></i> Schedule Viewing
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="viewing-actions">
+                                    <button class="btn btn-outline-secondary active" id="dayView">Day</button>
+                                    <button class="btn btn-outline-secondary" id="weekView">Week</button>
+                                    <button class="btn btn-outline-secondary" id="monthView">Month</button>
+                                    <div class="date-navigation">
+                                        <button class="btn btn-sm" id="prevDate"><i class="fas fa-chevron-left"></i></button>
+                                        <span id="currentDateDisplay">May 15, 2023</span>
+                                        <button class="btn btn-sm" id="nextDate"><i class="fas fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="calendar-day-view" id="calendarView">
+                                    <div class="time-slot">
+                                        <div class="time-label">9:00 AM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">10:00 AM</div>
+                                        <div class="time-events">
+                                            <div class="viewing-event" data-viewing-id="1">
+                                                <div class="event-time">10:00 - 10:30</div>
+                                                <div class="event-details">
+                                                    <h5>123 Main St</h5>
+                                                    <p>With: Robert Chen</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">11:00 AM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">12:00 PM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">1:00 PM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">2:00 PM</div>
+                                        <div class="time-events">
+                                            <div class="viewing-event" data-viewing-id="2">
+                                                <div class="event-time">2:30 - 3:00</div>
+                                                <div class="event-details">
+                                                    <h5>456 Oak Ave</h5>
+                                                    <p>With: Sarah Johnson</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">3:00 PM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">4:00 PM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                    <div class="time-slot">
+                                        <div class="time-label">5:00 PM</div>
+                                        <div class="time-events"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Upcoming Viewings</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="upcoming-viewings" id="upcomingViewingsList">
+                                    <div class="viewing-item" data-viewing-id="1">
+                                        <div class="viewing-date">
+                                            <span class="day">15</span>
+                                            <span class="month">May</span>
+                                        </div>
+                                        <div class="viewing-info">
+                                            <h5>123 Main St</h5>
+                                            <p>10:00 AM - 10:30 AM</p>
+                                            <p>With: Robert Chen</p>
+                                        </div>
+                                    </div>
+                                    <div class="viewing-item" data-viewing-id="2">
+                                        <div class="viewing-date">
+                                            <span class="day">15</span>
+                                            <span class="month">May</span>
+                                        </div>
+                                        <div class="viewing-info">
+                                            <h5>456 Oak Ave</h5>
+                                            <p>2:30 PM - 3:00 PM</p>
+                                            <p>With: Sarah Johnson</p>
+                                        </div>
+                                    </div>
+                                    <div class="viewing-item" data-viewing-id="3">
+                                        <div class="viewing-date">
+                                            <span class="day">16</span>
+                                            <span class="month">May</span>
+                                        </div>
+                                        <div class="viewing-info">
+                                            <h5>789 Pine Rd</h5>
+                                            <p>11:00 AM - 11:30 AM</p>
+                                            <p>With: Lisa Williams</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div class="content-section" id="messages">
+                <h2>Messages</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="message-container">
+                            <div class="message-sidebar">
+                                <div class="message-search">
+                                    <input type="text" id="messageSearch" placeholder="Search messages...">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="message-list" id="messageList">
+                                    <div class="message-item active" data-contact="sarah-johnson">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <div class="message-header">
+                                                <h5>Sarah Johnson</h5>
+                                                <span class="message-time">10:30 AM</span>
+                                            </div>
+                                            <p class="message-excerpt">Hi, I'm interested in the property at 123 Main St...</p>
+                                        </div>
+                                    </div>
+                                    <div class="message-item" data-contact="michael-brown">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <div class="message-header">
+                                                <h5>Michael Brown</h5>
+                                                <span class="message-time">Yesterday</span>
+                                            </div>
+                                            <p class="message-excerpt">When can we schedule a viewing for 789 Pine Rd?</p>
+                                        </div>
+                                    </div>
+                                    <div class="message-item" data-contact="robert-chen">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <div class="message-header">
+                                                <h5>Robert Chen</h5>
+                                                <span class="message-time">May 12</span>
+                                            </div>
+                                            <p class="message-excerpt">I've sent the signed documents for 456 Oak Ave</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <div class="message-recipient">
+                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" id="currentContactAvatar">
+                                        <h4 id="currentContactName">Sarah Johnson</h4>
+                                    </div>
+                                    <div class="message-actions">
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-phone"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-video"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-ellipsis-h"></i></button>
+                                    </div>
+                                </div>
+                                <div class="message-thread" id="messageThread">
+                                    <div class="message-bubble received">
+                                        <div class="message-text">Hi, I'm interested in the property at 123 Main St. Can you tell me more about it?</div>
+                                        <div class="message-time">10:30 AM</div>
+                                    </div>
+                                    <div class="message-bubble sent">
+                                        <div class="message-text">Hello Sarah! Yes, it's a beautiful 3-bedroom home with a recently renovated kitchen and a spacious backyard. Would you like to schedule a viewing?</div>
+                                        <div class="message-time">10:35 AM</div>
+                                    </div>
+                                    <div class="message-bubble received">
+                                        <div class="message-text">That sounds great! I'm available this Thursday after 2 PM. Would that work?</div>
+                                        <div class="message-time">10:37 AM</div>
+                                    </div>
+                                </div>
+                                <div class="message-composer">
+                                    <textarea id="messageInput" placeholder="Type your message here..."></textarea>
+                                    <div class="composer-actions">
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-paperclip"></i></button>
+                                        <button class="btn btn-primary" id="sendMessageBtn">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="content-section" id="reports">
+                <h2>Reports</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-report="sales">Sales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-report="listings">Listings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-report="performance">Performance</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="report-content active" id="sales-report">
+                            <div class="report-filters">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>Time Period</label>
+                                        <select class="form-select" id="salesTimePeriod">
+                                            <option>Last 30 Days</option>
+                                            <option>Last 90 Days</option>
+                                            <option>This Year</option>
+                                            <option selected>Custom Range</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>From</label>
+                                        <input type="date" class="form-control" id="salesFromDate" value="2023-01-01">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>To</label>
+                                        <input type="date" class="form-control" id="salesToDate" value="2023-05-15">
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button class="btn btn-primary" id="generateSalesReport">Generate Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report-chart mt-4">
+                                <div class="chart-placeholder" style="height: 400px; background-color: #f8f9fc; display: flex; align-items: center; justify-content: center;">
+                                    <h4>Sales Chart Would Appear Here</h4>
+                                </div>
+                            </div>
+                            <div class="report-summary mt-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="summary-card">
+                                            <h5>Total Sales</h5>
+                                            <h3>$2,450,000</h3>
+                                            <p>5 properties sold</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="summary-card">
+                                            <h5>Average Price</h5>
+                                            <h3>$490,000</h3>
+                                            <p>Across all sales</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="summary-card">
+                                            <h5>Days on Market</h5>
+                                            <h3>42</h3>
+                                            <p>Average time to sell</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report-table mt-4">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Property</th>
+                                            <th>Sale Date</th>
+                                            <th>Sale Price</th>
+                                            <th>List Price</th>
+                                            <th>Days on Market</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>101 Elm St</td>
+                                            <td>May 10, 2023</td>
+                                            <td>$650,000</td>
+                                            <td>$675,000</td>
+                                            <td>28</td>
+                                        </tr>
+                                        <tr>
+                                            <td>55 Maple Dr</td>
+                                            <td>Apr 22, 2023</td>
+                                            <td>$520,000</td>
+                                            <td>$525,000</td>
+                                            <td>35</td>
+                                        </tr>
+                                        <tr>
+                                            <td>22 Birch Ln</td>
+                                            <td>Mar 15, 2023</td>
+                                            <td>$480,000</td>
+                                            <td>$499,000</td>
+                                            <td>42</td>
+                                        </tr>
+                                        <tr>
+                                            <td>77 Cedar Ave</td>
+                                            <td>Feb 28, 2023</td>
+                                            <td>$390,000</td>
+                                            <td>$399,000</td>
+                                            <td>51</td>
+                                        </tr>
+                                        <tr>
+                                            <td>33 Spruce St</td>
+                                            <td>Jan 10, 2023</td>
+                                            <td>$410,000</td>
+                                            <td>$425,000</td>
+                                            <td>63</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="report-content" id="listings-report">
+                            <p>Listings report content would appear here.</p>
+                        </div>
+                        <div class="report-content" id="performance-report">
+                            <p>Performance report content would appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="addBuyerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Buyer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="buyerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="buyerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="buyerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="buyerPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Budget Range</label>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="buyerMinBudget" placeholder="Min" required>
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="buyerMaxBudget" placeholder="Max" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Property Preferences</label>
+                            <textarea class="form-control" id="buyerPreferences" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Profile Image URL</label>
+                            <input type="text" class="form-control" id="buyerImage" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveBuyerBtn">Save Buyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addSellerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Seller</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sellerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="sellerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="sellerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="sellerPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Property Address</label>
+                            <input type="text" class="form-control" id="sellerPropertyAddress" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Asking Price</label>
+                            <input type="text" class="form-control" id="sellerAskingPrice" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Profile Image URL</label>
+                            <input type="text" class="form-control" id="sellerImage" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveSellerBtn">Save Seller</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addListingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Listing</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="listingForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Property Address</label>
+                                    <input type="text" class="form-control" id="listingAddress" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Property Type</label>
+                                    <select class="form-select" id="listingType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="Single Family">Single Family Home</option>
+                                        <option value="Condo">Condo</option>
+                                        <option value="Townhouse">Townhouse</option>
+                                        <option value="Apartment">Apartment</option>
+                                        <option value="Land">Land</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Price</label>
+                                    <input type="text" class="form-control" id="listingPrice" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Bedrooms</label>
+                                    <input type="number" class="form-control" id="listingBedrooms" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Bathrooms</label>
+                                    <input type="number" class="form-control" id="listingBathrooms" step="0.5" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Square Footage</label>
+                                    <input type="text" class="form-control" id="listingSqft" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Lot Size</label>
+                                    <input type="text" class="form-control" id="listingLotSize">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Year Built</label>
+                                    <input type="text" class="form-control" id="listingYearBuilt" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" id="listingDescription" rows="4" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Property Image URL</label>
+                                    <input type="text" class="form-control" id="listingImage" placeholder="https://example.com/image.jpg">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveListingBtn">Save Listing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addViewingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule New Viewing</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="viewingForm">
+                        <div class="mb-3">
+                            <label class="form-label">Property</label>
+                            <select class="form-select" id="viewingProperty" required>
+                                <option value="">Select Property</option>
+                                <option value="123 Main St, Anytown, USA">123 Main St, Anytown, USA</option>
+                                <option value="456 Oak Ave, Somewhere, USA">456 Oak Ave, Somewhere, USA</option>
+                                <option value="789 Pine Rd, Anycity, USA">789 Pine Rd, Anycity, USA</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Buyer</label>
+                            <select class="form-select" id="viewingBuyer" required>
+                                <option value="">Select Buyer</option>
+                                <option value="Sarah Johnson">Sarah Johnson</option>
+                                <option value="Michael Brown">Michael Brown</option>
+                                <option value="Lisa Williams">Lisa Williams</option>
+                                <option value="Robert Chen">Robert Chen</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" id="viewingDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Time</label>
+                            <input type="time" class="form-control" id="viewingTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Duration (minutes)</label>
+                            <input type="number" class="form-control" id="viewingDuration" value="30" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" id="viewingNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveViewingBtn">Schedule Viewing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Viewing Details Modal -->
+    <div class="modal fade" id="viewingDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewingDetailsTitle">Viewing Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewingDetailsContent">
+                    <!-- Content will be filled by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editViewingBtn">Edit</button>
+                    <button type="button" class="btn btn-danger" id="cancelViewingBtn">Cancel Viewing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize variables
+        let currentViewingId = null;
+        let currentContact = 'sarah-johnson';
+        const messages = {
+            'sarah-johnson': [
+                { type: 'received', text: 'Hi, I\'m interested in the property at 123 Main St. Can you tell me more about it?', time: '10:30 AM' },
+                { type: 'sent', text: 'Hello Sarah! Yes, it\'s a beautiful 3-bedroom home with a recently renovated kitchen and a spacious backyard. Would you like to schedule a viewing?', time: '10:35 AM' },
+                { type: 'received', text: 'That sounds great! I\'m available this Thursday after 2 PM. Would that work?', time: '10:37 AM' }
+            ],
+            'michael-brown': [
+                { type: 'received', text: 'When can we schedule a viewing for 789 Pine Rd?', time: 'Yesterday' },
+                { type: 'sent', text: 'Hi Michael, I have availability tomorrow at 11 AM or Friday at 3 PM. Would either of those work for you?', time: 'Yesterday' }
+            ],
+            'robert-chen': [
+                { type: 'received', text: 'I\'ve sent the signed documents for 456 Oak Ave', time: 'May 12' },
+                { type: 'sent', text: 'Thank you Robert! I\'ve received them and will process everything today. The closing date remains scheduled for June 1st.', time: 'May 12' }
+            ]
+        };
+
+        // Sidebar navigation
+        const menuItems = document.querySelectorAll('.sidebar-menu li');
+        const contentSections = document.querySelectorAll('.content-section');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items and sections
+                menuItems.forEach(i => i.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+                
+                // Add active class to clicked menu item
+                this.classList.add('active');
+                
+                // Show corresponding content section
+                const target = this.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+        
+        // Report tabs
+        const reportTabs = document.querySelectorAll('.nav-tabs .nav-link');
+        const reportContents = document.querySelectorAll('.report-content');
+        
+        reportTabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs and contents
+                reportTabs.forEach(t => t.classList.remove('active'));
+                reportContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const target = this.getAttribute('data-report');
+                document.getElementById(`${target}-report`).classList.add('active');
+            });
+        });
+        
+        // Calendar navigation
+        const prevBtn = document.getElementById('prevDate');
+        const nextBtn = document.getElementById('nextDate');
+        const dateDisplay = document.getElementById('currentDateDisplay');
+        const dayViewBtn = document.getElementById('dayView');
+        const weekViewBtn = document.getElementById('weekView');
+        const monthViewBtn = document.getElementById('monthView');
+        const calendarView = document.getElementById('calendarView');
+        
+        let currentDate = new Date(2023, 4, 15); // May 15, 2023
+        let currentView = 'day';
+        
+        function updateDateDisplay() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            dateDisplay.textContent = currentDate.toLocaleDateString('en-US', options);
+            
+            // Update calendar view based on current view type
+            updateCalendarView();
+        }
+        
+        function updateCalendarView() {
+            // In a real app, this would fetch and display viewings for the selected date range
+            // For this demo, we'll just show the same viewings for any day in May 2023
+            if (currentDate.getMonth() === 4) { // May is month 4 (0-indexed)
+                // Show our demo viewings
+                document.querySelectorAll('.time-events').forEach(el => {
+                    el.innerHTML = ''; // Clear existing events
+                });
+                
+                if (currentDate.getDate() === 15) {
+                    // Add viewings for May 15
+                    const time10am = document.querySelector('.time-slot:nth-child(2) .time-events');
+                    time10am.innerHTML = `
+                        <div class="viewing-event" data-viewing-id="1">
+                            <div class="event-time">10:00 - 10:30</div>
+                            <div class="event-details">
+                                <h5>123 Main St</h5>
+                                <p>With: Robert Chen</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const time2pm = document.querySelector('.time-slot:nth-child(6) .time-events');
+                    time2pm.innerHTML = `
+                        <div class="viewing-event" data-viewing-id="2">
+                            <div class="event-time">2:30 - 3:00</div>
+                            <div class="event-details">
+                                <h5>456 Oak Ave</h5>
+                                <p>With: Sarah Johnson</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (currentDate.getDate() === 16) {
+                    // Add viewing for May 16
+                    const time11am = document.querySelector('.time-slot:nth-child(3) .time-events');
+                    time11am.innerHTML = `
+                        <div class="viewing-event" data-viewing-id="3">
+                            <div class="event-time">11:00 - 11:30</div>
+                            <div class="event-details">
+                                <h5>789 Pine Rd</h5>
+                                <p>With: Lisa Williams</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                // Clear all viewings if not in May
+                document.querySelectorAll('.time-events').forEach(el => {
+                    el.innerHTML = '';
+                });
+            }
+        }
+        
+        prevBtn.addEventListener('click', function() {
+            if (currentView === 'day') {
+                currentDate.setDate(currentDate.getDate() - 1);
+            } else if (currentView === 'week') {
+                currentDate.setDate(currentDate.getDate() - 7);
+            } else if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+            }
+            updateDateDisplay();
+        });
+        
+        nextBtn.addEventListener('click', function() {
+            if (currentView === 'day') {
+                currentDate.setDate(currentDate.getDate() + 1);
+            } else if (currentView === 'week') {
+                currentDate.setDate(currentDate.getDate() + 7);
+            } else if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            }
+            updateDateDisplay();
+        });
+        
+        dayViewBtn.addEventListener('click', function() {
+            dayViewBtn.classList.add('active');
+            weekViewBtn.classList.remove('active');
+            monthViewBtn.classList.remove('active');
+            currentView = 'day';
+            updateDateDisplay();
+        });
+        
+        weekViewBtn.addEventListener('click', function() {
+            dayViewBtn.classList.remove('active');
+            weekViewBtn.classList.add('active');
+            monthViewBtn.classList.remove('active');
+            currentView = 'week';
+            updateDateDisplay();
+        });
+        
+        monthViewBtn.addEventListener('click', function() {
+            dayViewBtn.classList.remove('active');
+            weekViewBtn.classList.remove('active');
+            monthViewBtn.classList.add('active');
+            currentView = 'month';
+            updateDateDisplay();
+        });
+        
+        // Initialize date display
+        updateDateDisplay();
+        
+        // Logout button
+        const logoutBtn = document.querySelector('.logout-btn');
+        logoutBtn.addEventListener('click', function() {
+            alert('Logging out...');
+            // In a real app, this would redirect to logout endpoint
+        });
+        
+        // Notification bell
+        const notificationBtn = document.querySelector('.notification');
+        notificationBtn.addEventListener('click', function() {
+            alert('You have 3 new notifications:\n1. New message from Sarah Johnson\n2. Viewing reminder for tomorrow\n3. New listing in your area');
+        });
+        
+        // User dropdown
+        const userDropdown = document.querySelector('.user-dropdown');
+        userDropdown.addEventListener('click', function() {
+            alert('User menu would appear here with options to view profile, settings, etc.');
+        });
+        
+        // Buyer/Seller/Listing search functionality
+        document.getElementById('buyerSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#buyersTable tbody tr');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.user-info span').textContent.toLowerCase();
+                const contact = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || contact.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById('buyerStatusFilter').addEventListener('change', function() {
+            const status = this.value;
+            const rows = document.querySelectorAll('#buyersTable tbody tr');
+            
+            rows.forEach(row => {
+                if (status === 'all' || row.getAttribute('data-status') === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById('sellerSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#sellersTable tbody tr');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.user-info span').textContent.toLowerCase();
+                const contact = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || contact.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById('sellerStatusFilter').addEventListener('change', function() {
+            const status = this.value;
+            const rows = document.querySelectorAll('#sellersTable tbody tr');
+            
+            rows.forEach(row => {
+                if (status === 'all' || row.getAttribute('data-status') === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById('listingSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#listingsTable tbody tr');
+            
+            rows.forEach(row => {
+                const address = row.querySelector('.property-info span').textContent.toLowerCase();
+                const fullAddress = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                
+                if (address.includes(searchTerm) || fullAddress.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById('listingStatusFilter').addEventListener('change', function() {
+            const status = this.value;
+            const rows = document.querySelectorAll('#listingsTable tbody tr');
+            
+            rows.forEach(row => {
+                if (status === 'all' || row.getAttribute('data-status') === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        document.getElementById('listingTypeFilter').addEventListener('change', function() {
+            const type = this.value;
+            const rows = document.querySelectorAll('#listingsTable tbody tr');
+            
+            rows.forEach(row => {
+                if (type === 'all' || row.getAttribute('data-type') === type) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Add Buyer functionality
+        document.getElementById('saveBuyerBtn').addEventListener('click', function() {
+            const form = document.getElementById('buyerForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const name = document.getElementById('buyerName').value;
+            const email = document.getElementById('buyerEmail').value;
+            const phone = document.getElementById('buyerPhone').value;
+            const minBudget = document.getElementById('buyerMinBudget').value;
+            const maxBudget = document.getElementById('buyerMaxBudget').value;
+            const preferences = document.getElementById('buyerPreferences').value;
+            const image = document.getElementById('buyerImage').value || 'https://randomuser.me/api/portraits/lego/1.jpg';
+            
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-status', 'active');
+            newRow.innerHTML = `
+                <td>
+                    <div class="user-info">
+                        <img src="${image}" alt="User">
+                        <span>${name}</span>
+                    </div>
+                </td>
+                <td>${email}<br>${phone}</td>
+                <td>$${minBudget} - $${maxBudget}</td>
+                <td>${preferences}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-buyer"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary edit-buyer"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-outline-danger delete-buyer"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            
+            document.querySelector('#buyersTable tbody').appendChild(newRow);
+            
+            // Reset form and close modal
+            form.reset();
+            bootstrap.Modal.getInstance(document.getElementById('addBuyerModal')).hide();
+            
+            alert('Buyer added successfully!');
+        });
+        
+        // Add Seller functionality
+        document.getElementById('saveSellerBtn').addEventListener('click', function() {
+            const form = document.getElementById('sellerForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const name = document.getElementById('sellerName').value;
+            const email = document.getElementById('sellerEmail').value;
+            const phone = document.getElementById('sellerPhone').value;
+            const property = document.getElementById('sellerPropertyAddress').value;
+            const price = document.getElementById('sellerAskingPrice').value;
+            const image = document.getElementById('sellerImage').value || 'https://randomuser.me/api/portraits/lego/2.jpg';
+            
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-status', 'active');
+            newRow.innerHTML = `
+                <td>
+                    <div class="user-info">
+                        <img src="${image}" alt="User">
+                        <span>${name}</span>
+                    </div>
+                </td>
+                <td>${email}<br>${phone}</td>
+                <td>1</td>
+                <td>$${price}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-seller"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary edit-seller"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-outline-danger delete-seller"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            
+            document.querySelector('#sellersTable tbody').appendChild(newRow);
+            
+            // Reset form and close modal
+            form.reset();
+            bootstrap.Modal.getInstance(document.getElementById('addSellerModal')).hide();
+            
+            alert('Seller added successfully!');
+        });
+        
+        // Add Listing functionality
+        document.getElementById('saveListingBtn').addEventListener('click', function() {
+            const form = document.getElementById('listingForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const address = document.getElementById('listingAddress').value;
+            const type = document.getElementById('listingType').value;
+            const price = document.getElementById('listingPrice').value;
+            const bedrooms = document.getElementById('listingBedrooms').value;
+            const bathrooms = document.getElementById('listingBathrooms').value;
+            const sqft = document.getElementById('listingSqft').value;
+            const lotSize = document.getElementById('listingLotSize').value;
+            const yearBuilt = document.getElementById('listingYearBuilt').value;
+            const description = document.getElementById('listingDescription').value;
+            const image = document.getElementById('listingImage').value || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=75&q=80';
+            
+            const addressParts = address.split(',');
+            const shortAddress = addressParts[0].trim();
+            
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-status', 'active');
+            newRow.setAttribute('data-type', type.toLowerCase().replace(' ', '-'));
+            newRow.innerHTML = `
+                <td>
+                    <div class="property-info">
+                        <img src="${image}" alt="Property">
+                        <span>${shortAddress}</span>
+                    </div>
+                </td>
+                <td>${address}</td>
+                <td>${type}</td>
+                <td>$${price}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-listing"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary edit-listing"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-outline-danger delete-listing"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            
+            document.querySelector('#listingsTable tbody').appendChild(newRow);
+            
+            // Reset form and close modal
+            form.reset();
+            bootstrap.Modal.getInstance(document.getElementById('addListingModal')).hide();
+            
+            alert('Listing added successfully!');
+        });
+        
+        // Add Viewing functionality
+        document.getElementById('saveViewingBtn').addEventListener('click', function() {
+            const form = document.getElementById('viewingForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const property = document.getElementById('viewingProperty').value;
+            const buyer = document.getElementById('viewingBuyer').value;
+            const date = new Date(document.getElementById('viewingDate').value);
+            const time = document.getElementById('viewingTime').value;
+            const duration = document.getElementById('viewingDuration').value;
+            const notes = document.getElementById('viewingNotes').value;
+            
+            // Format date for display
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            
+            // Create new viewing in upcoming viewings list
+            const newViewing = document.createElement('div');
+            newViewing.className = 'viewing-item';
+            newViewing.setAttribute('data-viewing-id', Date.now()); // Use timestamp as ID
+            newViewing.innerHTML = `
+                <div class="viewing-date">
+                    <span class="day">${date.getDate()}</span>
+                    <span class="month">${date.toLocaleString('default', { month: 'short' })}</span>
+                </div>
+                <div class="viewing-info">
+                    <h5>${property.split(',')[0]}</h5>
+                    <p>${time} - ${calculateEndTime(time, duration)}</p>
+                    <p>With: ${buyer}</p>
+                </div>
+            `;
+            
+            document.getElementById('upcomingViewingsList').prepend(newViewing);
+            
+            // Reset form and close modal
+            form.reset();
+            bootstrap.Modal.getInstance(document.getElementById('addViewingModal')).hide();
+            
+            alert('Viewing scheduled successfully!');
+        });
+        
+        function calculateEndTime(startTime, duration) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const totalMinutes = hours * 60 + minutes + Number(duration);
+            const endHours = Math.floor(totalMinutes / 60);
+            const endMinutes = totalMinutes % 60;
+            return `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+        }
+        
+        // Viewing event click handler
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.viewing-event')) {
+                const viewingEvent = e.target.closest('.viewing-event');
+                currentViewingId = viewingEvent.getAttribute('data-viewing-id');
+                showViewingDetails(currentViewingId);
+            } else if (e.target.closest('.viewing-item')) {
+                const viewingItem = e.target.closest('.viewing-item');
+                currentViewingId = viewingItem.getAttribute('data-viewing-id');
+                showViewingDetails(currentViewingId);
+            }
+        });
+        
+        function showViewingDetails(viewingId) {
+            // In a real app, this would fetch viewing details from a database
+            // For this demo, we'll use mock data based on the viewing ID
+            
+            let viewingDetails = {};
+            
+            if (viewingId === '1') {
+                viewingDetails = {
+                    property: '123 Main St, Anytown, USA',
+                    buyer: 'Robert Chen',
+                    date: 'May 15, 2023',
+                    time: '10:00 AM - 10:30 AM',
+                    duration: '30 minutes',
+                    notes: 'First viewing for this property. Buyer is interested in the neighborhood.'
+                };
+            } else if (viewingId === '2') {
+                viewingDetails = {
+                    property: '456 Oak Ave, Somewhere, USA',
+                    buyer: 'Sarah Johnson',
+                    date: 'May 15, 2023',
+                    time: '2:30 PM - 3:00 PM',
+                    duration: '30 minutes',
+                    notes: 'Second viewing. Buyer is seriously considering making an offer.'
+                };
+            } else if (viewingId === '3') {
+                viewingDetails = {
+                    property: '789 Pine Rd, Anycity, USA',
+                    buyer: 'Lisa Williams',
+                    date: 'May 16, 2023',
+                    time: '11:00 AM - 11:30 AM',
+                    duration: '30 minutes',
+                    notes: 'First viewing. Buyer is looking for a condo in this area.'
+                };
+            } else {
+                // Default details for newly added viewings
+                viewingDetails = {
+                    property: document.getElementById('viewingProperty').value,
+                    buyer: document.getElementById('viewingBuyer').value,
+                    date: new Date(document.getElementById('viewingDate').value).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }),
+                    time: `${document.getElementById('viewingTime').value} - ${calculateEndTime(
+                        document.getElementById('viewingTime').value, 
+                        document.getElementById('viewingDuration').value
+                    )}`,
+                    duration: `${document.getElementById('viewingDuration').value} minutes`,
+                    notes: document.getElementById('viewingNotes').value || 'No additional notes'
+                };
+            }
+            
+            // Update modal content
+            document.getElementById('viewingDetailsTitle').textContent = `Viewing Details (ID: ${viewingId})`;
+            document.getElementById('viewingDetailsContent').innerHTML = `
+                <div class="mb-3">
+                    <h6>Property</h6>
+                    <p>${viewingDetails.property}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Buyer</h6>
+                    <p>${viewingDetails.buyer}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Date & Time</h6>
+                    <p>${viewingDetails.date} at ${viewingDetails.time}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Duration</h6>
+                    <p>${viewingDetails.duration}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Notes</h6>
+                    <p>${viewingDetails.notes}</p>
+                </div>
+            `;
+            
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('viewingDetailsModal'));
+            modal.show();
+        }
+        
+        // Edit Viewing button
+        document.getElementById('editViewingBtn').addEventListener('click', function() {
+            alert('Edit viewing functionality would open the viewing form with existing data for ID: ' + currentViewingId);
+        });
+        
+        // Cancel Viewing button
+        document.getElementById('cancelViewingBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel this viewing?')) {
+                // Remove viewing from calendar and upcoming list
+                document.querySelector(`.viewing-event[data-viewing-id="${currentViewingId}"]`)?.remove();
+                document.querySelector(`.viewing-item[data-viewing-id="${currentViewingId}"]`)?.remove();
+                
+                // Close the modal
+                bootstrap.Modal.getInstance(document.getElementById('viewingDetailsModal')).hide();
+                
+                alert('Viewing has been canceled.');
+            }
+        });
+        
+        // Messages functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.message-item')) {
+                const messageItem = e.target.closest('.message-item');
+                const contact = messageItem.getAttribute('data-contact');
+                
+                // Set active message
+                document.querySelectorAll('.message-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                messageItem.classList.add('active');
+                
+                // Update current contact
+                currentContact = contact;
+                updateMessageThread();
+            }
+        });
+        
+        function updateMessageThread() {
+            // Update contact info
+            const contactItem = document.querySelector(`.message-item[data-contact="${currentContact}"]`);
+            const contactName = contactItem.querySelector('h5').textContent;
+            const contactAvatar = contactItem.querySelector('img').src;
+            
+            document.getElementById('currentContactName').textContent = contactName;
+            document.getElementById('currentContactAvatar').src = contactAvatar;
+            
+            // Update message thread
+            const thread = document.getElementById('messageThread');
+            thread.innerHTML = '';
+            
+            messages[currentContact].forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `message-bubble ${msg.type}`;
+                bubble.innerHTML = `
+                    <div class="message-text">${msg.text}</div>
+                    <div class="message-time">${msg.time}</div>
+                `;
+                thread.appendChild(bubble);
+            });
+            
+            // Scroll to bottom of thread
+            thread.scrollTop = thread.scrollHeight;
+        }
+        
+        // Send message functionality
+        document.getElementById('sendMessageBtn').addEventListener('click', function() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (messageText) {
+                // Add message to thread
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble sent';
+                bubble.innerHTML = `
+                    <div class="message-text">${messageText}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                document.getElementById('messageThread').appendChild(bubble);
+                
+                // Add to messages data
+                messages[currentContact].push({
+                    type: 'sent',
+                    text: messageText,
+                    time: timeString
+                });
+                
+                // Update the message preview in the sidebar
+                const contactItem = document.querySelector(`.message-item[data-contact="${currentContact}"]`);
+                if (contactItem) {
+                    contactItem.querySelector('.message-excerpt').textContent = messageText;
+                    contactItem.querySelector('.message-time').textContent = 'Just now';
+                }
+                
+                // Clear input and scroll to bottom
+                messageInput.value = '';
+                document.getElementById('messageThread').scrollTop = document.getElementById('messageThread').scrollHeight;
+            }
+        });
+        
+        // Allow pressing Enter to send message
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('sendMessageBtn').click();
+            }
+        });
+        
+        // Initialize message thread with first contact
+        updateMessageThread();
+        
+        // Generate Sales Report
+        document.getElementById('generateSalesReport').addEventListener('click', function() {
+            const timePeriod = document.getElementById('salesTimePeriod').value;
+            const fromDate = document.getElementById('salesFromDate').value;
+            const toDate = document.getElementById('salesToDate').value;
+            
+            alert(`Generating sales report for ${timePeriod}\nFrom: ${fromDate}\nTo: ${toDate}`);
+        });
+        
+        // Table row actions (view, edit, delete)
+        document.addEventListener('click', function(e) {
+            // Buyers table actions
+            if (e.target.closest('.view-buyer')) {
+                const row = e.target.closest('tr');
+                const name = row.querySelector('.user-info span').textContent;
+                alert(`Viewing details for buyer: ${name}`);
+            } else if (e.target.closest('.edit-buyer')) {
+                const row = e.target.closest('tr');
+                const name = row.querySelector('.user-info span').textContent;
+                alert(`Editing buyer: ${name}`);
+            } else if (e.target.closest('.delete-buyer')) {
+                const row = e.target.closest('tr');
+                const name = row.querySelector('.user-info span').textContent;
+                if (confirm(`Are you sure you want to delete buyer: ${name}?`)) {
+                    row.remove();
+                }
+            }
+            
+            // Sellers table actions
+            else if (e.target.closest('.view-seller')) {
+                const row = e.target.closest('tr');
+                const name = row.querySelector('.user-info span').textContent;
+                alert(`Viewing details for seller: ${name}`);
+            } else if (e.target.closest('.edit-seller')) {
+                const row = e.target.closest('tr');
+                const name = row.querySelector('.user-info span').textContent;
+                alert(`Editing seller: ${name}`);
+            } else if (e.target.closest('.delete-seller')) {
+                const row = e.target.closest('tr');
+                const name = row.querySelector('.user-info span').textContent;
+                if (confirm(`Are you sure you want to delete seller: ${name}?`)) {
+                    row.remove();
+                }
+            }
+            
+            // Listings table actions
+            else if (e.target.closest('.view-listing')) {
+                const row = e.target.closest('tr');
+                const address = row.querySelector('.property-info span').textContent;
+                alert(`Viewing details for property: ${address}`);
+            } else if (e.target.closest('.edit-listing')) {
+                const row = e.target.closest('tr');
+                const address = row.querySelector('.property-info span').textContent;
+                alert(`Editing listing: ${address}`);
+            } else if (e.target.closest('.delete-listing')) {
+                const row = e.target.closest('tr');
+                const address = row.querySelector('.property-info span').textContent;
+                if (confirm(`Are you sure you want to delete listing: ${address}?`)) {
+                    row.remove();
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="author" content="Untree.co" />
+	<link rel="shortcut icon" href="favicon.png" />
+
+	<meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap5" />
+
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+		rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+	<link rel="stylesheet" href="fonts/icomoon/style.css" />
+	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
+
+	<link rel="stylesheet" href="css/tiny-slider.css" />
+	<link rel="stylesheet" href="css/aos.css" />
+	<link rel="stylesheet" href="css/style.css" />
+
+
+	<title>
+		REAL ESTATE
+	</title>
+
+	<style>
+		.slider-container {
+			width: 100%;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.slider-track {
+			display: flex;
+			gap: 20px;
+			animation: scroll 20s linear infinite;
+		}
+
+		.card {
+			flex: 0 0 300px;
+			background-color: white;
+			border-radius: 10px;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+		}
+
+		.card img {
+			width: 100%;
+			height: 180px;
+			object-fit: cover;
+		}
+
+		.card-content {
+			padding: 15px;
+		}
+
+		.card-title {
+			font-size: 18px;
+			font-weight: bold;
+			margin-bottom: 8px;
+		}
+
+		.card-price {
+			color: #007bff;
+			font-weight: 600;
+			margin-bottom: 10px;
+		}
+
+		.features {
+			font-size: 13px;
+			color: #555;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin-bottom: 12px;
+		}
+
+		.features span {
+			background: #eee;
+			padding: 4px 8px;
+			border-radius: 6px;
+		}
+
+		@keyframes scroll {
+			0% {
+				transform: translateX(0);
+			}
+
+			100% {
+				transform: translateX(-50%);
+			}
+		}
+
+		/* Duplicate the content for infinite scroll illusion */
+		.slider-track.duplicate {
+			display: none;
+		}
+
+		@media (min-width: 768px) {
+			.slider-track {
+				width: max-content;
+			}
+		}
+
+		/* Work Section */
+		#work {
+			padding: 80px 0;
+			background: #f9f9f9;
+		}
+
+		#work .heading h2 {
+			font-size: 36px;
+			font-weight: 700;
+			color: #333;
+			margin-bottom: 10px;
+		}
+
+		#work .heading p {
+			font-size: 16px;
+			color: #777;
+			margin-bottom: 40px;
+		}
+
+		#portfolio {
+			margin-top: 30px;
+		}
+
+		#portfolio .filters {
+			margin-bottom: 40px;
+			text-align: center;
+			padding: 0;
+		}
+
+		#portfolio .filters li {
+			display: inline-block;
+			margin: 0 10px;
+		}
+
+		#portfolio .filters a {
+			font-size: 15px;
+			font-weight: 600;
+			color: #333;
+			text-decoration: none;
+			padding: 8px 20px;
+			border: 2px solid transparent;
+			border-radius: 30px;
+			transition: all 0.3s ease;
+			cursor: pointer;
+		}
+
+		#portfolio .filters a:hover,
+		#portfolio .filters a.active {
+			color: #fff;
+			background: #3498db;
+			border-color: #3498db;
+		}
+
+		#portfolio .items {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 20px;
+		}
+
+		#portfolio .item {
+			width: 22%;
+			overflow: hidden;
+			position: relative;
+			border-radius: 10px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+			background: #fff;
+			transition: transform 0.3s ease;
+		}
+
+		#portfolio .item:hover {
+			transform: translateY(-10px);
+		}
+
+		.effect-bubba img {
+			width: 100%;
+			height: auto;
+			border-radius: 10px;
+			display: block;
+		}
+
+		.effect-bubba figcaption {
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: rgba(52, 152, 219, 0.8);
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			transition: all 0.5s ease;
+			border-radius: 10px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		.effect-bubba:hover figcaption {
+			opacity: 1;
+		}
+
+		.effect-bubba h2 {
+			color: #fff;
+			font-size: 24px;
+			margin-bottom: 10px;
+		}
+
+		.effect-bubba a {
+			color: #fff;
+			font-size: 16px;
+			border: 1px solid #fff;
+			padding: 6px 15px;
+			border-radius: 25px;
+			text-decoration: none;
+			transition: background 0.3s ease;
+		}
+
+		.effect-bubba a:hover {
+			background: #fff;
+			color: #3498db;
+		}
+
+		/* Responsive */
+		@media (max-width: 992px) {
+			#portfolio .item {
+				width: 45%;
+			}
+		}
+
+		@media (max-width: 576px) {
+			#portfolio .item {
+				width: 100%;
+			}
+		}
+
+		/* Services Section */
+		#services {
+			padding: 100px 0;
+			background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+		}
+
+		#services .container {
+			max-width: 1200px;
+			margin: auto;
+		}
+
+		.service-card {
+			background: #fff;
+			border-radius: 15px;
+			padding: 40px 20px;
+			text-align: center;
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+			transition: all 0.5s ease;
+			position: relative;
+			overflow: hidden;
+			cursor: pointer;
+		}
+
+		.service-card::before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 8px;
+			background: #3498db;
+			top: 0;
+			left: 0;
+			transition: all 0.4s ease;
+			transform: scaleX(0);
+			transform-origin: left;
+		}
+
+		.service-card:hover {
+			transform: translateY(-10px) scale(1.03);
+			box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+		}
+
+		.service-card:hover::before {
+			transform: scaleX(1);
+		}
+
+		.service-icon {
+			width: 100px;
+			height: 100px;
+			background: #3498db;
+			margin: 0 auto 20px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.4s;
+		}
+
+		.service-icon img {
+			width: 50%;
+			height: 50%;
+			object-fit: contain;
+			transition: transform 0.4s;
+		}
+
+		.service-card:hover .service-icon {
+			background: #2ecc71;
+		}
+
+		.service-card:hover .service-icon img {
+			transform: rotate(20deg) scale(1.1);
+		}
+
+		.service-card h3 {
+			font-size: 24px;
+			margin-bottom: 15px;
+			color: #333;
+			font-weight: bold;
+		}
+
+		.service-card p {
+			font-size: 16px;
+			color: #555;
+		}
+
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 30px;
+			justify-content: center;
+		}
+
+		.col-md-3 {
+			flex: 0 0 calc(25% - 30px);
+			max-width: calc(25% - 30px);
+			box-sizing: border-box;
+		}
+
+		@media (max-width: 991px) {
+			.col-md-3 {
+				flex: 0 0 calc(50% - 30px);
+				max-width: calc(50% - 30px);
+			}
+		}
+
+		@media (max-width: 575px) {
+			.col-md-3 {
+				flex: 0 0 100%;
+				max-width: 100%;
+			}
+		}
+
+		/* login sub dorpdown*/
+
+		.menu,
+		.dropdown,
+		.sub-dropdown {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.menu li {
+			position: relative;
+			display: inline-block;
+		}
+
+		.menu li a {
+			display: block;
+			padding: 10px 15px;
+			text-decoration: none;
+			color: #000;
+		}
+
+		.has-children .dropdown,
+		.has-children .sub-dropdown {
+			display: none;
+			position: absolute;
+			background: #fff;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+			min-width: 160px;
+			z-index: 1000;
+		}
+
+		.has-children:hover>.dropdown {
+			display: block;
+			top: 100%;
+			left: 0;
+		}
+
+		.dropdown .has-children:hover>.sub-dropdown {
+			display: block;
+			top: 0;
+			text-align: center;
+		}
+
+		.dropdown li {
+			position: relative;
+		}
+
+		.dropdown a:hover {
+			background-color: #f0f0f0;
+		}
+
+		.floating-action {
+			position: fixed;
+			bottom: 2rem;
+			right: 2rem;
+			width: 60px;
+			height: 60px;
+			background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+			color: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+			cursor: pointer;
+			z-index: 100;
+			transition: all 0.3s;
+		}
+
+		.floating-action:hover {
+			transform: scale(1.1) rotate(10deg);
+		}
+
+		/* Animation classes */
+		.bounce-in {
+			animation: bounceIn 0.5s;
+		}
+
+		.floating-action img {
+			width: 90px;
+			height: 90px;
+		}
+
+		/* chatboard */
+		/* Modal Base */
+
+		.chatbot-modal {
+
+			display: none;
+
+			position: fixed;
+
+			z-index: 9999;
+
+			left: 0;
+
+			top: 0;
+
+			width: 100%;
+
+			height: 100%;
+
+			background-color: rgba(0, 0, 0, 0.5);
+
+		}
+
+		/* Modal Content Box */
+
+		.chatbot-modal-content {
+
+			background-color: #fff;
+
+			margin: 5% auto;
+
+			padding: 0;
+
+			width: 80%;
+
+			max-width: 600px;
+
+			border-radius: 15px;
+
+			overflow: hidden;
+
+			position: relative;
+
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+		}
+
+		/* Close Button */
+
+		.close-btn {
+
+			position: absolute;
+
+			top: 10px;
+
+			right: 15px;
+
+			font-size: 28px;
+
+			font-weight: bold;
+
+			color: #444;
+
+			cursor: pointer;
+
+			z-index: 1;
+
+		}
+
+		/* Animation Keyframes */
+
+		@keyframes popupFadeIn {
+
+			from {
+
+				opacity: 0;
+
+				transform: scale(0.8);
+
+			}
+
+			to {
+
+				opacity: 1;
+
+				transform: scale(1);
+
+			}
+
+		}
+
+		/* Apply Animation */
+
+		.animate-popup {
+
+			animation: popupFadeIn 0.4s ease-out;
+
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="site-mobile-menu site-navbar-target">
+		<div class="site-mobile-menu-header">
+			<div class="site-mobile-menu-close">
+				<span class="icofont-close js-menu-toggle"></span>
+			</div>
+		</div>
+		<div class="site-mobile-menu-body"></div>
+	</div>
+
+	<nav class="site-nav">
+		<div class="container">
+			<div class="menu-bg-outer">
+				<div class="menu-bg-inner">
+					<div class="site-navigation">
+						<a href="index.html" class="logo">
+							<img src="logo.png" alt="Logo" height="40" width="90">
+						</a>
+
+
+						<ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+							<ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+								<li class="active"><a href="index.html">Home</a></li>
+								<li class="has-children">
+									<a href="properties.html">Properties</a>
+									<ul class="dropdown">
+										<li><a href="Residential.html">Buy (Residential, Commercial, Land)</a></li>
+										<li><a href="Sell.html">Sell (Residential, Commercial, Land)</a></li>
+										<li><a href="OfficeSpaces.html">Rent (Apartments, Villas, Office Spaces) </a>
+										</li>
+										<li><a href="Commercial.html">Commercial </a></li>
+										<li><a href="LuxuryProperties.html">Luxury Properties </a></li>
+										<!-- <li class="has-children">
+											<a href="#">Dropdown</a>
+											<ul class="dropdown">
+												<li><a href="#">Sub Menu One</a></li>
+												<li><a href="#">Sub Menu Two</a></li>
+												<li><a href="#">Sub Menu Three</a></li>
+											</ul>
+										</li> -->
+									</ul>
+								</li>
+								<li><a href="about.html">About Us</a></li>
+
+
+								<li class="has-children">
+									<a href=" services.html">Services</a>
+
+									<ul class="dropdown">
+										<li><a href="property valuation.html">Property Valuation </a></li>
+										<li><a href="legal assistance.html">Legal Assistance</a></li>
+										<li><a href="project marketing.html">Project Marketing </a></li>
+										<li><a href="Property Management.html">Property Management</a></li>
+
+									</ul>
+								</li>
+
+								<li><a href="blog.html">Blog</a></li>
+
+
+								<li><a href="contact.html">Contact Us</a></li>
+
+
+
+								<!-- <ul class="menu">
+									<li class="has-children">
+										<a href="login.html"><img src="https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png" alt="Description" width="30" height="30"></a>
+									  <a href="#">Login</a>
+									  <ul class="dropdown">
+										<li><a href="UserRegistration.html">Super Admin</a></li>
+										<li><a href="Agent.html">Admin</a></li>
+										<li class="has-children">
+										  <a href="#">User</a>
+										  <ul class="dropdown sub-dropdown">
+											<li><a href="buyer-login.html">Buyer</a></li>
+											<li><a href="seller-login.html">Seller</a></li>
+											<li><a href="agent-login.html">Agent</a></li>
+										  </ul>
+										</li>
+									  </ul>
+									</li>
+								  </ul> -->
+
+
+
+
+								<!-- <li class="has-children">
+									<img src="https://cdn-icons-png.flaticon.com/512/484/484633.png
+			 " alt="Description" width="30" height="30">
+									<ul class="dropdown">
+										<li><a href="#"> English</a></li>
+										<li><a href="#"> Marathi </a></li>
+										<li><a href="#"> Hindi</a></li>
+								</li> -->
+
+
+								<a href="#"
+									class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none"
+									data-toggle="collapse" data-target="#main-navbar">
+									<span></span>
+								</a>
+
+								<li class="has-children">
+									<a href="#"><img src="images\login image.png" alt="Description" width="30"
+											height="30"></a>
+
+									<ul class="dropdown">
+										<li><a href="superadmin.html">Super Admin</a></li>
+										<li><a href="Adminlogin.html">Admin</a></li>
+
+										<li class="has-children">
+											<a href="UserRegistration.html">User</a>
+											<ul class="sub-dropdown" style="left: auto; right: 100%; top: 0;">
+												<li><a href="buyer.html">Buyer</a></li>
+												<li><a href="sellerdashboard.html">Seller</a></li>
+												<li><a href="Agent.html">Agent</a></li>
+											</ul>
+										</li>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<div class="hero">
+		<div class="hero-slide">
+			<div class="img overlay" style="background-image: url('images/banner-bg2.jpg')">
+			</div>
+			<div class="img overlay"
+				style="background-image: url('https://cdn.pixabay.com/photo/2019/01/30/08/14/house-3963987_640.jpg')">
+			</div>
+			<div class="img overlay"
+				style="background-image: url('https://www.signatureglobal.in/blog/wp-content/uploads/2023/09/Industry-News-19th-sep.jpg')">
+			</div>
+			<div class="img overlay" style="background-image: url('images/banner-bg3.jpg')">
+			</div>
+			<div class="img overlay" style="background-image: url('images/banner-bg.jpg')"> </div>
+		</div>
+
+		<div class="container">
+			<div class="row justify-content-center align-items-center">
+				<div class="col-lg-9 text-center">
+					<h1 class="heading" data-aos="fade-up">
+						Discover Your Dream Home the Smart Way
+					</h1>
+					<!-- <form action="#" class="narrow-w form-search d-flex align-items-stretch mb-3" data-aos="fade-up"
+						data-aos-delay="200">
+						<input type="text" class="form-control px-4" placeholder="" />
+						<button type="submit" class="btn btn-primary">Search</button>
+					</form> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="section">
+
+		<div class="row">
+			<div class="col-12">
+				<div class="slider-container">
+					<div class="slider-track" id="slider">
+						<!-- Card 1 -->
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">2 BHK – Airoli</div>
+								<div class="card-price">₹78 Lakhs</div>
+								<div class="features">
+									<span>1000 sq.ft</span><span>Gym</span><span>Parking</span>
+
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<!-- Card 2 -->
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">3 BHK – Andheri</div>
+								<div class="card-price">₹1.2 Cr</div>
+								<div class="features">
+									<span>1200 sq.ft</span><span>Security</span><span>Balcony</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<!-- Card 3 -->
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">1 BHK – Dombivli</div>
+								<div class="card-price">₹42 Lakhs</div>
+								<div class="features">
+									<span>650 sq.ft</span><span>Lift</span><span>Backup</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<!-- Card 4 -->
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">4 BHK – Powai</div>
+								<div class="card-price">₹2.3 Cr</div>
+								<div class="features">
+									<span>1800 sq.ft</span><span>Clubhouse</span><span>Lake View</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<!-- Repeat cards for smooth scroll effect -->
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">2 BHK – Airoli</div>
+								<div class="card-price">₹78 Lakhs</div>
+								<div class="features">
+									<span>1000 sq.ft</span><span>Gym</span><span>Parking</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">1 BHK – Dombivli</div>
+								<div class="card-price">₹42 Lakhs</div>
+								<div class="features">
+									<span>650 sq.ft</span><span>Lift</span><span>Backup</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">1 BHK – Dombivli</div>
+								<div class="card-price">₹42 Lakhs</div>
+								<div class="features">
+									<span>650 sq.ft</span><span>Lift</span><span>Backup</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<div class="card">
+							<img src="images/property2-1.jpg" />
+							<div class="card-content">
+								<div class="card-title">3 BHK – Andheri</div>
+								<div class="card-price">₹1.2 Cr</div>
+								<div class="features">
+									<span>1200 sq.ft</span><span>Security</span><span>Balcony</span>
+								</div>
+								<a href="Residential.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Buy</a>
+								<a href="Sell.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Sell</a>
+								<a href="OfficeSpaces.html" onclick=""
+									style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Rent</a>
+
+							</div>
+						</div>
+
+						<!-- You can keep repeating more cards for a better loop effect -->
+					</div>
+				</div>
+
+
+
+			</div>
+		</div>
+	</div>
+	<section id="services">
+		<div class="container">
+			<div class="row">
+
+				<!-- Service 1 -->
+				<div class="col-md-3" data-aos="zoom-in">
+					<div class="service-card">
+						<div class="service-icon">
+							<img src="images/5.png" alt="New Projects">
+						</div>
+						<h3>New Projects</h3>
+						<p>Explore groundbreaking developments that blend luxury with unparalleled comfort.</p>
+					</div>
+				</div>
+
+				<!-- Service 2 -->
+				<div class="col-md-3" data-aos="zoom-in" data-aos-delay="100">
+					<div class="service-card">
+						<div class="service-icon">
+							<img src="images/1.png" alt="Plots for Sale">
+						</div>
+						<h3>Plots for Sale</h3>
+						<p>Find your perfect piece of land in exclusive, premium locations, ready for development.</p>
+					</div>
+				</div>
+
+				<!-- Service 3 -->
+				<div class="col-md-3" data-aos="zoom-in" data-aos-delay="200">
+					<div class="service-card">
+						<div class="service-icon">
+							<img src="images/2.png" alt="Luxury Villas">
+						</div>
+						<h3>Luxury Villas</h3>
+						<p>Experience world-class architecture and amenities with our luxury villas.</p>
+					</div>
+				</div>
+
+				<!-- Service 4 -->
+				<div class="col-md-3" data-aos="zoom-in" data-aos-delay="300">
+					<div class="service-card">
+						<div class="service-icon">
+							<img src="images/3.png" alt="Rent a House">
+						</div>
+						<h3>Rent a House</h3>
+						<p>Comfortable and stylish rental options for your ideal, perfect living experience.</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+	</div>
+
+
+
+
+
+
+	<div class="container">
+		<div class="row justify-content-center align-items-center">
+			<div class="col-lg-9 text-center mt-5">
+				<h1 class="heading" data-aos="fade-up">Residential</h1>
+			</div>
+		</div>
+	</div>
+
+	<div
+		style="font-family: 'Arial', sans-serif; background: #f4f6f8; padding: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+		<!-- Popup -->
+		<div id="popup"
+			style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 10;">
+			<div
+				style="background: white; padding: 25px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; max-width: 320px; width: 90%;">
+				<img id="agentPhoto" src="" alt="Agent Photo"
+					style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+				<h2 id="agentName"></h2>
+				<p><strong>Email:</strong> <span id="agentEmail"></span></p>
+				<p><strong>Phone:</strong> <span id="agentPhone"></span></p>
+				<button onclick="document.getElementById('popup').style.display='none'"
+					style="margin-top: 15px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+			</div>
+		</div>
+
+		<!-- Repeat Property Cards Below -->
+		<!-- Card Template -->
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images/property1-1.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images/property1-2.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images/property1-3.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">2 BHK – Airoli, Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹78 Lakhs</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1000 sq.ft • Parking • Gym • Garden
+				</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Amit Deshmukh', 'amit.agent@gmail.com', '+91 9876543210', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+
+			</div>
+		</div>
+
+		<!-- Card 2 -->
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images/property2-1.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images/property2-2.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images/property2-3.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security • Balcony
+				</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent2.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+		<!-- Card 3 -->
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images\hall5.webp"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\kitchen5.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\bath5.avif"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">1 BHK – Dombivli, Thane</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹42 Lakhs</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">650 sq.ft • Lift • Power Backup</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Nikhil Joshi', 'nikhil.joshi@homes.com', '+91 9923456781', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+		<!-- Card 4 -->
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images\hall6.webp"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\kitchen6.avif"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\bath5.avif"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">4 BHK – Powai, Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹2.3 Cr</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1800 sq.ft • Lake View • Clubhouse</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Ritu Kapoor', 'ritu.kapoor@luxuryhomes.in', '+91 9876001122', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+		<!-- Card 5 -->
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images\hall1.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\kitchen1.avif"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\bath1.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">Studio – Navi Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹30 Lakhs</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">450 sq.ft • Metro Access • Security
+				</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Suresh Pawar', 'suresh.pawar@dealz.com', '+91 9812345678', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images\hall2.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\kitchen2.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\bath2.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">Studio – Navi Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹30 Lakhs</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">450 sq.ft • Metro Access • Security
+				</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Suresh Pawar', 'suresh.pawar@dealz.com', '+91 9812345678', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images\hall3.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\kitchen3.webp"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\bath3.webp"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">Studio – Navi Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹30 Lakhs</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">450 sq.ft • Metro Access • Security
+				</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Suresh Pawar', 'suresh.pawar@dealz.com', '+91 9812345678', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+
+		<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+			onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+			<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+				<img class="slide-img active" src="images\hall4.webp"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\kitchen5.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				<img class="slide-img" src="images\bath4.jpg"
+					style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+			</div>
+			<div style="padding: 15px;">
+				<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">Studio – Navi Mumbai</h3>
+				<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹30 Lakhs</div>
+				<div style="font-size: 14px; color: #555; margin-bottom: 15px;">450 sq.ft • Metro Access • Security
+				</div>
+				<a href="javascript:void(0)"
+					onclick="showAgentPopup('Suresh Pawar', 'suresh.pawar@dealz.com', '+91 9812345678', 'images/agent1.jpg')"
+					style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+					Agent</a>
+			</div>
+		</div>
+
+
+		<div class="container">
+			<div class="row justify-content-center align-items-center">
+				<div class="col-lg-9 text-center mt-5">
+					<h1 class="heading" data-aos="fade-up">LuxuryProperties</h1>
+				</div>
+			</div>
+		</div>
+
+		<div
+			style="font-family: 'Arial', sans-serif; background: #f4f6f8; padding: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+			<!-- Popup -->
+			<div id="popup"
+				style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 10;">
+				<div
+					style="background: white; padding: 25px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; max-width: 320px; width: 90%;">
+					<img id="agentPhoto" src="" alt="Agent Photo"
+						style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+					<h2 id="agentName"></h2>
+					<p><strong>Email:</strong> <span id="agentEmail"></span></p>
+					<p><strong>Phone:</strong> <span id="agentPhone"></span></p>
+					<button onclick="document.getElementById('popup').style.display='none'"
+						style="margin-top: 15px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+				</div>
+			</div>
+
+			<!-- Repeat Property Cards Below -->
+			<!-- Card Template 1-->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary10.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary11.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary12.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">2 BHK – Airoli, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹78 Lakhs</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1000 sq.ft • Parking • Gym • Garden
+					</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Amit Deshmukh', 'amit.agent@gmail.com', '+91 9876543210', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Add 5 More Cards Below -->
+
+			<!-- Card 2 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary1.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary2.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary4.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent2.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Card 3 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxary5.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary6.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary7.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent2.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Card 4 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary8.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary9.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary10.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent2.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Card 5 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary11.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary13.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary12.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent2.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+			<!-- Card 6 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary14.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary15.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary16.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent2.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary17.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary18.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary19.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary20.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary21.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary22.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row justify-content-center align-items-center">
+				<div class="col-lg-9 text-center mt-5">
+					<h1 class="heading" data-aos="fade-up">Commercial</h1>
+				</div>
+			</div>
+		</div>
+
+		<div
+			style="font-family: 'Arial', sans-serif; background: #f4f6f8; padding: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+			<!-- Popup -->
+			<div id="popup"
+				style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 10;">
+				<div
+					style="background: white; padding: 25px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; max-width: 320px; width: 90%;">
+					<img id="agentPhoto" src="" alt="Agent Photo"
+						style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+					<h2 id="agentName"></h2>
+					<p><strong>Email:</strong> <span id="agentEmail"></span></p>
+					<p><strong>Phone:</strong> <span id="agentPhone"></span></p>
+					<button onclick="document.getElementById('popup').style.display='none'"
+						style="margin-top: 15px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+				</div>
+			</div>
+
+			<!-- Repeat Property Cards Below -->
+			<!-- Card Template 1-->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images/property2-1.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images/property2-2.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images/property2-3.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Add 5 More Cards Below -->
+
+			<!-- Card 2 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary1.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary2.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary4.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Card 3 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxary5.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary6.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary7.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Card 4 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary8.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary9.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary10.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+
+			<!-- Card 5 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary11.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary13.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary12.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+			<!-- Card 6 -->
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary14.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary15.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary16.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary17.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary18.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary19.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+			<div style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease; width: 320px;"
+				onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+				<div style="position: relative; width: 100%; height: 200px; overflow: hidden;">
+					<img class="slide-img active" src="images\luxuary20.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 1; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary21.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+					<img class="slide-img" src="images\luxuary22.jpg"
+						style="position: absolute; width: 100%; height: 200px; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out;">
+				</div>
+				<div style="padding: 15px;">
+					<h3 style="font-size: 1.2rem; margin-bottom: 5px; color: #333;">3 BHK – Andheri, Mumbai</h3>
+					<div style="font-weight: bold; color: #007bff; margin-bottom: 8px;">₹1.2 Cr</div>
+					<div style="font-size: 14px; color: #555; margin-bottom: 15px;">1200 sq.ft • Lift • Security •
+						Balcony</div>
+					<a href="javascript:void(0)"
+						onclick="showAgentPopup('Priya Mehta', 'priya.mehta@propertydeal.com', '+91 9001234567', 'images/agent1.jpg')"
+						style="display: inline-block; padding: 10px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 8px;">Contact
+						Agent</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+
+	<section id="work" class="page-section page">
+		<div class="container text-center">
+			<div class="heading">
+				<h2>Projects</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+			</div>
+			<div id="portfolio">
+				<ul class="filters list-inline">
+					<li><a class="active" data-filter="*" href="#">All</a></li>
+					<li><a data-filter=".photography" href="#">New Projects</a></li>
+					<li><a data-filter=".branding" href="#">Villas</a></li>
+					<li><a data-filter=".web" href="#">Plots</a></li>
+				</ul>
+
+				<ul class="items list-unstyled clearfix">
+					<li class="item branding">
+						<figure class="effect-bubba">
+							<img src="images\img_1.jpg" alt="Villa 1">
+							<figcaption>
+								<h2>Villa</h2>
+								<a href="#">View more</a>
+							</figcaption>
+						</figure>
+					</li>
+					<li class="item photography">
+						<figure class="effect-bubba">
+							<img src="images\img_2.jpg" alt="New Project 1">
+							<figcaption>
+								<h2>New Project</h2>
+								<a href="#">View more</a>
+							</figcaption>
+						</figure>
+					</li>
+					<li class="item web">
+						<figure class="effect-bubba">
+							<img src="images\img_3.jpg" alt="Plot 1">
+							<figcaption>
+								<h2>Plot</h2>
+								<a href="#">View more</a>
+							</figcaption>
+						</figure>
+					</li>
+					<li class="item branding">
+						<figure class="effect-bubba">
+							<img src="images\img_4.jpg" alt="Villa 2">
+							<figcaption>
+								<h2>Villa</h2>
+								<a href="#">View more</a>
+							</figcaption>
+						</figure>
+					</li>
+					<li class="item branding">
+						<figure class="effect-bubba">
+							<img src="images\img_5.jpg" alt="Villa 2">
+							<figcaption>
+								<h2>Villa</h2>
+								<a href="#">View more</a>
+							</figcaption>
+						</figure>
+					</li>
+					<li class="item web">
+						<figure class="effect-bubba">
+							<img src="images\img_6.jpg" alt="Plot 2">
+							<figcaption>
+								<h2>Plot</h2>
+								<a href="#">View more</a>
+							</figcaption>
+						</figure>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Filtering Script -->
+	<script>
+		$(document).ready(function () {
+			$('.filters a').click(function (e) {
+				e.preventDefault();
+				var filterValue = $(this).attr('data-filter');
+				$('.filters a').removeClass('active');
+				$(this).addClass('active');
+				if (filterValue == '*') {
+					$('.items .item').fadeIn();
+				} else {
+					$('.items .item').hide();
+					$('.items ' + filterValue).fadeIn();
+				}
+			});
+		});
+	</script>
+
+
+
+	<div class="section sec-testimonials">
+		<div class="container">
+			<div class="row mb-5 align-items-center">
+				<div class="col-md-6">
+					<h2 class="font-weight-bold heading text-primary mb-4 mb-md-0">
+						Customer Says
+					</h2>
+				</div>
+				<div class="col-md-6 text-md-end">
+					<div id="testimonial-nav">
+						<span class="prev" data-controls="prev">Prev</span>
+
+						<span class="next" data-controls="next">Next</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4"></div>
+			</div>
+			<div class="testimonial-slider-wrap">
+				<div class="testimonial-slider">
+					<div class="item">
+						<div class="testimonial">
+							<img src="images\imageforR.png" alt="Image" class="img-fluid rounded-circle w-25 mb-4" />
+							<div class="rate">
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+							</div>
+							<h3 class="h5 text-primary mb-4">Rohit Bhagat</h3>
+							<blockquote>
+								<p>
+									&ldquo;It has been a remarkable experience collaborating with this team. Their
+									professionalism,
+									attention to detail, and commitment to excellence were evident throughout the entire
+									process. The
+									outcome not only met but exceeded our expectations.&rdquo;
+								</p>
+							</blockquote>
+							<p class="text-black-50">Developer, Co-founder</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="testimonial">
+							<img src="images\imageforR.png" alt="Image" class="img-fluid rounded-circle w-25 mb-4" />
+							<div class="rate">
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+							</div>
+							<h3 class="h5 text-primary mb-4">Rohan Jain</h3>
+							<blockquote>
+								<p>
+									&ldquo;From the initial consultation to the final delivery, the team demonstrated
+									exceptional skill
+									and reliability. Their responsiveness and clarity in communication made the entire
+									collaboration
+									seamless.&rdquo;
+								</p>
+							</blockquote>
+							<p class="text-black-50">Date analyst, Co-founder</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="testimonial">
+							<img src="images\imageforA.png" alt="Image" class="img-fluid rounded-circle w-25 mb-4" />
+							<div class="rate">
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+							</div>
+							<h3 class="h5 text-primary mb-4">Aditi Rathore</h3>
+							<blockquote>
+								<p>
+									&ldquo;From the initial consultation to the final delivery, the team demonstrated
+									exceptional skill
+									and reliability. Their innovative approach and dedication to quality stood out at
+									every stage of the
+									project.&rdquo;
+								</p>
+							</blockquote>
+							<p class="text-black-50">Designer, Co-founder</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="testimonial">
+							<img src="images\imageforA.png" alt="Image" class="img-fluid rounded-circle w-25 mb-4" />
+							<div class="rate">
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+								<span class="icon-star text-warning"></span>
+							</div>
+							<h3 class="h5 text-primary mb-4">Akash Gupta</h3>
+							<blockquote>
+								<p>
+									&ldquo;From the initial consultation to the final delivery, the team demonstrated
+									exceptional skill
+									and reliability. Their attention to detail and commitment to meeting tight deadlines
+									were truly
+									impressive.&rdquo;
+								</p>
+							</blockquote>
+							<p class="text-black-50">Software Engineer, Co-founder</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<footer class="site-footer ">
+		<div class="container">
+			<div class="row justify-content-between text-start gy-4">
+
+				<!-- Contact -->
+				<div class="col-12 col-md-4 col-lg-4">
+					<div class="widget">
+						<h3>Contact</h3>
+						<address>
+							Office No: 11, Third Floor,<br>
+							QuantumSoft Technologies,<br>
+							World Trade Center, A Wing,<br>
+							Fountain Road, CityVista, Kharadi,<br>
+							Pune, Maharashtra 411014
+						</address>
+						<ul class="list-unstyled links">
+							<li><a href="tel:+917498857371">+91-7498857371</a></li>
+							<li><a
+									href="mailto:contact@quantumsofttechnologies.com">contact@quantumsofttechnologies.com</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Sources -->
+				<div class="col-12 col-md-4 col-lg-4">
+					<div class="widget">
+						<h3>Sources</h3>
+						<div class="d-flex justify-content-between flex-wrap gap-3">
+							<ul class="list-unstyled links me-3">
+								<li><a href="about.html">About Us</a></li>
+								<li><a href="services.html">Services</a></li>
+								<li><a href="blog.html">Blog</a></li>
+								<li><a href="vision & mission.html"> vision & mission</a></li>
+
+								<li><a href="Terms & Condition.html">Terms & Condition</a></li>
+								<li><a href="Terms & Condition.html">Privacy</a></li>
+							</ul>
+							<ul class="list-unstyled links">
+								<!-- <li><a href="#">Partners</a></li>
+					<li><a href="#">Business</a></li> -->
+								<li><a href="Careers.html">Careers</a></li>
+								<li><a href="FAQ.html">FAQ</a></li>
+								<li><a href="Creative.html">Creative</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<!-- Links & Social -->
+				<div class="col-12 col-md-4 col-lg-3">
+					<div class="widget">
+						<h3>Links</h3>
+						<ul class="list-unstyled links">
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+						<ul class="list-unstyled social d-flex gap-3 mt-3">
+							<li><a href="#"><span class="icon-instagram"></span></a></li>
+							<li><a href="#"><span class="icon-twitter"></span></a></li>
+							<li><a href="#"><span class="icon-facebook"></span></a></li>
+							<li><a href="#"><span class="icon-linkedin"></span></a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Footer Bottom -->
+			<div class="row mt-5">
+				<div class="col-12 text-center small text-muted">
+					<div>
+						Distributed by
+						<a href="https://www.quantumsofttechnologies.com/" target="_blank">QuantumSoft Technologies</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<!-- /.site-footer -->
+
+	<!-- <div class="floating-action pulse">
+		<a href="realchatbot/chatbot_index.html">
+			<img src="./images/Chatbot_logo.png" alt="Chatbot Icon">
+		</a>
+	</div> --><!-- Floating Chatbot Icon -->
+	<div class="floating-action pulse">
+		<a href="#" id="openChatbotPopup">
+			<img src="./images/chatbot_logo.png" alt="Chatbot Icon">
+		</a>
+	</div>
+
+	<!-- Chatbot Modal -->
+	<div id="chatbotModal" class="chatbot-modal">
+		<div class="chatbot-modal-content animate-popup">
+			<span class="close-btn">&times;</span>
+			<iframe src="realchatbot\chatbot_index.html" width="100%" height="500px" frameborder="0"></iframe>
+		</div>
+	</div>
+
+	<!-- Preloader -->
+	<div id="overlayer"></div>
+	<div class="loader">
+		<div class="spinner-border" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+	</div>
+
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/tiny-slider.js"></script>
+	<script src="js/aos.js"></script>
+	<script src="js/navbar.js"></script>
+	<script src="js/counter.js"></script>
+	<script src="js/custom.js"></script>
+
+	<!-- Swiper JS + CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+
+
+	<script>
+		const swiper = new Swiper('.industrySwiper', {
+			slidesPerView: 1,
+			spaceBetween: 20,
+			loop: true,
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+			breakpoints: {
+				640: {
+					slidesPerView: 2,
+				},
+				768: {
+					slidesPerView: 3,
+				},
+				1024: {
+					slidesPerView: 4,
+				},
+				1200: {
+					slidesPerView: 5,
+				},
+			}
+		});
+	</script>
+	<!-- JavaScript -->
+	<script> function showAgentPopup(name, email, phone, photoUrl) {
+			document.getElementById("agentName").textContent = name;
+			document.getElementById("agentEmail").textContent = email;
+			document.getElementById("agentPhone").textContent = phone;
+			document.getElementById("agentPhoto").src = photoUrl;
+			document.getElementById("popup").style.display = "flex";
+		}
+
+		// Slideshow
+		document.querySelectorAll("div[style*='slideshow']").forEach(container => {
+			const imgs = container.querySelectorAll('.slide-img');
+			let index = 0;
+			setInterval(() => {
+				imgs[index].style.opacity = 0;
+				imgs[index].classList.remove("active");
+				index = (index + 1) % imgs.length;
+				imgs[index].style.opacity = 1;
+				imgs[index].classList.add("active");
+			}, 3000);
+		});</script>
+	<script>
+		function showAgentPopup(name, email, phone, photoUrl) {
+			document.getElementById("agentName").textContent = name;
+			document.getElementById("agentEmail").textContent = email;
+			document.getElementById("agentPhone").textContent = phone;
+			document.getElementById("agentPhoto").src = photoUrl;
+			document.getElementById("popup").style.display = "flex";
+		}
+
+		// Image Slideshow for Each Card
+		document.querySelectorAll("div[style*='position: relative']").forEach(container => {
+			const slides = container.querySelectorAll('.slide-img');
+			if (slides.length < 2) return; // Skip if only one image
+
+			let index = 0;
+			setInterval(() => {
+				slides[index].style.opacity = 0;
+				index = (index + 1) % slides.length;
+				slides[index].style.opacity = 1;
+			}, 3000);
+		});
+	</script>
+	<!-- JavaScript for Filtering -->
+	<script>
+		document.getElementById("searchForm").addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			const type = document.getElementById("type").value.toLowerCase();
+			const transaction = document.getElementById("transaction").value.toLowerCase();
+			const location = document.getElementById("location").value.toLowerCase();
+
+			const cards = document.querySelectorAll(".property-card");
+
+			cards.forEach(card => {
+				const cardType = card.getAttribute("data-type").toLowerCase();
+				const cardTransaction = card.getAttribute("data-transaction").toLowerCase();
+				const cardLocation = card.getAttribute("data-location").toLowerCase();
+
+				const matchesType = !type || cardType === type;
+				const matchesTransaction = !transaction || cardTransaction === transaction;
+				const matchesLocation = !location || cardLocation.includes(location);
+
+				if (matchesType && matchesTransaction && matchesLocation) {
+					card.style.display = "block";
+				} else {
+					card.style.display = "none";
+				}
+			});
+		});
+	</script>
+	<!-- AOS Animation Script -->
+	<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+	<script>
+		AOS.init({
+			duration: 1200,
+			once: true
+		});
+	</script>
+
+    <!-- chatboard script  -->
+	<script>
+
+		const modal = document.getElementById("chatbotModal");
+	  
+		const openBtn = document.getElementById("openChatbotPopup");
+	  
+		const closeBtn = document.querySelector(".close-btn");
+	   
+		openBtn.addEventListener("click", function (e) {
+	  
+		  e.preventDefault();
+	  
+		  modal.style.display = "block";
+	  
+		});
+	   
+		closeBtn.addEventListener("click", function () {
+	  
+		  modal.style.display = "none";
+	  
+		});
+	   
+		window.addEventListener("click", function (e) {
+	  
+		  if (e.target == modal) {
+	  
+			modal.style.display = "none";
+	  
+		  }
+	  
+		});
+	  </script>
+	  
+	   
+</body>
+
+</html>

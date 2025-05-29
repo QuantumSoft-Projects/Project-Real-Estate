@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Untree.co" />
+  <link rel="shortcut icon" href="favicon.png" />
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap5" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="fonts/icomoon/style.css" />
+  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
+
+  <link rel="stylesheet" href="css/tiny-slider.css" />
+  <link rel="stylesheet" href="css/aos.css" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <title>
+    Quantum Real Estate
+  </title>
+  <style>
+    .legal-service-section {
+      padding: 40px 20px;
+      background-color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+
+    .legal-service-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .legal-service-title {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .legal-service-text {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #555;
+    }
+
+    .legal-service-list {
+      margin-top: 20px;
+      padding-left: 20px;
+    }
+
+    .legal-service-list li {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .legal-service-title {
+        font-size: 26px;
+      }
+
+      .legal-service-text,
+      .legal-service-list {
+        font-size: 16px;
+      }
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f9ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .legal-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .legal-section h1 {
+      font-size: 38px;
+      font-weight: 800;
+      color: #1a2ca1;
+      margin-bottom: 16px;
+    }
+
+    .legal-section p {
+      color: #555;
+      font-size: 17px;
+      max-width: 650px;
+      margin: 0 auto 30px;
+    }
+
+    .btn-explore {
+      background-color: #3c5ff5;
+      color: white;
+      padding: 12px 26px;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 40px;
+    }
+
+    .btn-explore:hover {
+      background-color: #2646d4;
+    }
+
+    .service-boxes {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px 24px;
+      width: 260px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      text-align: left;
+    }
+
+    .service-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1d39c4;
+      margin-bottom: 10px;
+    }
+
+    .service-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .service-boxes {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-mobile-menu site-navbar-target">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="container">
+      <div class="menu-bg-outer">
+        <div class="menu-bg-inner">
+          <div class="site-navigation">
+            <a href="index.html" class="logo">
+              <img src="logo.png" alt="Logo" height="40" width="90">
+            </a>
+
+
+            <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+              <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li class="has-children">
+                  <a href="properties.html">Properties</a>
+                  <ul class="dropdown">
+                    <li><a href="Residential.html">Buy (Residential, Commercial, Land)</a></li>
+                    <li><a href="Sell.html">sell (Residential, Commercial, Land)</a></li>
+                    <li><a href="OfficeSpaces.html">Rent (Apartments, Villas, Office Spaces) </a></li>
+                    <li><a href="Commercial.html">Commercial </a></li>
+                    <li><a href="LuxuryProperties.html">Luxury Properties </a></li>
+                    <!-- <li class="has-children">
+                    <a href="#">Dropdown</a>
+                    <ul class="dropdown">
+                      <li><a href="#">Sub Menu One</a></li>
+                      <li><a href="#">Sub Menu Two</a></li>
+                      <li><a href="#">Sub Menu Three</a></li>
+                    </ul>
+                  </li> -->
+                  </ul>
+                </li>
+                <li><a href="about.html">About Us</a></li>
+
+                <li class="has-children">
+                  <a href=" services.html">Services</a>
+
+                  <ul class="dropdown">
+                    <li><a href="property valuation.html">Property Valuation </a></li>
+                    <li><a href="legal assistance.html">Legal Assistance</a></li>
+                    <li><a href="project marketing.html">Project Marketing </a></li>
+                    <li><a href="Property Management.html">Property Management</a></li>
+
+                  </ul>
+                </li>
+
+                <li><a href="blog.html">Blog</a></li>
+
+                <li><a href="contact.html">Contact Us</a></li>
+
+
+                <li class="has-children">
+									<a href="login.html"><img src="images\login image.png" alt="Description" width="30"
+											height="30"></a>
+
+									<ul class="dropdown">
+										<li><a href="Residential.html">Super Admin</a></li>
+										<li><a href="Sell.html">Admin</a></li>
+
+										<li class="has-children">
+											<a href="#">User</a>
+											<ul class="sub-dropdown" style="left: auto; right: 100%; top: 0;">
+												<li><a href="buyerdashboard.html">Buyer</a></li>
+												<li><a href="sellerdashboard.html">Seller</a></li>
+												<li><a href="agentdashboard.html">Agent</a></li>
+											</ul>
+										</li>
+
+              </ul>
+              <a href="#"
+                class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none"
+                data-toggle="collapse" data-target="#main-navbar">
+                <span></span>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="hero page-inner overlay"
+    style="background-image: url('https://img.freepik.com/premium-photo/stylized-blue-white-houses-arranged-row-blue-gradient-background_276930-6237.jpg')">
+    <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-lg-9 text-center mt-5">
+          <h1 class="heading" data-aos="fade-up">Legal Assistance
+          </h1>
+
+
+
+          <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+            <ol class="breadcrumb text-center justify-content-center">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active text-white-50" aria-current="page">
+                Legal Assistance
+
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+
+    <section class="legal-service-section">
+      <div class="legal-service-container">
+        <h2 class="legal-service-title">Legal Assistance
+        </h2>
+        <p class="legal-service-text">
+
+          Real estate transactions can be complex — that’s why we offer reliable Legal Assistance
+          to make the entire process smooth, secure, and transparent.
+          Our experienced legal team ensures your rights are protected and all documents are thoroughly reviewed and
+          compliant with local regulations.
+        </p>
+
+        <section class="legal-section">
+          <h1>Real Estate VR + Legal Assistance
+          </h1>
+          <p>Experience immersive virtual property tours and get trusted legal advice – all on a single platform.</p>
+          <button class="btn-explore">Explore Our Services</button>
+
+
+          <div class="service-boxes">
+            <div class="service-card">
+              <h3>VR Property Tours</h3>
+              <p>Take realistic and immersive tours of homes and commercial spaces using VR technology.</p>
+            </div>
+            <div class="service-card">
+              <h3>Legal Consultation</h3>
+              <p>Get expert legal advice for buying, selling, leasing, or dispute resolution.</p>
+            </div>
+            <div class="service-card">
+              <h3>Document Assistance</h3>
+              <p>End-to-end documentation support handled professionally and efficiently.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section style="padding: 60px 20px; background: #fff; text-align: center;">
+          <h2 style="font-size: 30px; color: #1a2ca1; font-weight: 800; margin-bottom: 20px;">Why Choose Us</h2>
+          <p style="max-width: 650px; margin: 0 auto 40px; font-size: 16px; color: #555;">
+            Our platform brings together innovative technology and professional legal support, ensuring a seamless
+            experience for your real estate journey.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+            <div
+              style="width: 240px; padding: 20px; background: #f5f9ff; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.06);">
+              <h4 style="color: #1d39c4; font-weight: 700; margin-bottom: 10px;">Trusted Experts</h4>
+              <p style="font-size: 14px; color: #666;">Work with certified legal professionals and experienced real
+                estate agents.</p>
+            </div>
+            <div
+              style="width: 240px; padding: 20px; background: #f5f9ff; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.06);">
+              <h4 style="color: #1d39c4; font-weight: 700; margin-bottom: 10px;">Time-Saving</h4>
+              <p style="font-size: 14px; color: #666;">Skip the long legal process with ready-to-use document templates
+                and guidance.</p>
+            </div>
+            <div
+              style="width: 240px; padding: 20px; background: #f5f9ff; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.06);">
+              <h4 style="color: #1d39c4; font-weight: 700; margin-bottom: 10px;">All-in-One Platform</h4>
+              <p style="font-size: 14px; color: #666;">From property search to legal closure, manage everything in one
+                place.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section style="padding: 60px 20px; background: #eef3ff; text-align: center;">
+          <h2 style="font-size: 30px; color: #1a2ca1; font-weight: 800; margin-bottom: 20px;">Need Legal Help?</h2>
+          <p style="max-width: 600px; margin: 0 auto 30px; font-size: 16px; color: #444;">
+            Reach out to our legal experts now. We’re here to support your property decisions with clarity and
+            confidence.
+          </p>
+          <a href="contact.html"
+            style="background-color: #3c5ff5; color: white; padding: 12px 26px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+            Contact Us
+          </a>
+        </section>
+      </div>
+    </section>
+    <br>
+    <!-- /.untree_co-section -->
+
+    <footer class="site-footer ">
+      <div class="container">
+        <div class="row justify-content-between text-start gy-4">
+
+          <!-- Contact -->
+          <div class="col-12 col-md-4 col-lg-4">
+            <div class="widget">
+              <h3>Contact</h3>
+              <address>
+                Office No: 11, Third Floor,<br>
+                QuantumSoft Technologies,<br>
+                World Trade Center, A Wing,<br>
+                Fountain Road, CityVista, Kharadi,<br>
+                Pune, Maharashtra 411014
+              </address>
+              <ul class="list-unstyled links">
+                <li><a href="tel:+917498857371">+91-7498857371</a></li>
+                <li><a href="mailto:contact@quantumsofttechnologies.com">contact@quantumsofttechnologies.com</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Sources -->
+          <div class="col-12 col-md-4 col-lg-4">
+            <div class="widget">
+              <h3>Sources</h3>
+              <div class="d-flex justify-content-between flex-wrap gap-3">
+                <ul class="list-unstyled links me-3">
+                  <li><a href="about.html">About Us</a></li>
+                  <li><a href="services.html">Services</a></li>
+                  <li><a href="blog.html">Blog</a></li>
+                  <li><a href=" Vision & Mission.html"> Vision & Mission</a></li>
+
+                  <li><a href="Terms & Condition.html">Terms & Condition</a></li>
+                  <li><a href="privacy.html">Privacy</a></li>
+                </ul>
+                <ul class="list-unstyled links">
+                  <!-- <li><a href="#">Partners</a></li>
+                <li><a href="#">Business</a></li> -->
+                  <li><a href="Careers.html">Careers</a></li>
+                  <li><a href="FAQ.html">FAQ</a></li>
+                  <li><a href="Creative.html">Creative</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Links & Social -->
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="widget">
+              <h3>Links</h3>
+              <ul class="list-unstyled links">
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+              </ul>
+              <ul class="list-unstyled social d-flex gap-3 mt-3">
+                <li><a href="#"><span class="icon-instagram"></span></a></li>
+                <li><a href="#"><span class="icon-twitter"></span></a></li>
+                <li><a href="#"><span class="icon-facebook"></span></a></li>
+                <li><a href="#"><span class="icon-linkedin"></span></a></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="row mt-5">
+          <div class="col-12 text-center small text-muted">
+            <div>
+              Distributed by
+              <a href="https://www.quantumsofttechnologies.com/" target="_blank">QuantumSoft Technologies</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- /.site-footer -->
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/tiny-slider.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/counter.js"></script>
+    <script src="js/custom.js"></script>
+</body>
+
+</html>

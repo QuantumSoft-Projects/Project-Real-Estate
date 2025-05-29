@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #dddfeb;
+            --text-color: #3a3b45;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .settings-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section-header h3 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        #settingsForm {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: 200px;
+        }
+
+        .btn:hover {
+            background-color: #3a5bc7;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                padding: 20px;
+            }
+
+            #settingsForm {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .section-header h3 {
+                font-size: 1.5rem;
+            }
+
+            .form-control {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="section-header">
+            <h3>Account Settings</h3>
+        </div>
+        <form id="settingsForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" class="form-control" value="John">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" class="form-control" value="Doe">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-control" value="john.doe@example.com">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" class="form-control" value="(123) 456-7890">
+            </div>
+            <div class="form-group">
+                <label for="password">Change Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter new password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+            </div>
+            <div class="form-group">
+                <label>Notification Preferences</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="emailNotifications" checked> Email notifications</label>
+                    <label><input type="checkbox" id="smsNotifications" checked> SMS notifications</label>
+                    <label><input type="checkbox" id="pushNotifications"> Push notifications</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        // Mock user data
+        const userData = {
+            firstName: "John",
+            lastName: "Doe",
+            email: "john.doe@example.com",
+            phone: "(123) 456-7890",
+            notifications: {
+                email: true,
+                sms: true,
+                push: false
+            }
+        };
+
+        // Initialize form with user data
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('firstName').value = userData.firstName;
+            document.getElementById('lastName').value = userData.lastName;
+            document.getElementById('email').value = userData.email;
+            document.getElementById('phone').value = userData.phone;
+            document.getElementById('emailNotifications').checked = userData.notifications.email;
+            document.getElementById('smsNotifications').checked = userData.notifications.sms;
+            document.getElementById('pushNotifications').checked = userData.notifications.push;
+        });
+
+        // Settings form submission
+        const settingsForm = document.getElementById('settingsForm');
+        settingsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const emailNotifications = document.getElementById('emailNotifications').checked;
+            const smsNotifications = document.getElementById('smsNotifications').checked;
+            const pushNotifications = document.getElementById('pushNotifications').checked;
+
+            // Validate password if changed
+            if (password || confirmPassword) {
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                // In a real app, you would update the password here
+                console.log('Password changed to:', password);
+                
+                // Clear password fields
+                document.getElementById('password').value = '';
+                document.getElementById('confirmPassword').value = '';
+            }
+
+            // Update user data (in a real app, you would send this to a server)
+            userData.firstName = firstName;
+            userData.lastName = lastName;
+            userData.email = email;
+            userData.phone = phone;
+            userData.notifications.email = emailNotifications;
+            userData.notifications.sms = smsNotifications;
+            userData.notifications.push = pushNotifications;
+
+            console.log('Updated user data:', userData);
+            alert('Settings saved successfully!');
+            
+            // In a real app, you might update the UI or redirect here
+            // document.querySelector('.user-profile span').textContent = `${firstName} ${lastName}`;
+        });
+    </script>
+</body>
+</html>

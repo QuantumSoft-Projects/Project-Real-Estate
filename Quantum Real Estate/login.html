@@ -1,0 +1,3231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #4e73df;
+            --success: #1cc88a;
+            --info: #36b9cc;
+            --warning: #f6c23e;
+            --danger: #e74a3b;
+            --secondary: #858796;
+            --light: #f8f9fc;
+            --dark: #5a5c69;
+            --purple: #6f42c1;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fc;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background: #4e73df;
+            color: #fff;
+            transition: all 0.3s;
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #sidebar.active {
+            margin-left: -250px;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #3a5bc7;
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+        }
+
+        #sidebar ul p {
+            color: #fff;
+            padding: 10px;
+        }
+
+        #sidebar ul li a {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        #sidebar ul li a:hover {
+            color: #fff;
+            background: #3a5bc7;
+            transform: translateX(5px);
+        }
+
+        #sidebar ul li.active>a {
+            color: #fff;
+            background: #3a5bc7;
+        }
+
+        #sidebar ul li a i {
+            margin-right: 10px;
+        }
+
+        #sidebar ul ul a {
+            font-size: 0.9em !important;
+            padding-left: 30px !important;
+            background: #3a5bc7;
+        }
+
+        /* Content */
+        #content {
+            width: 100%;
+            min-height: 100vh;
+            transition: all 0.3s;
+            background-color: #f8f9fc;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 15px 10px;
+            background: #fff;
+            border: none;
+            border-radius: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-btn {
+            box-shadow: none;
+            outline: none !important;
+            border: none;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            font-weight: 600;
+        }
+
+        /* Charts */
+        .chart-area {
+            position: relative;
+            height: 20rem;
+            width: 100%;
+        }
+
+        .chart-pie {
+            position: relative;
+            height: 15rem;
+            width: 100%;
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            padding: 0;
+            list-style: none;
+        }
+
+        .activity-feed .feed-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid #e3e6f0;
+            transition: all 0.3s;
+        }
+
+        .activity-feed .feed-item:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+
+        .activity-feed .feed-item:last-child {
+            border-left: 0;
+        }
+
+        .activity-feed .feed-item::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: -7px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .activity-feed .feed-item:hover::after {
+            transform: scale(1.2);
+        }
+
+        .activity-feed .feed-item .feed-date {
+            display: block;
+            position: relative;
+            color: var(--secondary);
+            font-size: 0.85rem;
+        }
+
+        .activity-feed .feed-item .feed-text {
+            position: relative;
+            margin-top: 0.25rem;
+        }
+
+        /* Badges */
+        .badge {
+            font-weight: 500;
+            padding: 0.35em 0.65em;
+            transition: all 0.2s;
+        }
+
+        .badge:hover {
+            transform: translateY(-1px);
+        }
+
+        .badge-purple {
+            background-color: var(--purple);
+            color: white;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fc;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15);
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        /* Forms */
+        .form-control,
+        .form-select {
+            border-radius: 0.3rem;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 0.3rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5bc7;
+            border-color: #3a5bc7;
+            transform: translateY(-2px);
+        }
+
+        /* Tables */
+        .table {
+            border-radius: 0.35rem;
+            overflow: hidden;
+        }
+
+        .table th {
+            background-color: #f8f9fc;
+            font-weight: 600;
+        }
+
+        .table tr {
+            transition: all 0.2s;
+        }
+
+        .table tr:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+                position: fixed;
+                z-index: 1000;
+                height: 100vh;
+            }
+
+            #sidebar.active {
+                margin-left: 0;
+            }
+
+            #sidebarCollapse span {
+                display: none;
+            }
+
+            #content {
+                padding-left: 0;
+            }
+
+            .login-card {
+                margin: 20px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Overlay for mobile sidebar */
+        .overlay {
+            display: none;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Property Images */
+        .property-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.35rem 0.35rem 0 0;
+            transition: all 0.3s;
+        }
+
+        .property-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Loading Spinner */
+        .spinner-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+        }
+
+        .toast {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: none;
+            border-radius: 0.35rem;
+            overflow: hidden;
+        }
+
+        .toast-header {
+            font-weight: 600;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3a5bc7;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Spinner -->
+    <div class="spinner-container" id="spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+        <div class="toast align-items-center text-white bg-success" id="successToast" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="successToastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger" id="errorToast" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="errorToastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page (initially shown) -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card animate__animated animate__fadeIn">
+            <button class="close-btn" id="closeLogin" style="display: none;"><i class="fas fa-times"></i></button>
+            <h2 class="text-center mb-4">Real Estate Login</h2>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Login</button>
+                <div class="text-center mt-3">
+                    <a href="#" id="showRegister" class="text-decoration-none">Register as new user</a>
+                    <span class="mx-2">|</span>
+                    <a href="#" id="forgotPassword" class="text-decoration-none">Forgot password?</a>
+                </div>
+            </form>
+
+            <form id="registerForm" style="display: none;">
+                <button class="close-btn" id="closeRegister"><i class="fas fa-times"></i></button>
+                <h3 class="text-center mb-4">Register</h3>
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phoneNumber">
+                </div>
+
+                <div class="mb-3">
+                    <label for="registerRole" class="form-label">Role</label>
+                    <select class="form-select" id="registerRole" required>
+                        <option value="BUYER">Buyer</option>
+                        <option value="SELLER">Seller</option>
+                        <option value="AGENT">Agent</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea class="form-control" id="bio" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="profilePicture" class="form-label">Profile Picture</label>
+                    <input type="file" class="form-control" id="profilePicture">
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" required>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">Register</button>
+
+                <div class="text-center mt-3">
+                    <a href="#" id="showLogin" class="text-decoration-none">Back to login</a>
+                </div>
+            </form>
+
+            <form id="forgotPasswordForm" style="display: none;">
+                <button class="close-btn" id="closeForgotPassword"><i class="fas fa-times"></i></button>
+                <h3 class="text-center mb-4">Reset Password</h3>
+                <div class="mb-3">
+                    <label for="forgotEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="forgotEmail" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Send Reset Link</button>
+                <div class="text-center mt-3">
+                    <a href="#" id="showLoginFromForgot" class="text-decoration-none">Back to login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard (initially hidden) -->
+    <div id="dashboard" class="wrapper" style="display: none;">
+        <!-- Overlay for mobile sidebar -->
+        <div class="overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <nav id="sidebar" class="active">
+            <div class="sidebar-header">
+                <h3>RealEstatePro</h3>
+                <strong>REP</strong>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="#">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#propertiesSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                        class="dropdown-toggle">
+                        <i class="fas fa-home"></i>
+                        Properties
+                    </a>
+                    <ul class="collapse list-unstyled" id="propertiesSubmenu">
+                        <li>
+                            <a href="#" id="viewProperties">All Properties</a>
+                        </li>
+                        <li>
+                            <a href="#" id="addProperty">Add Property</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" id="viewUsers">
+                        <i class="fas fa-users"></i>
+                        Users
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="viewAgents">
+                        <i class="fas fa-handshake"></i>
+                        Agents
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="viewBookings">
+                        <i class="fas fa-calendar"></i>
+                        Bookings
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="viewMessages">
+                        <i class="fas fa-comments"></i>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="viewReports">
+                        <i class="fas fa-chart-line"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="viewSettings">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span class="ms-2 d-none d-md-inline">Menu</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ms-auto" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button"
+                                    data-bs-toggle="dropdown">
+                                    <i class="fas fa-bell"></i>
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        3
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                                    <li>
+                                        <h6 class="dropdown-header">Notifications</h6>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-home text-primary"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <p class="mb-0">New property added</p>
+                                                    <small class="text-muted">2 minutes ago</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-center" href="#">View all notifications</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                    data-bs-toggle="dropdown">
+                                    <i class="fas fa-envelope"></i>
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        5
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messagesDropdown">
+                                    <li>
+                                        <h6 class="dropdown-header">Messages</h6>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <img src="https://via.placeholder.com/40" alt="User"
+                                                        class="rounded-circle" width="40">
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <p class="mb-0">John Doe: Interested in property #123</p>
+                                                    <small class="text-muted">10 minutes ago</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-center" href="#">View all messages</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                    data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span id="currentUserEmail" class="d-none d-md-inline"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#" id="logoutBtn"><i
+                                                class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div class="container-fluid">
+                <!-- Dashboard Overview -->
+                <div id="dashboardOverview" class="animate__animated animate__fadeIn">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="mb-0">Dashboard Overview</h2>
+                                <div class="d-flex">
+                                    <div class="input-group me-2" style="width: 250px;">
+                                        <input type="text" class="form-control" placeholder="Search...">
+                                        <button class="btn btn-primary" type="button"><i
+                                                class="fas fa-search"></i></button>
+                                    </div>
+                                    <button class="btn btn-primary" id="refreshDashboard">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Total Properties</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalProperties">0
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-home fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-success">Available: <span
+                                                id="availableProperties">0</span></span>
+                                        <span class="badge bg-warning">Pending: <span
+                                                id="pendingProperties">0</span></span>
+                                        <span class="badge bg-danger">Sold: <span id="soldProperties">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Total Users</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalUsers">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">Active: <span id="activeUsers">0</span></span>
+                                        <span class="badge bg-purple">Agents: <span id="totalAgents">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Total Revenue</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRevenue">$0
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-info">Monthly: <span id="monthlyRevenue">$0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Recent Activities</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">5 New</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-bell fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <a href="#" class="small text-decoration-none">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row">
+                        <!-- Monthly Views Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Monthly Property Views</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            <li><a class="dropdown-item" href="#">Export Data</a></li>
+                                            <li><a class="dropdown-item" href="#">Print Chart</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" href="#">Refresh</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="viewsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Type Distribution -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Property Type Distribution</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="propertyTypeChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> Residential
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-danger"></i> Commercial
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-warning"></i> Land
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Properties & Activities -->
+                    <div class="row">
+                        <!-- Recent Properties -->
+                        <div class="col-lg-8 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">Recent Properties</h6>
+                                    <button class="btn btn-sm btn-primary" id="addPropertyFromDashboard">
+                                        <i class="fas fa-plus me-1"></i> Add Property
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="propertyTable" width="100%"
+                                            cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Title</th>
+                                                    <th>Type</th>
+                                                    <th>Status</th>
+                                                    <th>Price</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="propertyTableBody">
+                                                <!-- Filled by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities -->
+                        <div class="col-lg-4 mb-4">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            <li><a class="dropdown-item" href="#">View All</a></li>
+                                            <li><a class="dropdown-item" href="#">Mark All Read</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="activity-feed" id="activityFeed">
+                                        <!-- Filled by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Properties Table View -->
+                <div id="propertiesTableView" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="mb-0">All Properties</h2>
+                                <div>
+                                    <button class="btn btn-primary me-2" id="addPropertyFromTable">
+                                        <i class="fas fa-plus me-1"></i> Add Property
+                                    </button>
+                                    <button class="btn btn-secondary" id="backToDashboardFromProperties">
+                                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Properties</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Property List</h6>
+                            <div class="input-group" style="width: 300px;">
+                                <input type="text" class="form-control" placeholder="Search properties..."
+                                    id="propertySearch">
+                                <button class="btn btn-outline-secondary" type="button" id="propertySearchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="allPropertiesTable" width="100%"
+                                    cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Image</th>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Location</th>
+                                            <th>Price</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="allPropertiesTableBody">
+                                        <!-- Filled by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table View -->
+                <div id="usersTableView" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="mb-0">All Users</h2>
+                                <button class="btn btn-secondary" id="backToDashboardFromUsers">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                                </button>
+                            </div>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Users</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">User List</h6>
+                            <div class="input-group" style="width: 300px;">
+                                <input type="text" class="form-control" placeholder="Search users..." id="userSearch">
+                                <button class="btn btn-outline-secondary" type="button" id="userSearchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <!-- Filled by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agents Table View -->
+                <div id="agentsTableView" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="mb-0">All Agents</h2>
+                                <div>
+                                    <button class="btn btn-primary me-2" id="addAgentFromTable">
+                                        <i class="fas fa-plus me-1"></i> Add Agent
+                                    </button>
+                                    <button class="btn btn-secondary" id="backToDashboardFromAgents">
+                                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                                    </button>
+                                </div>
+                            </div>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Agents</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Agent List</h6>
+                            <div class="input-group" style="width: 300px;">
+                                <input type="text" class="form-control" placeholder="Search agents..." id="agentSearch">
+                                <button class="btn btn-outline-secondary" type="button" id="agentSearchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="agentsTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Photo</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="agentsTableBody">
+                                        <!-- Filled by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Property Modal -->
+    <div class="modal fade" id="addPropertyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Property</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="propertyForm">
+                        <div class="mb-3">
+                            <label for="propertyTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="propertyTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="propertyDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="propertyPrice" class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="propertyPrice" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="propertyType" class="form-label">Type</label>
+                                <select class="form-select" id="propertyType" required>
+                                    <option value="RESIDENTIAL">Residential</option>
+                                    <option value="COMMERCIAL">Commercial</option>
+                                    <option value="LAND">Land</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="propertyStatus" class="form-label">Status</label>
+                                <select class="form-select" id="propertyStatus" required>
+                                    <option value="AVAILABLE">Available</option>
+                                    <option value="PENDING">Pending</option>
+                                    <option value="SOLD">Sold</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="propertyLocation" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="propertyLocation" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="propertyBedrooms" class="form-label">Bedrooms</label>
+                                <input type="number" class="form-control" id="propertyBedrooms">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="propertyBathrooms" class="form-label">Bathrooms</label>
+                                <input type="number" step="0.5" class="form-control" id="propertyBathrooms">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="propertySquareFootage" class="form-label">Square Footage</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="propertySquareFootage">
+                                    <span class="input-group-text">sq ft</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyAddress" class="form-label">Address</label>
+                            <textarea class="form-control" id="propertyAddress" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyYearBuilt" class="form-label">Year Built</label>
+                            <input type="number" class="form-control" id="propertyYearBuilt">
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyFeatures" class="form-label">Features (comma separated)</label>
+                            <input type="text" class="form-control" id="propertyFeatures">
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyAmenities" class="form-label">Amenities (comma separated)</label>
+                            <input type="text" class="form-control" id="propertyAmenities">
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyImages" class="form-label">Images</label>
+                            <input type="file" class="form-control" id="propertyImages" multiple>
+                            <div class="small text-muted">Upload property images (max 5)</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="savePropertyBtn">Save Property</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Property Modal -->
+    <div class="modal fade" id="viewPropertyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewPropertyTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner" id="propertyCarouselInner">
+                                    <!-- Images will be added here -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3" id="viewPropertyPrice"></h4>
+                            <div class="d-flex mb-3">
+                                <span class="badge bg-primary me-2" id="viewPropertyType"></span>
+                                <span class="badge bg-success" id="viewPropertyStatus"></span>
+                            </div>
+                            <p class="mb-3" id="viewPropertyDescription"></p>
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-bed me-2"></i>
+                                        <span id="viewPropertyBedrooms"></span> Beds
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-bath me-2"></i>
+                                        <span id="viewPropertyBathrooms"></span> Baths
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-ruler-combined me-2"></i>
+                                        <span id="viewPropertySquareFootage"></span> sq ft
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Location</h6>
+                                <p id="viewPropertyLocation"></p>
+                                <p id="viewPropertyAddress"></p>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Details</h6>
+                                <p><strong>Year Built:</strong> <span id="viewPropertyYearBuilt"></span></p>
+                                <div id="viewPropertyFeatures"></div>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Amenities</h6>
+                                <div id="viewPropertyAmenities"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editPropertyBtn">Edit Property</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Property Modal -->
+    <div class="modal fade" id="editPropertyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Property</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPropertyForm">
+                        <input type="hidden" id="editPropertyId">
+                        <div class="mb-3">
+                            <label for="editPropertyTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editPropertyTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPropertyDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editPropertyDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editPropertyPrice" class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="editPropertyPrice" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editPropertyType" class="form-label">Type</label>
+                                <select class="form-select" id="editPropertyType" required>
+                                    <option value="RESIDENTIAL">Residential</option>
+                                    <option value="COMMERCIAL">Commercial</option>
+                                    <option value="LAND">Land</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editPropertyStatus" class="form-label">Status</label>
+                                <select class="form-select" id="editPropertyStatus" required>
+                                    <option value="AVAILABLE">Available</option>
+                                    <option value="PENDING">Pending</option>
+                                    <option value="SOLD">Sold</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editPropertyLocation" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="editPropertyLocation" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="editPropertyBedrooms" class="form-label">Bedrooms</label>
+                                <input type="number" class="form-control" id="editPropertyBedrooms">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editPropertyBathrooms" class="form-label">Bathrooms</label>
+                                <input type="number" step="0.5" class="form-control" id="editPropertyBathrooms">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editPropertySquareFootage" class="form-label">Square Footage</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="editPropertySquareFootage">
+                                    <span class="input-group-text">sq ft</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPropertyAddress" class="form-label">Address</label>
+                            <textarea class="form-control" id="editPropertyAddress" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPropertyYearBuilt" class="form-label">Year Built</label>
+                            <input type="number" class="form-control" id="editPropertyYearBuilt">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPropertyFeatures" class="form-label">Features (comma separated)</label>
+                            <input type="text" class="form-control" id="editPropertyFeatures">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPropertyAmenities" class="form-label">Amenities (comma separated)</label>
+                            <input type="text" class="form-control" id="editPropertyAmenities">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="updatePropertyBtn">Update Property</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Agent Modal -->
+    <div class="modal fade" id="addAgentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Agent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="agentForm">
+                        <div class="mb-3">
+                            <label for="agentName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="agentName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="agentEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="agentEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="agentPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="agentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="agentPhone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="agentPhone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="agentBio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="agentBio" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="agentProfilePicture" class="form-label">Profile Picture URL</label>
+                            <input type="text" class="form-control" id="agentProfilePicture">
+                        </div>
+                        <div class="mb-3">
+                            <label for="agentStatus" class="form-label">Status</label>
+                            <select class="form-select" id="agentStatus" required>
+                                <option value="ACTIVE">Active</option>
+                                <option value="INACTIVE">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveAgentBtn">Save Agent</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Agent Modal -->
+    <div class="modal fade" id="viewAgentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewAgentName"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="" id="viewAgentProfilePicture" class="rounded-circle" width="150" height="150"
+                            style="object-fit: cover;">
+                    </div>
+                    <div class="mb-3">
+                        <h6>Contact Information</h6>
+                        <p><i class="fas fa-envelope me-2"></i> <span id="viewAgentEmail"></span></p>
+                        <p><i class="fas fa-phone me-2"></i> <span id="viewAgentPhone"></span></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Status</h6>
+                        <span class="badge" id="viewAgentStatus"></span>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Bio</h6>
+                        <p id="viewAgentBio"></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Properties Listed</h6>
+                        <p id="viewAgentPropertiesCount"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editAgentBtn">Edit Agent</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Agent Modal -->
+    <div class="modal fade" id="editAgentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Agent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editAgentForm">
+                        <input type="hidden" id="editAgentId">
+                        <div class="mb-3">
+                            <label for="editAgentName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="editAgentName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAgentEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="editAgentEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAgentPhone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="editAgentPhone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAgentBio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="editAgentBio" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAgentProfilePicture" class="form-label">Profile Picture URL</label>
+                            <input type="text" class="form-control" id="editAgentProfilePicture">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAgentStatus" class="form-label">Status</label>
+                            <select class="form-select" id="editAgentStatus" required>
+                                <option value="ACTIVE">Active</option>
+                                <option value="INACTIVE">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateAgentBtn">Update Agent</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View User Modal -->
+    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewUserName"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="" id="viewUserProfilePicture" class="rounded-circle" width="150" height="150"
+                            style="object-fit: cover;">
+                    </div>
+                    <div class="mb-3">
+                        <h6>Contact Information</h6>
+                        <p><i class="fas fa-envelope me-2"></i> <span id="viewUserEmail"></span></p>
+                        <p><i class="fas fa-phone me-2"></i> <span id="viewUserPhone"></span></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Role</h6>
+                        <span class="badge" id="viewUserRole"></span>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Status</h6>
+                        <span class="badge" id="viewUserStatus"></span>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Properties Interested In</h6>
+                        <p id="viewUserPropertiesCount"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Global variables
+        let currentUser = null;
+        let properties = [];
+        let users = [];
+        let agents = [];
+        let currentView = 'dashboard';
+
+        // API Base URL
+        const API_BASE_URL = 'http://localhost:8081/api';
+
+        // Toast notifications
+        const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+
+        function showSuccessToast(message) {
+            document.getElementById('successToastMessage').textContent = message;
+            successToast.show();
+        }
+
+        function showErrorToast(message) {
+            document.getElementById('errorToastMessage').textContent = message;
+            errorToast.show();
+        }
+
+        // Show loading spinner
+        function showLoading() {
+            document.getElementById('spinner').style.display = 'flex';
+        }
+
+        // Hide loading spinner
+        function hideLoading() {
+            document.getElementById('spinner').style.display = 'none';
+        }
+
+        // DOM Ready
+        $(document).ready(function () {
+            // Check if user is already logged in
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Verify token and load dashboard
+                verifyTokenAndLoadDashboard(token);
+            } else {
+                // Show login page
+                $('#loginPage').show();
+                $('#dashboard').hide();
+            }
+
+            // Initialize event listeners
+            initEventListeners();
+        });
+
+        function initEventListeners() {
+            // Login/Register toggle
+            $('#showRegister').click(function (e) {
+                e.preventDefault();
+                $('#loginForm').hide();
+                $('#registerForm').show();
+                $('#forgotPasswordForm').hide();
+            });
+
+            $('#showLogin').click(function (e) {
+                e.preventDefault();
+                $('#registerForm').hide();
+                $('#loginForm').show();
+                $('#forgotPasswordForm').hide();
+            });
+
+            $('#forgotPassword').click(function (e) {
+                e.preventDefault();
+                $('#loginForm').hide();
+                $('#registerForm').hide();
+                $('#forgotPasswordForm').show();
+            });
+
+            $('#showLoginFromForgot').click(function (e) {
+                e.preventDefault();
+                $('#forgotPasswordForm').hide();
+                $('#loginForm').show();
+            });
+
+            // Close buttons
+            $('#closeLogin').click(function () {
+                $('#loginPage').hide();
+            });
+
+            $('#closeRegister').click(function () {
+                $('#registerForm').hide();
+                $('#loginForm').show();
+            });
+
+            $('#closeForgotPassword').click(function () {
+                $('#forgotPasswordForm').hide();
+                $('#loginForm').show();
+            });
+
+            // Login form submission
+            $('#loginForm').submit(function (e) {
+                e.preventDefault();
+                const email = $('#loginEmail').val();
+                const password = $('#loginPassword').val();
+
+                loginUser(email, password);
+            });
+
+            // Register form submission
+            $('#registerForm').submit(function (e) {
+                e.preventDefault();
+                const userData = {
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                    phoneNumber: $('#phoneNumber').val(),
+                    role: $('#registerRole').val(),
+                    bio: $('#bio').val(),
+                    profilePicture: $('#profilePicture').val(),
+                    status: $('#status').val()
+                };
+
+                registerUser(userData);
+            });
+
+            // Forgot password form submission
+            $('#forgotPasswordForm').submit(function (e) {
+                e.preventDefault();
+                const email = $('#forgotEmail').val();
+                forgotPassword(email);
+            });
+
+            // Logout button
+            $('#logoutBtn').click(function () {
+                logoutUser();
+            });
+
+            // Sidebar toggle
+            $('#sidebarCollapse').click(function () {
+                $('#sidebar').toggleClass('active');
+                $('#sidebarOverlay').toggleClass('active');
+            });
+
+            // Overlay click
+            $('#sidebarOverlay').click(function () {
+                $('#sidebar').removeClass('active');
+                $('#sidebarOverlay').removeClass('active');
+            });
+
+            // Add Property buttons
+            $('#addProperty, #addPropertyFromDashboard, #addPropertyFromTable').click(function () {
+                $('#addPropertyModal').modal('show');
+            });
+
+            // Save Property button
+            $('#savePropertyBtn').click(function () {
+                saveProperty();
+            });
+
+            // Edit Property button
+            $('#editPropertyBtn').click(function () {
+                const propertyId = $('#editPropertyId').val();
+                loadPropertyForEdit(propertyId);
+            });
+
+            // Update Property button
+            $('#updatePropertyBtn').click(function () {
+                updateProperty();
+            });
+
+            // Add Agent buttons
+            $('#addAgentFromTable').click(function () {
+                $('#addAgentModal').modal('show');
+            });
+
+            // Save Agent button
+            $('#saveAgentBtn').click(function () {
+                saveAgent();
+            });
+
+            // Edit Agent button
+            $('#editAgentBtn').click(function () {
+                const agentId = $('#editAgentId').val();
+                loadAgentForEdit(agentId);
+            });
+
+            // Update Agent button
+            $('#updateAgentBtn').click(function () {
+                updateAgent();
+            });
+
+            // Navigation links
+            $('#viewProperties').click(function (e) {
+                e.preventDefault();
+                switchView('properties');
+            });
+
+            $('#viewUsers').click(function (e) {
+                e.preventDefault();
+                switchView('users');
+            });
+
+            $('#viewAgents').click(function (e) {
+                e.preventDefault();
+                switchView('agents');
+            });
+
+            // Back to dashboard buttons
+            $('#backToDashboardFromProperties').click(function () {
+                switchView('dashboard');
+            });
+
+            $('#backToDashboardFromUsers').click(function () {
+                switchView('dashboard');
+            });
+
+            $('#backToDashboardFromAgents').click(function () {
+                switchView('dashboard');
+            });
+
+            // Refresh dashboard
+            $('#refreshDashboard').click(function () {
+                refreshDashboard();
+            });
+        }
+
+        // Switch between views
+        function switchView(view) {
+            currentView = view;
+
+            // Hide all views
+            $('#dashboardOverview, #propertiesTableView, #usersTableView, #agentsTableView').hide();
+
+            // Show the selected view
+            switch (view) {
+                case 'dashboard':
+                    $('#dashboardOverview').show();
+                    break;
+                case 'properties':
+                    $('#propertiesTableView').show();
+                    loadAllPropertiesTable();
+                    break;
+                case 'users':
+                    $('#usersTableView').show();
+                    loadUsersTable();
+                    break;
+                case 'agents':
+                    $('#agentsTableView').show();
+                    loadAgentsTable();
+                    break;
+            }
+
+            // Update active menu item
+            $('.components li').removeClass('active');
+            $(`#view${view.charAt(0).toUpperCase() + view.slice(1)}`).parent().addClass('active');
+        }
+
+        // API Functions
+        async function loginUser(email, password) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Save token and user data
+                    localStorage.setItem('token', data.token);
+                    currentUser = data.user;
+
+                    // Load dashboard
+                    loadDashboard();
+                    showSuccessToast('Login successful!');
+                } else {
+                    showErrorToast(data.message || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showErrorToast('An error occurred during login');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function registerUser(userData) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showSuccessToast('Registration successful! Please login.');
+                    $('#registerForm').hide();
+                    $('#loginForm').show();
+                    $('#loginEmail').val(userData.email);
+                } else {
+                    showErrorToast(data.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showErrorToast('An error occurred during registration');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function verifyEmail(token) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/verify?token=${encodeURIComponent(token)}`, {
+                    method: 'GET'
+                });
+
+                if (response.ok) {
+                    showSuccessToast('Email verified successfully!');
+                } else {
+                    const data = await response.json();
+                    showErrorToast(data.message || 'Email verification failed');
+                }
+            } catch (error) {
+                console.error('Email verification error:', error);
+                showErrorToast('An error occurred during email verification');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function resetPassword(token, newPassword) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/reset-password?token=${encodeURIComponent(token)}&newPassword=${encodeURIComponent(newPassword)}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    showSuccessToast('Password reset successfully!');
+                } else {
+                    const data = await response.json();
+                    showErrorToast(data.message || 'Password reset failed');
+                }
+            } catch (error) {
+                console.error('Password reset error:', error);
+                showErrorToast('An error occurred during password reset');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function forgotPassword(email) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/forgot-password?email=${encodeURIComponent(email)}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    showSuccessToast('Password reset link sent to your email!');
+                    $('#forgotPasswordForm').hide();
+                    $('#loginForm').show();
+                } else {
+                    const data = await response.json();
+                    showErrorToast(data.message || 'Failed to send reset link');
+                }
+            } catch (error) {
+                console.error('Forgot password error:', error);
+                showErrorToast('An error occurred while sending reset link');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function verifyTokenAndLoadDashboard(token) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    currentUser = user;
+                    loadDashboard();
+                } else {
+                    localStorage.removeItem('token');
+                    $('#loginPage').show();
+                    $('#dashboard').hide();
+                    showErrorToast('Session expired. Please login again.');
+                }
+            } catch (error) {
+                console.error('Token verification error:', error);
+                localStorage.removeItem('token');
+                $('#loginPage').show();
+                $('#dashboard').hide();
+                showErrorToast('Error verifying session');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loginAgent(email, password) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Save token and agent data
+                    localStorage.setItem('token', data.token);
+                    currentUser = data.agent;
+
+                    // Load dashboard
+                    loadDashboard();
+                    showSuccessToast('Agent login successful!');
+                } else {
+                    showErrorToast(data.message || 'Agent login failed');
+                }
+            } catch (error) {
+                console.error('Agent login error:', error);
+                showErrorToast('An error occurred during agent login');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function registerAgent(agentData) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(agentData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showSuccessToast('Agent registration successful!');
+                    return data;
+                } else {
+                    showErrorToast(data.message || 'Agent registration failed');
+                    return null;
+                }
+            } catch (error) {
+                console.error('Agent registration error:', error);
+                showErrorToast('An error occurred during agent registration');
+                return null;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function getAgentByEmail(email) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/${encodeURIComponent(email)}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const agent = await response.json();
+                    return agent;
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to get agent');
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error getting agent:', error);
+                showErrorToast('An error occurred while getting agent');
+                return null;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('token');
+            currentUser = null;
+            $('#loginPage').show();
+            $('#dashboard').hide();
+            $('#loginForm').show();
+            $('#registerForm').hide();
+            $('#forgotPasswordForm').hide();
+            $('#loginEmail').val('');
+            $('#loginPassword').val('');
+            showSuccessToast('Logged out successfully');
+        }
+
+        async function loadDashboard() {
+            // Hide login page and show dashboard
+            $('#loginPage').hide();
+            $('#dashboard').show();
+
+            // Set current user email
+            $('#currentUserEmail').text(currentUser.email);
+
+            // Load dashboard data
+            await loadDashboardData();
+            initCharts();
+        }
+
+        async function loadDashboardData() {
+            showLoading();
+            try {
+                // Load properties
+                const propertiesResponse = await fetch(`${API_BASE_URL}/properties`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (propertiesResponse.ok) {
+                    properties = await propertiesResponse.json();
+                    updatePropertyStats();
+                    loadRecentProperties();
+                    loadRecentActivities();
+                } else {
+                    throw new Error('Failed to load properties');
+                }
+
+                // Load users
+                const usersResponse = await fetch(`${API_BASE_URL}/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (usersResponse.ok) {
+                    users = await usersResponse.json();
+                    updateUserStats();
+                } else {
+                    throw new Error('Failed to load users');
+                }
+
+                // Load agents
+                const agentsResponse = await fetch(`${API_BASE_URL}/agents`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (agentsResponse.ok) {
+                    agents = await agentsResponse.json();
+                    updateAgentStats();
+                } else {
+                    throw new Error('Failed to load agents');
+                }
+
+                // Calculate revenue
+                calculateRevenue();
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showErrorToast(error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function refreshDashboard() {
+            loadDashboardData();
+            showSuccessToast('Dashboard refreshed');
+        }
+
+        function updatePropertyStats() {
+            const totalProperties = properties.length;
+            const availableProperties = properties.filter(p => p.status === 'AVAILABLE').length;
+            const pendingProperties = properties.filter(p => p.status === 'PENDING').length;
+            const soldProperties = properties.filter(p => p.status === 'SOLD').length;
+
+            $('#totalProperties').text(totalProperties);
+            $('#availableProperties').text(availableProperties);
+            $('#pendingProperties').text(pendingProperties);
+            $('#soldProperties').text(soldProperties);
+        }
+
+        function updateUserStats() {
+            const totalUsers = users.length;
+            const activeUsers = users.filter(u => u.status === 'ACTIVE').length;
+
+            $('#totalUsers').text(totalUsers);
+            $('#activeUsers').text(activeUsers);
+        }
+
+        function updateAgentStats() {
+            const totalAgents = agents.length;
+            $('#totalAgents').text(totalAgents);
+        }
+
+        function calculateRevenue() {
+            const soldProperties = properties.filter(p => p.status === 'SOLD');
+            const totalRevenue = soldProperties.reduce((sum, property) => sum + property.price, 0);
+            const monthlyRevenue = totalRevenue * 0.1; // Assuming 10% commission
+
+            $('#totalRevenue').text(`$${totalRevenue.toLocaleString()}`);
+            $('#monthlyRevenue').text(`$${monthlyRevenue.toLocaleString()}`);
+        }
+
+        function loadRecentProperties() {
+            const tableBody = $('#propertyTableBody');
+            tableBody.empty();
+
+            // Show only the first 5 properties
+            const recentProperties = properties.slice(0, 5);
+
+            recentProperties.forEach(property => {
+                let statusBadge;
+                if (property.status === 'AVAILABLE') {
+                    statusBadge = '<span class="badge bg-success">Available</span>';
+                } else if (property.status === 'PENDING') {
+                    statusBadge = '<span class="badge bg-warning">Pending</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-danger">Sold</span>';
+                }
+
+                let typeBadge;
+                if (property.type === 'RESIDENTIAL') {
+                    typeBadge = '<span class="badge bg-primary">Residential</span>';
+                } else if (property.type === 'COMMERCIAL') {
+                    typeBadge = '<span class="badge bg-danger">Commercial</span>';
+                } else {
+                    typeBadge = '<span class="badge bg-warning">Land</span>';
+                }
+
+                const row = `
+                    <tr>
+                        <td>${property.id}</td>
+                        <td>${property.title}</td>
+                        <td>${typeBadge}</td>
+                        <td>${statusBadge}</td>
+                        <td>$${property.price.toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-property-btn" data-id="${property.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary edit-property-btn" data-id="${property.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                tableBody.append(row);
+            });
+
+            // Add event listeners to view buttons
+            $('.view-property-btn').click(function () {
+                const propertyId = $(this).data('id');
+                viewProperty(propertyId);
+            });
+
+            // Add event listeners to edit buttons
+            $('.edit-property-btn').click(function () {
+                const propertyId = $(this).data('id');
+                loadPropertyForEdit(propertyId);
+            });
+        }
+
+        function loadRecentActivities() {
+            const activityFeed = $('#activityFeed');
+            activityFeed.empty();
+
+            // Generate some sample activities
+            const activities = [
+                {
+                    date: 'Today, 10:45 AM',
+                    text: 'New property added by John Doe'
+                },
+                {
+                    date: 'Today, 09:30 AM',
+                    text: 'Property #123 marked as sold'
+                },
+                {
+                    date: 'Yesterday, 3:45 PM',
+                    text: 'New user registered: Jane Smith'
+                },
+                {
+                    date: 'Yesterday, 1:20 PM',
+                    text: 'New agent added: Michael Brown'
+                },
+                {
+                    date: 'May 1, 11:15 AM',
+                    text: 'System maintenance completed'
+                }
+            ];
+
+            activities.forEach(activity => {
+                const item = `
+                    <div class="feed-item">
+                        <span class="feed-date">${activity.date}</span>
+                        <p class="feed-text">${activity.text}</p>
+                    </div>
+                `;
+                activityFeed.append(item);
+            });
+        }
+
+        function initCharts() {
+            // Monthly Views Chart
+            const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+            const viewsChart = new Chart(viewsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Views',
+                        data: [1200, 1500, 1800, 2100, 2500, 2800],
+                        backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                        borderColor: 'rgba(78, 115, 223, 1)',
+                        pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderWidth: 2,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Property Type Chart
+            const propertyTypeCtx = document.getElementById('propertyTypeChart').getContext('2d');
+            const propertyTypeChart = new Chart(propertyTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Residential', 'Commercial', 'Land'],
+                    datasets: [{
+                        data: [
+                            properties.filter(p => p.type === 'RESIDENTIAL').length,
+                            properties.filter(p => p.type === 'COMMERCIAL').length,
+                            properties.filter(p => p.type === 'LAND').length
+                        ],
+                        backgroundColor: [
+                            'rgba(78, 115, 223, 0.8)',
+                            'rgba(231, 74, 59, 0.8)',
+                            'rgba(246, 194, 62, 0.8)'
+                        ],
+                        hoverBackgroundColor: [
+                            'rgba(78, 115, 223, 1)',
+                            'rgba(231, 74, 59, 1)',
+                            'rgba(246, 194, 62, 1)'
+                        ],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%',
+                }
+            });
+        }
+
+        async function saveProperty() {
+            showLoading();
+            const propertyData = {
+                title: $('#propertyTitle').val(),
+                description: $('#propertyDescription').val(),
+                price: parseFloat($('#propertyPrice').val()),
+                type: $('#propertyType').val(),
+                status: $('#propertyStatus').val(),
+                bedrooms: parseInt($('#propertyBedrooms').val()) || 0,
+                bathrooms: parseFloat($('#propertyBathrooms').val()) || 0,
+                squareFootage: parseFloat($('#propertySquareFootage').val()) || 0,
+                location: $('#propertyLocation').val(),
+                address: $('#propertyAddress').val(),
+                yearBuilt: parseInt($('#propertyYearBuilt').val()) || null,
+                features: $('#propertyFeatures').val() ? $('#propertyFeatures').val().split(',').map(f => f.trim()) : [],
+                amenities: $('#propertyAmenities').val() ? $('#propertyAmenities').val().split(',').map(a => a.trim()) : [],
+                agentId: currentUser.id // Assuming the current user is the agent
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/properties`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(propertyData)
+                });
+
+                if (response.ok) {
+                    const newProperty = await response.json();
+                    properties.unshift(newProperty); // Add to beginning of array
+                    updatePropertyStats();
+                    loadRecentProperties();
+                    $('#addPropertyModal').modal('hide');
+                    $('#propertyForm')[0].reset();
+                    showSuccessToast('Property added successfully!');
+
+                    // If we're on the properties table view, refresh it
+                    if (currentView === 'properties') {
+                        loadAllPropertiesTable();
+                    }
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to add property');
+                }
+            } catch (error) {
+                console.error('Error saving property:', error);
+                showErrorToast('An error occurred while saving the property');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function viewProperty(propertyId) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/properties/${propertyId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const property = await response.json();
+
+                    // Set modal content
+                    $('#viewPropertyTitle').text(property.title);
+                    $('#viewPropertyPrice').text(`$${property.price.toLocaleString()}`);
+                    $('#viewPropertyDescription').text(property.description);
+                    $('#viewPropertyLocation').text(property.location);
+                    $('#viewPropertyAddress').text(property.address);
+                    $('#viewPropertyBedrooms').text(property.bedrooms || 'N/A');
+                    $('#viewPropertyBathrooms').text(property.bathrooms || 'N/A');
+                    $('#viewPropertySquareFootage').text(property.squareFootage || 'N/A');
+                    $('#viewPropertyYearBuilt').text(property.yearBuilt || 'N/A');
+
+                    // Set type and status badges
+                    let typeBadgeClass, statusBadgeClass;
+                    if (property.type === 'RESIDENTIAL') {
+                        typeBadgeClass = 'bg-primary';
+                    } else if (property.type === 'COMMERCIAL') {
+                        typeBadgeClass = 'bg-danger';
+                    } else {
+                        typeBadgeClass = 'bg-warning';
+                    }
+
+                    if (property.status === 'AVAILABLE') {
+                        statusBadgeClass = 'bg-success';
+                    } else if (property.status === 'PENDING') {
+                        statusBadgeClass = 'bg-warning';
+                    } else {
+                        statusBadgeClass = 'bg-danger';
+                    }
+
+                    $('#viewPropertyType').text(property.type).removeClass().addClass(`badge ${typeBadgeClass}`);
+                    $('#viewPropertyStatus').text(property.status).removeClass().addClass(`badge ${statusBadgeClass}`);
+
+                    // Set features and amenities
+                    const featuresList = property.features && property.features.length > 0 ?
+                        `<ul>${property.features.map(f => `<li>${f}</li>`).join('')}</ul>` :
+                        '<p>No features listed</p>';
+
+                    const amenitiesList = property.amenities && property.amenities.length > 0 ?
+                        `<ul>${property.amenities.map(a => `<li>${a}</li>`).join('')}</ul>` :
+                        '<p>No amenities listed</p>';
+
+                    $('#viewPropertyFeatures').html(featuresList);
+                    $('#viewPropertyAmenities').html(amenitiesList);
+
+                    // Set images carousel
+                    const carouselInner = $('#propertyCarouselInner');
+                    carouselInner.empty();
+
+                    // Add default image if no images are available
+                    if (!property.images || property.images.length === 0) {
+                        carouselInner.append(`
+                            <div class="carousel-item active">
+                                <img src="https://via.placeholder.com/600x400?text=No+Image" class="d-block w-100" alt="Property Image">
+                            </div>
+                        `);
+                    } else {
+                        property.images.forEach((image, index) => {
+                            carouselInner.append(`
+                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                    <img src="${image}" class="d-block w-100" alt="Property Image">
+                                </div>
+                            `);
+                        });
+                    }
+
+                    // Set property ID for edit button
+                    $('#editPropertyBtn').data('id', property.id);
+                    $('#editPropertyId').val(property.id);
+
+                    // Show modal
+                    $('#viewPropertyModal').modal('show');
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to load property');
+                }
+            } catch (error) {
+                console.error('Error viewing property:', error);
+                showErrorToast('An error occurred while loading the property');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadPropertyForEdit(propertyId) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/properties/${propertyId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const property = await response.json();
+
+                    // Fill the edit form
+                    $('#editPropertyId').val(property.id);
+                    $('#editPropertyTitle').val(property.title);
+                    $('#editPropertyDescription').val(property.description);
+                    $('#editPropertyPrice').val(property.price);
+                    $('#editPropertyType').val(property.type);
+                    $('#editPropertyStatus').val(property.status);
+                    $('#editPropertyBedrooms').val(property.bedrooms || '');
+                    $('#editPropertyBathrooms').val(property.bathrooms || '');
+                    $('#editPropertySquareFootage').val(property.squareFootage || '');
+                    $('#editPropertyLocation').val(property.location);
+                    $('#editPropertyAddress').val(property.address);
+                    $('#editPropertyYearBuilt').val(property.yearBuilt || '');
+                    $('#editPropertyFeatures').val(property.features ? property.features.join(', ') : '');
+                    $('#editPropertyAmenities').val(property.amenities ? property.amenities.join(', ') : '');
+
+                    // Close view modal if open
+                    $('#viewPropertyModal').modal('hide');
+
+                    // Show edit modal
+                    $('#editPropertyModal').modal('show');
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to load property for editing');
+                }
+            } catch (error) {
+                console.error('Error loading property for edit:', error);
+                showErrorToast('An error occurred while loading the property for editing');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function updateProperty() {
+            showLoading();
+            const propertyId = $('#editPropertyId').val();
+            const propertyData = {
+                title: $('#editPropertyTitle').val(),
+                description: $('#editPropertyDescription').val(),
+                price: parseFloat($('#editPropertyPrice').val()),
+                type: $('#editPropertyType').val(),
+                status: $('#editPropertyStatus').val(),
+                bedrooms: parseInt($('#editPropertyBedrooms').val()) || 0,
+                bathrooms: parseFloat($('#editPropertyBathrooms').val()) || 0,
+                squareFootage: parseFloat($('#editPropertySquareFootage').val()) || 0,
+                location: $('#editPropertyLocation').val(),
+                address: $('#editPropertyAddress').val(),
+                yearBuilt: parseInt($('#editPropertyYearBuilt').val()) || null,
+                features: $('#editPropertyFeatures').val() ? $('#editPropertyFeatures').val().split(',').map(f => f.trim()) : [],
+                amenities: $('#editPropertyAmenities').val() ? $('#editPropertyAmenities').val().split(',').map(a => a.trim()) : [],
+                agentId: currentUser.id // Assuming the current user is the agent
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/properties/${propertyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(propertyData)
+                });
+
+                if (response.ok) {
+                    const updatedProperty = await response.json();
+
+                    // Update the property in the properties array
+                    const index = properties.findIndex(p => p.id === updatedProperty.id);
+                    if (index !== -1) {
+                        properties[index] = updatedProperty;
+                    }
+
+                    // Update UI
+                    updatePropertyStats();
+                    loadRecentProperties();
+                    $('#editPropertyModal').modal('hide');
+                    showSuccessToast('Property updated successfully!');
+
+                    // If we're on the properties table view, refresh it
+                    if (currentView === 'properties') {
+                        loadAllPropertiesTable();
+                    }
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to update property');
+                }
+            } catch (error) {
+                console.error('Error updating property:', error);
+                showErrorToast('An error occurred while updating the property');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function loadAllPropertiesTable() {
+            const tableBody = $('#allPropertiesTableBody');
+            tableBody.empty();
+
+            properties.forEach(property => {
+                let statusBadge;
+                if (property.status === 'AVAILABLE') {
+                    statusBadge = '<span class="badge bg-success">Available</span>';
+                } else if (property.status === 'PENDING') {
+                    statusBadge = '<span class="badge bg-warning">Pending</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-danger">Sold</span>';
+                }
+
+                let typeBadge;
+                if (property.type === 'RESIDENTIAL') {
+                    typeBadge = '<span class="badge bg-primary">Residential</span>';
+                } else if (property.type === 'COMMERCIAL') {
+                    typeBadge = '<span class="badge bg-danger">Commercial</span>';
+                } else {
+                    typeBadge = '<span class="badge bg-warning">Land</span>';
+                }
+
+                // Use a default image if none is available
+                const imageUrl = property.images && property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/100';
+
+                const row = `
+                    <tr>
+                        <td>${property.id}</td>
+                        <td>
+                            <img src="${imageUrl}" alt="Property Image" width="50" height="50" style="object-fit: cover;">
+                        </td>
+                        <td>${property.title}</td>
+                        <td>${typeBadge}</td>
+                        <td>${property.location}</td>
+                        <td>$${property.price.toLocaleString()}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-property-btn" data-id="${property.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary edit-property-btn" data-id="${property.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-property-btn" data-id="${property.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                tableBody.append(row);
+            });
+
+            // Add event listeners to view buttons
+            $('.view-property-btn').click(function () {
+                const propertyId = $(this).data('id');
+                viewProperty(propertyId);
+            });
+
+            // Add event listeners to edit buttons
+            $('.edit-property-btn').click(function () {
+                const propertyId = $(this).data('id');
+                loadPropertyForEdit(propertyId);
+            });
+
+            // Add event listeners to delete buttons
+            $('.delete-property-btn').click(function () {
+                const propertyId = $(this).data('id');
+                deleteProperty(propertyId);
+            });
+        }
+
+        async function deleteProperty(propertyId) {
+            if (!confirm('Are you sure you want to delete this property?')) {
+                return;
+            }
+
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/properties/${propertyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    // Remove the property from the properties array
+                    properties = properties.filter(p => p.id !== propertyId);
+
+                    // Update UI
+                    updatePropertyStats();
+                    loadRecentProperties();
+                    showSuccessToast('Property deleted successfully!');
+
+                    // If we're on the properties table view, refresh it
+                    if (currentView === 'properties') {
+                        loadAllPropertiesTable();
+                    }
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to delete property');
+                }
+            } catch (error) {
+                console.error('Error deleting property:', error);
+                showErrorToast('An error occurred while deleting the property');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function loadUsersTable() {
+            const tableBody = $('#usersTableBody');
+            tableBody.empty();
+
+            users.forEach(user => {
+                let roleBadge;
+                if (user.role === 'ADMIN') {
+                    roleBadge = '<span class="badge bg-danger">Admin</span>';
+                } else if (user.role === 'AGENT') {
+                    roleBadge = '<span class="badge bg-primary">Agent</span>';
+                } else if (user.role === 'BUYER') {
+                    roleBadge = '<span class="badge bg-success">Buyer</span>';
+                } else {
+                    roleBadge = '<span class="badge bg-warning">Seller</span>';
+                }
+
+                let statusBadge;
+                if (user.status === 'ACTIVE') {
+                    statusBadge = '<span class="badge bg-success">Active</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-secondary">Inactive</span>';
+                }
+
+                const row = `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phoneNumber || 'N/A'}</td>
+                        <td>${roleBadge}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-user-btn" data-id="${user.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                tableBody.append(row);
+            });
+
+            // Add event listeners to view buttons
+            $('.view-user-btn').click(function () {
+                const userId = $(this).data('id');
+                viewUser(userId);
+            });
+        }
+
+        async function viewUser(userId) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+
+                    // Set modal content
+                    $('#viewUserName').text(user.name);
+                    $('#viewUserEmail').text(user.email);
+                    $('#viewUserPhone').text(user.phoneNumber || 'N/A');
+
+                    // Set role and status badges
+                    let roleBadgeClass, statusBadgeClass;
+                    if (user.role === 'ADMIN') {
+                        roleBadgeClass = 'bg-danger';
+                    } else if (user.role === 'AGENT') {
+                        roleBadgeClass = 'bg-primary';
+                    } else if (user.role === 'BUYER') {
+                        roleBadgeClass = 'bg-success';
+                    } else {
+                        roleBadgeClass = 'bg-warning';
+                    }
+
+                    if (user.status === 'ACTIVE') {
+                        statusBadgeClass = 'bg-success';
+                    } else {
+                        statusBadgeClass = 'bg-secondary';
+                    }
+
+                    $('#viewUserRole').text(user.role).removeClass().addClass(`badge ${roleBadgeClass}`);
+                    $('#viewUserStatus').text(user.status).removeClass().addClass(`badge ${statusBadgeClass}`);
+
+                    // Set profile picture (using a default if none is available)
+                    const profilePicUrl = user.profilePicture || 'https://via.placeholder.com/150';
+                    $('#viewUserProfilePicture').attr('src', profilePicUrl);
+
+                    // Set properties count (placeholder)
+                    $('#viewUserPropertiesCount').text('5 properties');
+
+                    // Show modal
+                    $('#viewUserModal').modal('show');
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to load user');
+                }
+            } catch (error) {
+                console.error('Error viewing user:', error);
+                showErrorToast('An error occurred while loading the user');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function loadAgentsTable() {
+            const tableBody = $('#agentsTableBody');
+            tableBody.empty();
+
+            agents.forEach(agent => {
+                let statusBadge;
+                if (agent.status === 'ACTIVE') {
+                    statusBadge = '<span class="badge bg-success">Active</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-secondary">Inactive</span>';
+                }
+
+                // Use a default image if none is available
+                const imageUrl = agent.profilePicture || 'https://via.placeholder.com/50';
+
+                const row = `
+                    <tr>
+                        <td>${agent.id}</td>
+                        <td>
+                            <img src="${imageUrl}" alt="Agent Photo" width="40" height="40" class="rounded-circle" style="object-fit: cover;">
+                        </td>
+                        <td>${agent.name}</td>
+                        <td>${agent.email}</td>
+                        <td>${agent.phoneNumber || 'N/A'}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-agent-btn" data-id="${agent.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary edit-agent-btn" data-id="${agent.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-agent-btn" data-id="${agent.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                tableBody.append(row);
+            });
+
+            // Add event listeners to view buttons
+            $('.view-agent-btn').click(function () {
+                const agentId = $(this).data('id');
+                viewAgent(agentId);
+            });
+
+            // Add event listeners to edit buttons
+            $('.edit-agent-btn').click(function () {
+                const agentId = $(this).data('id');
+                loadAgentForEdit(agentId);
+            });
+
+            // Add event listeners to delete buttons
+            $('.delete-agent-btn').click(function () {
+                const agentId = $(this).data('id');
+                deleteAgent(agentId);
+            });
+        }
+
+        async function saveAgent() {
+            showLoading();
+            const agentData = {
+                name: $('#agentName').val(),
+                email: $('#agentEmail').val(),
+                password: $('#agentPassword').val(),
+                phoneNumber: $('#agentPhone').val(),
+                bio: $('#agentBio').val(),
+                profilePicture: $('#agentProfilePicture').val(),
+                status: $('#agentStatus').val()
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(agentData)
+                });
+
+                if (response.ok) {
+                    const newAgent = await response.json();
+                    agents.push(newAgent);
+                    updateAgentStats();
+                    $('#addAgentModal').modal('hide');
+                    $('#agentForm')[0].reset();
+                    showSuccessToast('Agent added successfully!');
+
+                    // If we're on the agents table view, refresh it
+                    if (currentView === 'agents') {
+                        loadAgentsTable();
+                    }
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to add agent');
+                }
+            } catch (error) {
+                console.error('Error saving agent:', error);
+                showErrorToast('An error occurred while saving the agent');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function viewAgent(agentId) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/${agentId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const agent = await response.json();
+
+                    // Set modal content
+                    $('#viewAgentName').text(agent.name);
+                    $('#viewAgentEmail').text(agent.email);
+                    $('#viewAgentPhone').text(agent.phoneNumber || 'N/A');
+                    $('#viewAgentBio').text(agent.bio || 'No bio available');
+
+                    // Set status badge
+                    let statusBadgeClass;
+                    if (agent.status === 'ACTIVE') {
+                        statusBadgeClass = 'bg-success';
+                    } else {
+                        statusBadgeClass = 'bg-secondary';
+                    }
+
+                    $('#viewAgentStatus').text(agent.status).removeClass().addClass(`badge ${statusBadgeClass}`);
+
+                    // Set profile picture (using a default if none is available)
+                    const profilePicUrl = agent.profilePicture || 'https://via.placeholder.com/150';
+                    $('#viewAgentProfilePicture').attr('src', profilePicUrl);
+
+                    // Set properties count (placeholder)
+                    $('#viewAgentPropertiesCount').text(`${properties.filter(p => p.agentId === agent.id).length} properties listed`);
+
+                    // Set agent ID for edit button
+                    $('#editAgentBtn').data('id', agent.id);
+                    $('#editAgentId').val(agent.id);
+
+                    // Show modal
+                    $('#viewAgentModal').modal('show');
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to load agent');
+                }
+            } catch (error) {
+                console.error('Error viewing agent:', error);
+                showErrorToast('An error occurred while loading the agent');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadAgentForEdit(agentId) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/${agentId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const agent = await response.json();
+
+                    // Fill the edit form
+                    $('#editAgentId').val(agent.id);
+                    $('#editAgentName').val(agent.name);
+                    $('#editAgentEmail').val(agent.email);
+                    $('#editAgentPhone').val(agent.phoneNumber || '');
+                    $('#editAgentBio').val(agent.bio || '');
+                    $('#editAgentProfilePicture').val(agent.profilePicture || '');
+                    $('#editAgentStatus').val(agent.status);
+
+                    // Close view modal if open
+                    $('#viewAgentModal').modal('hide');
+
+                    // Show edit modal
+                    $('#editAgentModal').modal('show');
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to load agent for editing');
+                }
+            } catch (error) {
+                console.error('Error loading agent for edit:', error);
+                showErrorToast('An error occurred while loading the agent for editing');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function updateAgent() {
+            showLoading();
+            const agentId = $('#editAgentId').val();
+            const agentData = {
+                name: $('#editAgentName').val(),
+                email: $('#editAgentEmail').val(),
+                phoneNumber: $('#editAgentPhone').val(),
+                bio: $('#editAgentBio').val(),
+                profilePicture: $('#editAgentProfilePicture').val(),
+                status: $('#editAgentStatus').val()
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/${agentId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(agentData)
+                });
+
+                if (response.ok) {
+                    const updatedAgent = await response.json();
+
+                    // Update the agent in the agents array
+                    const index = agents.findIndex(a => a.id === updatedAgent.id);
+                    if (index !== -1) {
+                        agents[index] = updatedAgent;
+                    }
+
+                    // Update UI
+                    updateAgentStats();
+                    $('#editAgentModal').modal('hide');
+                    showSuccessToast('Agent updated successfully!');
+
+                    // If we're on the agents table view, refresh it
+                    if (currentView === 'agents') {
+                        loadAgentsTable();
+                    }
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to update agent');
+                }
+            } catch (error) {
+                console.error('Error updating agent:', error);
+                showErrorToast('An error occurred while updating the agent');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function deleteAgent(agentId) {
+            if (!confirm('Are you sure you want to delete this agent?')) {
+                return;
+            }
+
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE_URL}/agents/${agentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    // Remove the agent from the agents array
+                    agents = agents.filter(a => a.id !== agentId);
+
+                    // Update UI
+                    updateAgentStats();
+                    showSuccessToast('Agent deleted successfully!');
+
+                    // If we're on the agents table view, refresh it
+                    if (currentView === 'agents') {
+                        loadAgentsTable();
+                    }
+                } else {
+                    const error = await response.json();
+                    showErrorToast(error.message || 'Failed to delete agent');
+                }
+            } catch (error) {
+                console.error('Error deleting agent:', error);
+                showErrorToast('An error occurred while deleting the agent');
+            } finally {
+                hideLoading();
+            }
+        }
+    </script>
+</body>
+
+</html>

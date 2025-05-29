@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+    --primary: #4e73df;
+    --success: #1cc88a;
+    --info: #36b9cc;
+    --warning: #f6c23e;
+    --danger: #e74a3b;
+    --secondary: #858796;
+    --light: #f8f9fc;
+    --dark: #5a5c69;
+    --purple: #6f42c1;
+}
+
+body {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fc;
+    overflow-x: hidden;
+}
+
+/* Sidebar */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #4e73df;
+    color: #fff;
+    transition: all 0.3s;
+    min-height: 100vh;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #3a5bc7;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar ul li a:hover {
+    color: #fff;
+    background: #3a5bc7;
+}
+
+#sidebar ul li.active > a {
+    color: #fff;
+    background: #3a5bc7;
+}
+
+#sidebar ul li a i {
+    margin-right: 10px;
+}
+
+#sidebar ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #3a5bc7;
+}
+
+/* Content */
+#content {
+    width: 100%;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+/* Navbar */
+.navbar {
+    padding: 15px 10px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+/* Charts */
+.chart-area {
+    position: relative;
+    height: 20rem;
+    width: 100%;
+}
+
+.chart-pie {
+    position: relative;
+    height: 15rem;
+    width: 100%;
+}
+
+/* Activity Feed */
+.activity-feed {
+    padding: 0;
+    list-style: none;
+}
+
+.activity-feed .feed-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid #e3e6f0;
+}
+
+.activity-feed .feed-item:last-child {
+    border-left: 0;
+}
+
+.activity-feed .feed-item::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -7px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.activity-feed .feed-item .feed-date {
+    display: block;
+    position: relative;
+    color: var(--secondary);
+    font-size: 0.85rem;
+}
+
+.activity-feed .feed-item .feed-text {
+    position: relative;
+    margin-top: 0.25rem;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+.badge-purple {
+    background-color: var(--purple);
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="active">
+            <div class="sidebar-header">
+                <h3>RealEstatePro</h3>
+                <strong>REP</strong>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="#">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#propertiesSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-home"></i>
+                        Properties
+                    </a>
+                    <ul class="collapse list-unstyled" id="propertiesSubmenu">
+                        <li>
+                            <a href="#">All Properties</a>
+                        </li>
+                        <li>
+                            <a href="#">Add Property</a>
+                        </li>
+                        <li>
+                            <a href="#">Categories</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="userdashboard.html">
+                        <i class="fas fa-users"></i>
+                        Users
+                    </a>
+                </li>
+                <li>
+                    <a href="Agent.html">
+                        <i class="fas fa-handshake"></i>
+                        Agents
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-calendar"></i>
+                        Bookings
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-comments"></i>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-chart-line"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-envelope"></i></a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i> Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div class="container-fluid">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2>Dashboard Overview</h2>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Total Properties</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalProperties">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-home fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">Available: <span id="availableProperties">0</span></span>
+                                    <span class="badge bg-warning">Pending: <span id="pendingProperties">0</span></span>
+                                    <span class="badge bg-danger">Sold: <span id="soldProperties">0</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Total Users</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalUsers">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge bg-primary">Active: <span id="activeUsers">0</span></span>
+                                    <span class="badge bg-purple">Agents: <span id="totalAgents">0</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            Total Revenue</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRevenue">$0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge bg-info">Monthly: <span id="monthlyRevenue">$0</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Recent Activities</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5 New</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-bell fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <a href="#" class="small text-decoration-none">View All</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row">
+                    <!-- Monthly Views Chart -->
+                    <div class="col-xl-8 col-lg-7">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Monthly Property Views</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                                        <li><a class="dropdown-item" href="#">Export Data</a></li>
+                                        <li><a class="dropdown-item" href="#">Print Chart</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">Refresh</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="viewsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Type Distribution -->
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Property Type Distribution</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-pie pt-4 pb-2">
+                                    <canvas id="propertyTypeChart"></canvas>
+                                </div>
+                                <div class="mt-4 text-center small">
+                                    <span class="mr-2">
+                                        <i class="fas fa-circle text-primary"></i> Residential
+                                    </span>
+                                    <span class="mr-2">
+                                        <i class="fas fa-circle text-danger"></i> Commercial
+                                    </span>
+                                    <span class="mr-2">
+                                        <i class="fas fa-circle text-warning"></i> Land
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Properties & Activities -->
+                <div class="row">
+                    <!-- Recent Properties -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Recent Properties</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="propertyTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Title</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                                <th>Price</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="propertyTableBody">
+                                            <!-- Filled by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                                        <li><a class="dropdown-item" href="#">View All</a></li>
+                                        <li><a class="dropdown-item" href="#">Mark All Read</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-feed" id="activityFeed">
+                                    <!-- Filled by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="js/script.js"></script>
+    <script>
+        // Sample data - in a real app, this would come from your API
+const dashboardData = {
+    overview: {
+        totalProperties: 245,
+        availableProperties: 189,
+        soldProperties: 42,
+        pendingProperties: 14,
+        totalUsers: 156,
+        activeUsers: 98,
+        totalAgents: 23,
+        totalRevenue: 1250000,
+        monthlyRevenue: 185000,
+        recentActivities: [
+            {
+                id: 1,
+                user: "John Doe",
+                action: "Added new property",
+                timestamp: "2023-06-15T10:30:00Z"
+            },
+            {
+                id: 2,
+                user: "Jane Smith",
+                action: "Made a booking",
+                timestamp: "2023-06-15T09:15:00Z"
+            },
+            {
+                id: 3,
+                user: "Mike Johnson",
+                action: "Updated property details",
+                timestamp: "2023-06-14T16:45:00Z"
+            },
+            {
+                id: 4,
+                user: "Sarah Williams",
+                action: "Completed payment",
+                timestamp: "2023-06-14T14:20:00Z"
+            },
+            {
+                id: 5,
+                user: "Admin",
+                action: "System maintenance",
+                timestamp: "2023-06-14T02:00:00Z"
+            }
+        ]
+    },
+    analytics: {
+        monthlyPropertyViews: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            data: [1200, 1500, 1800, 2100, 2500, 2800]
+        },
+        propertyTypeDistribution: {
+            labels: ["Residential", "Commercial", "Land"],
+            data: [65, 25, 10]
+        },
+        revenueByMonth: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            data: [85000, 92000, 110000, 125000, 150000, 185000]
+        }
+    },
+    properties: [
+        {
+            property_id: 1,
+            title: "Luxury Downtown Condo",
+            property_type: "Residential",
+            status: "Available",
+            price: 750000,
+            agent_id: 3
+        },
+        {
+            property_id: 2,
+            title: "Suburban Family Home",
+            property_type: "Residential",
+            status: "Pending",
+            price: 450000,
+            agent_id: 3
+        },
+        {
+            property_id: 3,
+            title: "Commercial Office Space",
+            property_type: "Commercial",
+            status: "Available",
+            price: 1200000,
+            agent_id: 5
+        },
+        {
+            property_id: 4,
+            title: "Lakefront Vacation Home",
+            property_type: "Residential",
+            status: "Available",
+            price: 925000,
+            agent_id: 2
+        },
+        {
+            property_id: 5,
+            title: "Development Land",
+            property_type: "Land",
+            status: "Sold",
+            price: 350000,
+            agent_id: 7
+        }
+    ]
+};
+
+// DOM Ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle sidebar
+    $('#sidebarCollapse').on('click', function() {
+        $('#sidebar').toggleClass('active');
+    });
+
+    // Update stats cards
+    updateStatsCards();
+    
+    // Initialize charts
+    initCharts();
+    
+    // Load property table
+    loadPropertyTable();
+    
+    // Load activity feed
+    loadActivityFeed();
+});
+
+function updateStatsCards() {
+    document.getElementById('totalProperties').textContent = dashboardData.overview.totalProperties;
+    document.getElementById('availableProperties').textContent = dashboardData.overview.availableProperties;
+    document.getElementById('pendingProperties').textContent = dashboardData.overview.pendingProperties;
+    document.getElementById('soldProperties').textContent = dashboardData.overview.soldProperties;
+    document.getElementById('totalUsers').textContent = dashboardData.overview.totalUsers;
+    document.getElementById('activeUsers').textContent = dashboardData.overview.activeUsers;
+    document.getElementById('totalAgents').textContent = dashboardData.overview.totalAgents;
+    document.getElementById('totalRevenue').textContent = '$' + dashboardData.overview.totalRevenue.toLocaleString();
+    document.getElementById('monthlyRevenue').textContent = '$' + dashboardData.overview.monthlyRevenue.toLocaleString();
+}
+
+function initCharts() {
+    // Monthly Views Chart
+    const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+    const viewsChart = new Chart(viewsCtx, {
+        type: 'line',
+        data: {
+            labels: dashboardData.analytics.monthlyPropertyViews.labels,
+            datasets: [{
+                label: 'Views',
+                data: dashboardData.analytics.monthlyPropertyViews.data,
+                backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                borderColor: 'rgba(78, 115, 223, 1)',
+                pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                borderWidth: 2,
+                tension: 0.3
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Property Type Chart
+    const propertyTypeCtx = document.getElementById('propertyTypeChart').getContext('2d');
+    const propertyTypeChart = new Chart(propertyTypeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: dashboardData.analytics.propertyTypeDistribution.labels,
+            datasets: [{
+                data: dashboardData.analytics.propertyTypeDistribution.data,
+                backgroundColor: [
+                    'rgba(78, 115, 223, 0.8)',
+                    'rgba(231, 74, 59, 0.8)',
+                    'rgba(246, 194, 62, 0.8)'
+                ],
+                hoverBackgroundColor: [
+                    'rgba(78, 115, 223, 1)',
+                    'rgba(231, 74, 59, 1)',
+                    'rgba(246, 194, 62, 1)'
+                ],
+                hoverBorderColor: "rgba(234, 236, 244, 1)",
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            cutout: '70%',
+        }
+    });
+}
+
+function loadPropertyTable() {
+    const tableBody = document.getElementById('propertyTableBody');
+    tableBody.innerHTML = '';
+    
+    dashboardData.properties.forEach(property => {
+        const row = document.createElement('tr');
+        
+        // Status badge
+        let statusBadge;
+        if (property.status === 'Available') {
+            statusBadge = '<span class="badge bg-success">Available</span>';
+        } else if (property.status === 'Pending') {
+            statusBadge = '<span class="badge bg-warning">Pending</span>';
+        } else {
+            statusBadge = '<span class="badge bg-danger">Sold</span>';
+        }
+        
+        // Type badge
+        let typeBadge;
+        if (property.property_type === 'Residential') {
+            typeBadge = '<span class="badge bg-primary">Residential</span>';
+        } else if (property.property_type === 'Commercial') {
+            typeBadge = '<span class="badge bg-danger">Commercial</span>';
+        } else {
+            typeBadge = '<span class="badge bg-warning">Land</span>';
+        }
+        
+        row.innerHTML = `
+            <td>${property.property_id}</td>
+            <td>${property.title}</td>
+            <td>${typeBadge}</td>
+            <td>${statusBadge}</td>
+            <td>$${property.price.toLocaleString()}</td>
+            <td>
+                <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+function loadActivityFeed() {
+    const activityFeed = document.getElementById('activityFeed');
+    activityFeed.innerHTML = '';
+    
+    dashboardData.overview.recentActivities.forEach(activity => {
+        const date = new Date(activity.timestamp);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        const activityItem = document.createElement('div');
+        activityItem.className = 'feed-item';
+        activityItem.innerHTML = `
+            <div class="feed-date">${formattedDate}</div>
+            <div class="feed-text">
+                <strong>${activity.user}</strong> ${activity.action}
+            </div>
+        `;
+        
+        activityFeed.appendChild(activityItem);
+    });
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="author" content="Untree.co" />
+<link rel="shortcut icon" href="favicon.png" />
+
+<meta name="description" content="" />
+<meta name="keywords" content="bootstrap, bootstrap5" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="fonts/icomoon/style.css" />
+<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
+
+<link rel="stylesheet" href="css/tiny-slider.css" />
+<link rel="stylesheet" href="css/aos.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap" rel="stylesheet" />
+
+<title>
+  Quantum Real Estate
+</title>
+
+<style>
+  /* body { */
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9; */
+  /* color: #333;
+      margin: 0;
+      padding: 0; */
+  /* line-height: 1.6; */
+  /* font-family: 'Work Sans', sans-serif; */
+  /* background: #f1f4f9; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* min-height: 100vh;
+      margin: 0;
+      padding: 20px; */
+  /* } */
+  body,
+  html {
+    min-height: 100%;
+    margin: 0;
+
+
+  }
+
+
+  h2 {
+    /* border-left: 5px solid #007BFF; */
+    padding-left: 15px;
+    margin-top: 40px;
+    font-size: 1.5rem;
+    color: #007BFF;
+  }
+
+  ul {
+    padding-left: 20px;
+    list-style-type: '✅ ';
+  }
+
+  .why-choose {
+    background-color: #eaf6ff;
+    border-left: 5px solid #00aaff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  .contact-section {
+    background: #007BFF;
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .contact-section a {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .tagline {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; full viewport height */
+    background-color: #f5f5f5;
+    /* optional, for subtle background */
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  .checkbox-container input {
+    width: auto;
+    margin-right: 10px;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .result {
+    margin-top: 25px;
+    font-size: 16px;
+    line-height: 1.6;
+    background: #f7f7f7;
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .result span {
+    display: block;
+    margin-bottom: 6px;
+    color: #222;
+  }
+
+  .contact-btn {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.3s ease;
+  }
+
+  .contact-btn:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+</style>
+
+</head>
+
+<body>
+  <div class="site-mobile-menu site-navbar-target">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="container">
+      <div class="menu-bg-outer">
+        <div class="menu-bg-inner">
+          <div class="site-navigation">
+            <a href="index.html" class="logo">
+              <img src="logo.png" alt="Logo" height="40" width="90">
+            </a>
+
+
+            <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+              <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li class="has-children">
+                  <a href="properties.html">Properties</a>
+                  <ul class="dropdown">
+                    <li><a href="Residential.html">Buy (Residential, Commercial, Land)</a></li>
+                    <li><a href="Sell.html">sell (Residential, Commercial, Land)</a></li>
+                    <li><a href="OfficeSpaces.html">Rent (Apartments, Villas, Office Spaces) </a></li>
+                    <li><a href="Commercial.html">Commercial </a></li>
+                    <li><a href="LuxuryProperties.html">Luxury Properties </a></li>
+                    <!-- <li class="has-children">
+                    <a href="#">Dropdown</a>
+                    <ul class="dropdown">
+                      <li><a href="#">Sub Menu One</a></li>
+                      <li><a href="#">Sub Menu Two</a></li>
+                      <li><a href="#">Sub Menu Three</a></li>
+                    </ul>
+                  </li> -->
+                  </ul>
+                </li>
+                <li><a href="about.html">About Us</a></li>
+
+                <li class="has-children">
+                  <a href="properties.html">Services</a>
+                  <ul class="dropdown">
+                    <li><a href="property valuation.html">property valuation</a></li>
+                    <li><a href="legal assistance.html">legal assistance</a></li>
+                    <li><a href="project marketing.html">project marketing </a></li>
+                    <li><a href="property management.html">property management </a></li>
+
+                  </ul>
+                </li>
+
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+
+
+                <li class="has-children">
+									<a href="login.html"><img src="images\login image.png" alt="Description" width="30"
+											height="30"></a>
+
+									<ul class="dropdown">
+										<li><a href="Residential.html">Super Admin</a></li>
+										<li><a href="Sell.html">Admin</a></li>
+
+										<li class="has-children">
+											<a href="#">User</a>
+											<ul class="sub-dropdown" style="left: auto; right: 100%; top: 0;">
+												<li><a href="buyerdashboard.html">Buyer</a></li>
+												<li><a href="sellerdashboard.html">Seller</a></li>
+												<li><a href="agentdashboard.html">Agent</a></li>
+											</ul>
+										</li>
+
+              </ul>
+              <a href="#"
+                class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none"
+                data-toggle="collapse" data-target="#main-navbar">
+                <span></span>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="hero page-inner overlay"
+    style="background-image: url('https://img.freepik.com/premium-photo/stylized-blue-white-houses-arranged-row-blue-gradient-background_276930-6237.jpg')">
+    <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-lg-9 text-center mt-5">
+          <h1 class="heading" data-aos="fade-up">Property Valuation Result</h1>
+
+          <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+            <ol class="breadcrumb text-center justify-content-center">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active text-white-50" aria-current="page">
+                Property Valuation Result
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br><br>
+  <div class="card-wrapper">
+    <div class="card">
+      <h2>Property Valuation</h2>
+
+      <label for="type">Property Type</label>
+      <select id="type">
+        <option value="Residential">Residential</option>
+        <option value="Commercial">Commercial</option>
+        <option value="Land">Land</option>
+        <option value="Shop">Shop</option>
+        <option value="Villa">Villa</option>
+      </select>
+
+      <label for="area">Area (in sq ft)</label>
+      <input type="number" id="area" placeholder="Enter area" />
+
+      <label for="rate">Rate per sq ft (₹)</label>
+      <input type="number" id="rate" placeholder="Enter rate" />
+
+      <label for="maintenance">Monthly Maintenance (₹)</label>
+      <input type="number" id="maintenance" placeholder="e.g., 1500" />
+
+      <label for="rent">Estimated Monthly Rent (₹)</label>
+      <input type="number" id="rent" placeholder="Optional for ROI" />
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="gst" />
+        <label for="gst">Apply GST (5%)</label>
+      </div>
+
+      <label for="loan">Loan Amount (₹)</label>
+      <input type="number" id="loan" placeholder="Optional EMI calc" />
+
+      <label for="interest">Interest Rate (%)</label>
+      <input type="number" id="interest" placeholder="e.g., 8.5" />
+
+      <label for="years">Loan Term (Years)</label>
+      <input type="number" id="years" placeholder="e.g., 20" />
+
+      <button onclick="calculateValuation()">Calculate</button>
+      <a href="contact.html" class="contact-btn">Contact Us</a>
+
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+  <script>
+    function calculateValuation() {
+      const area = parseFloat(document.getElementById('area').value);
+      const rate = parseFloat(document.getElementById('rate').value);
+      const gst = document.getElementById('gst').checked;
+      const type = document.getElementById('type').value;
+      const maintenance = parseFloat(document.getElementById('maintenance').value) || 0;
+      const rent = parseFloat(document.getElementById('rent').value) || 0;
+
+      const loan = parseFloat(document.getElementById('loan').value) || 0;
+      const interest = parseFloat(document.getElementById('interest').value) || 0;
+      const years = parseFloat(document.getElementById('years').value) || 0;
+
+      const result = document.getElementById('result');
+      result.innerHTML = "";
+
+      if (!area || !rate || area <= 0 || rate <= 0) {
+        result.innerHTML = `<span style="color:red;">Please enter valid area and rate.</span>`;
+        return;
+      }
+
+      let total = area * rate;
+      let gstValue = gst ? total * 0.05 : 0;
+      let finalValue = total + gstValue;
+
+      let annualMaintenance = maintenance * 12;
+      let annualRent = rent * 12;
+
+      let emi = 0;
+      if (loan > 0 && interest > 0 && years > 0) {
+        const monthlyRate = interest / 12 / 100;
+        const months = years * 12;
+        emi = (loan * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+          (Math.pow(1 + monthlyRate, months) - 1);
+      }
+
+      result.innerHTML = `
+        <span><strong>Type:</strong> ${type}</span>
+        <span><strong>Base Value:</strong> ₹ ${total.toLocaleString()}</span>
+        <span><strong>GST (5%):</strong> ₹ ${gstValue.toLocaleString()}</span>
+        <span><strong>Total Value:</strong> ₹ ${finalValue.toLocaleString()}</span>
+        <span><strong>Annual Maintenance:</strong> ₹ ${annualMaintenance.toLocaleString()}</span>
+        <span><strong>Expected Annual Rent:</strong> ₹ ${annualRent.toLocaleString()}</span>
+        ${emi > 0 ? `<span><strong>EMI (monthly):</strong> ₹ ${emi.toFixed(2).toLocaleString()}</span>` : ""}
+      `;
+    }
+  </script>
+  <br><br>
+  <footer class="site-footer ">
+    <div class="container">
+      <div class="row justify-content-between text-start gy-4">
+
+        <!-- Contact -->
+        <div class="col-12 col-md-4 col-lg-4">
+          <div class="widget">
+            <h3>Contact</h3>
+            <address>
+              Office No: 11, Third Floor,<br>
+              QuantumSoft Technologies,<br>
+              World Trade Center, A Wing,<br>
+              Fountain Road, CityVista, Kharadi,<br>
+              Pune, Maharashtra 411014
+            </address>
+            <ul class="list-unstyled links">
+              <li><a href="tel:+917498857371">+91-7498857371</a></li>
+              <li><a href="mailto:contact@quantumsofttechnologies.com">contact@quantumsofttechnologies.com</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sources -->
+        <div class="col-12 col-md-4 col-lg-4">
+          <div class="widget">
+            <h3>Sources</h3>
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+              <ul class="list-unstyled links me-3">
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href=" Vision & Mission.html"> Vision & Mission</a></li>
+
+                <li><a href="Terms & Condition.html">Terms & Condition</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+              </ul>
+              <ul class="list-unstyled links">
+                <!-- <li><a href="#">Partners</a></li>
+          <li><a href="#">Business</a></li> -->
+                <li><a href="Careers.html">Careers</a></li>
+                <li><a href="FAQ.html">FAQ</a></li>
+                <li><a href="Creative.html">Creative</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links & Social -->
+        <div class="col-12 col-md-4 col-lg-3">
+          <div class="widget">
+            <h3>Links</h3>
+            <ul class="list-unstyled links">
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+            <ul class="list-unstyled social d-flex gap-3 mt-3">
+              <li><a href="#"><span class="icon-instagram"></span></a></li>
+              <li><a href="#"><span class="icon-twitter"></span></a></li>
+              <li><a href="#"><span class="icon-facebook"></span></a></li>
+              <li><a href="#"><span class="icon-linkedin"></span></a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="row mt-5">
+        <div class="col-12 text-center small text-muted">
+          <div>
+            Distributed by
+            <a href="https://www.quantumsofttechnologies.com/" target="_blank">QuantumSoft Technologies</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- /.site-footer -->
+
+  <!-- Preloader -->
+  <div id="overlayer"></div>
+  <div class="loader">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/tiny-slider.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/counter.js"></script>
+  <script src="js/custom.js"></script>
+  <script>
+    // Property Details
+    const propertySize = 1800; // in sq ft
+
+    // CMA - Comparative Market Analysis
+    const comparables = [
+      { size: 1750, price: 350000 },
+      { size: 1820, price: 360000 },
+      { size: 1790, price: 355000 }
+    ];
+
+    const averagePricePerSqFt = comparables.reduce((sum, comp) => {
+      return sum + (comp.price / comp.size);
+    }, 0) / comparables.length;
+
+    const cmaValue = propertySize * averagePricePerSqFt;
+
+    // Income Approach
+    const monthlyRent = 2200;
+    const annualRent = monthlyRent * 12;
+    const capRate = 0.07; // 7%
+    const incomeValue = annualRent / capRate;
+
+    // Cost Approach
+    const landValue = 80000;
+    const rebuildCost = 280000;
+    const depreciation = 30000;
+    const costValue = rebuildCost - depreciation + landValue;
+
+    // Final Average Valuation
+    const averageValuation = (cmaValue + incomeValue + costValue) / 3;
+
+    // Output Results
+    const result = `
+=== Property Valuation ===
+CMA Value: $${cmaValue.toFixed(2)}
+Income Approach Value: $${incomeValue.toFixed(2)}
+Cost Approach Value: $${costValue.toFixed(2)}
+Final Average Valuation: $${averageValuation.toFixed(2)}
+    `;
+
+    document.getElementById("output").textContent = result;
+  </script>
+</body>
+
+</html>

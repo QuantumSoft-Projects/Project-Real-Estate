@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Register</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .register-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    .register-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.3s;
+    }
+    .form-group input:focus {
+      border-color: #007bff;
+    }
+    .btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+    @media (max-width: 480px) {
+      .register-container {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2>Register Admin</h2>
+    <form id="adminRegisterForm">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" required />
+      </div>
+      <div class="form-group">
+        <label for="phoneNo">Phone Number</label>
+        <input type="text" id="phoneNo" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+      </div>
+      <button type="submit" class="btn">Register Admin</button>
+      <div class="message" id="messageBox"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('adminRegisterForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const phoneNo = document.getElementById('phoneNo').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const messageBox = document.getElementById('messageBox');
+
+      const payload = {
+        fullName,
+        phoneNo,
+        email,
+        password,
+        role: "ADMIN"
+      };
+
+      try {
+        const response = await fetch("http://localhost:8080/api/admin/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          messageBox.textContent = "Admin registered successfully!";
+          messageBox.className = "message success";
+          document.getElementById('adminRegisterForm').reset();
+        } else {
+          const error = await response.json();
+          messageBox.textContent = error.message || "Registration failed!";
+          messageBox.className = "message error";
+        }
+      } catch (err) {
+        messageBox.textContent = "Error connecting to the server.";
+        messageBox.className = "message error";
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!-- /*
+* Template Name: Property
+* Template Author: Untree.co
+* Template URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Untree.co" />
+  <link rel="shortcut icon" href="favicon.png" />
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap5" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="fonts/icomoon/style.css" />
+  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
+
+  <link rel="stylesheet" href="css/tiny-slider.css" />
+  <link rel="stylesheet" href="css/aos.css" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <title>
+    Quantum Real Estate
+  </title>
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f4f4;
+    }
+
+    /* Header Section */
+    header {
+      background-color: rgba(0, 0, 0, 0.5);
+      ;
+      /* Sky Blue */
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .cta-button {
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Darker Sky Blue */
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 5px;
+    }
+
+    .cta-button:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Even Darker Blue */
+    }
+
+    /* Features Section */
+    .features {
+      padding: 50px 0;
+      background-color: #e6f7ff;
+      /* Light Sky Blue */
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      color: #333;
+    }
+
+    .feature-list {
+      display: flex;
+      justify-content: space-around;
+      gap: 30px;
+    }
+
+    .feature {
+      text-align: center;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 30%;
+    }
+
+    .feature h3 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .feature p {
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    /* Contact Section */
+    .contact {
+      padding: 50px 0;
+      background-color: rgba(20, 91, 117, 0.5);
+      /* Sky Blue */
+      color: white;
+    }
+
+    .contact h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    form button {
+      width: 100%;
+      padding: 12px;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Darker Sky Blue */
+      color: white;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 5px;
+    }
+
+    form button:hover {
+      background-color: #006699;
+      /* Even Darker Blue */
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #006699;
+      /* Dark Sky Blue */
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    footer p {
+      font-size: 1rem;
+    }
+
+
+    /* Gallery */
+    .gallery {
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+
+    .gallery h2 {
+      margin-bottom: 1rem;
+    }
+
+    .gallery .images {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .gallery img {
+      width: 300px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 
+.a
+    .about-section,
+    .services-section {
+      background-color: #fff;
+      margin: 30px 0;
+      padding: 60px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+ 
+    .about-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+ 
+    .about-image {
+      max-width: 400px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+ 
+    .about-text {
+      flex: 1;
+    }
+
+    
+    .about-image,
+    .service-image {
+     transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+    .about-image:hover,
+    .service-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+} */
+  </style>
+</head>
+
+
+<body>
+  <div class="site-mobile-menu site-navbar-target">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="container">
+      <div class="menu-bg-outer">
+        <div class="menu-bg-inner">
+          <div class="site-navigation">
+            <a href="index.html" class="logo">
+              <img src="logo.png" alt="Logo" height="40" width="90">
+            </a>
+
+
+            <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+              <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li class="has-children">
+                  <a href="properties.html">Properties</a>
+                  <ul class="dropdown">
+                    <li><a href="Residential.html">Buy (Residential, Commercial, Land)</a></li>
+                    <li><a href="Sell.html">Sell (Residential, Commercial, Land)</a></li>
+                    <li><a href="OfficeSpaces.html">Rent (Apartments, Villas, Office Spaces) </a></li>
+                    <li><a href="Commercial.html">Commercial </a></li>
+                    <li><a href="LuxuryProperties.html">Luxury Properties </a></li>
+                    <!-- <li class="has-children">
+                    <a href="#">Dropdown</a>
+                    <ul class="dropdown">
+                      <li><a href="#">Sub Menu One</a></li>
+                      <li><a href="#">Sub Menu Two</a></li>
+                      <li><a href="#">Sub Menu Three</a></li>
+                    </ul>
+                  </li> -->
+                  </ul>
+                </li>
+                <li><a href="about.html">About Us</a></li>
+
+                <li class="has-children">
+                  <a href=" services.html">Services</a>
+
+                  <ul class="dropdown">
+                    <li><a href="property valuation.html">Property Valuation </a></li>
+                    <li><a href="legal assistance.html">Legal Assistance</a></li>
+                    <li><a href="project marketing.html">Project Marketing </a></li>
+                    <li><a href="Property Management.html">Property Management</a></li>
+
+                  </ul>
+                </li>
+
+                <li><a href="blog.html">Blog</a></li>
+
+                <li><a href="contact.html">Contact Us</a></li>
+
+
+                <li class="has-children">
+									<a href="login.html"><img src="images\login image.png" alt="Description" width="30"
+											height="30"></a>
+
+									<ul class="dropdown">
+										<li><a href="Residential.html">Super Admin</a></li>
+										<li><a href="Sell.html">Admin</a></li>
+
+										<li class="has-children">
+											<a href="#">User</a>
+											<ul class="sub-dropdown" style="left: auto; right: 100%; top: 0;">
+												<li><a href="buyerdashboard.html">Buyer</a></li>
+												<li><a href="sellerdashboard.html">Seller</a></li>
+												<li><a href="agentdashboard.html">Agent</a></li>
+											</ul>
+										</li>
+
+              </ul>
+              <a href="#"
+                class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none"
+                data-toggle="collapse" data-target="#main-navbar">
+                <span></span>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="hero page-inner overlay"
+    style="background-image: url('https://img.freepik.com/premium-photo/stylized-blue-white-houses-arranged-row-blue-gradient-background_276930-6237.jpg')">
+    <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-lg-9 text-center mt-5">
+          <h1 class="heading" data-aos="fade-up">Project Marketing</h1>
+
+          <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+            <ol class="breadcrumb text-center justify-content-center">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active text-white-50" aria-current="page">
+                Project Marketing
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <!-- <section class="gallery">
+    <h2><b style="color: black;">Gallery</b></h2>
+    <div class="images">
+      <img src="images\commercial1.jpg" alt="Apartment View">
+      <img src="images\luxuary13.jpg" alt="Living Room">
+      <img src="images\apartmentback1.jpg" alt="Balcony View">
+      <img src="images\commercial1.jpg" alt="Apartment View">
+      <img src="images\luxuary13.jpg" alt="Living Room">
+      <img src="images\apartmentback1.jpg" alt="Balcony View">
+      <img src="images\commercial1.jpg" alt="Apartment View">
+      <img src="images\luxuary13.jpg" alt="Living Room">
+      <img src="images\apartmentback1.jpg" alt="Balcony View">
+      <img src="images\commercial1.jpg" alt="Apartment View">
+      <img src="images\luxuary13.jpg" alt="Living Room">
+      <img src="images\apartmentback1.jpg" alt="Balcony View">
+   
+    </div>
+  </section> -->
+
+  <section class="gallery" style="text-align: center; padding: 40px; background-color: #f8f8f8;">
+    <h2><b style="color: black; font-size: 2rem;">Gallery</b></h2>
+    <div class="images"
+      style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 30px;">
+
+      <img src="images/commercial1.jpg" alt="Apartment View"
+        style="width: 98%; height: 128px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/luxuary13.jpg" alt="Living Room"
+        style="width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/apartmentback1.jpg" alt="Balcony View"
+        style="width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/commercial1.jpg" alt="Apartment View"
+        style="width: 98%; height: 128px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/commercial1.jpg" alt="Apartment View"
+        style="width: 98%; height: 128px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/luxuary13.jpg" alt="Living Room"
+        style="width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/apartmentback1.jpg" alt="Balcony View"
+        style="width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/commercial1.jpg" alt="Apartment View"
+        style="width: 98%; height: 128px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/commercial1.jpg" alt="Apartment View"
+        style="width: 98%; height: 128px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/luxuary13.jpg" alt="Living Room"
+        style="width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/apartmentback1.jpg" alt="Balcony View"
+        style="width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <img src="images/commercial1.jpg" alt="Apartment View"
+        style="width: 98%; height: 128px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.2)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+      <!-- ...repeat for others -->
+
+    </div>
+  </section>
+
+
+  <section class="features">
+    <div class="container">
+      <h2>Project Features</h2>
+      <div class="feature-list">
+        <div class="feature">
+          <h3><b style="color: black;">Prime Location</b></h3>
+          <p>Located in downtown Greenview, close to shopping, culture, and transportation.</p>
+        </div>
+        <div class="feature">
+          <h3><b style="color: black;">Modern Design</b></h3>
+          <p>Spacious, contemporary units with luxury finishes and panoramic city views.</p>
+        </div>
+        <div class="feature">
+          <h3><b style="color: black;">Exclusive Amenities</b></h3>
+          <p>State-of-the-art gym, rooftop pool, 24/7 concierge service, and more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 
+<div class="about-content">
+  <img src="https://atlas-content-cdn.pixelsquid.com/stock-images/simple-house-NxE5a78-600.jpg" alt="Modern House" class="about-image" height="-30%" width="30%">
+  <div class="about-text">
+    <h3>Clean and Modern Design</h3>
+    <p>Our homes are designed with clean lines, modern aesthetics, and energy-efficient features that meet today’s needs and tomorrow’s dreams.</p>
+    <button id="openModalBtn" class="quote-btn">Request Quote</button>
+  </div>
+</div> -->
+
+  <!-- Contact Section -->
+
+  <h2 style="text-align: center; color: #001F4D;">Contact Us</h2>
+
+  <form onsubmit="showPopup(event)" style="max-width: 600px; margin: auto;">
+    <label style="display: block; margin-top: 20px; color: black;">Full Name</label>
+    <input type="text" style="width: 100%; padding: 10px; border-radius: 5px; border: none;">
+
+    <label style="display: block; margin-top: 20px; color: black;">Email Address</label>
+    <input type="email" style="width: 100%; padding: 10px; border-radius: 5px; border: none;">
+
+    <label style="display: block; margin-top: 20px; color: black;">Message</label>
+    <textarea rows="5" style="width: 100%; padding: 10px; border-radius: 5px; border: none;"></textarea>
+
+    <button type="submit"
+      style="margin-top: 25px; width: 100%; padding: 15px; background-color: #3e555e; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
+      Send Message
+    </button>
+  </form>
+
+  <!-- Popup Message -->
+  <div id="popup"
+    style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 9999; text-align: center;">
+    <p style="margin: 0; font-size: 18px; color: #333;">Message Sent Successfully!</p>
+    <button onclick="closePopup()"
+      style="margin-top: 15px; padding: 8px 20px; border: none; background-color: #3e555e; color: white; border-radius: 5px; cursor: pointer;">
+      OK
+    </button>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998;">
+  </div>
+
+  <br><br>
+
+  <footer class="site-footer ">
+    <div class="container">
+      <div class="row justify-content-between text-start gy-4">
+
+        <!-- Contact -->
+        <div class="col-12 col-md-4 col-lg-4">
+          <div class="widget">
+            <h3>Contact</h3>
+            <address>
+              Office No: 11, Third Floor,<br>
+              QuantumSoft Technologies,<br>
+              World Trade Center, A Wing,<br>
+              Fountain Road, CityVista, Kharadi,<br>
+              Pune, Maharashtra 411014
+            </address>
+            <ul class="list-unstyled links">
+              <li><a href="tel:+917498857371">+91-7498857371</a></li>
+              <li><a href="mailto:contact@quantumsofttechnologies.com">contact@quantumsofttechnologies.com</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sources -->
+        <div class="col-12 col-md-4 col-lg-4">
+          <div class="widget">
+            <h3>Sources</h3>
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+              <ul class="list-unstyled links me-3">
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href=" Vision & Mission.html"> Vision & Mission</a></li>
+
+                <li><a href="Terms & Condition.html">Terms & Condition</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+              </ul>
+              <ul class="list-unstyled links">
+                <!-- <li><a href="#">Partners</a></li>
+                <li><a href="#">Business</a></li> -->
+                <li><a href="Careers.html">Careers</a></li>
+                <li><a href="FAQ.html">FAQ</a></li>
+                <li><a href="Creative.html">Creative</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links & Social -->
+        <div class="col-12 col-md-4 col-lg-3">
+          <div class="widget">
+            <h3>Links</h3>
+            <ul class="list-unstyled links">
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+            <ul class="list-unstyled social d-flex gap-3 mt-3">
+              <li><a href="#"><span class="icon-instagram"></span></a></li>
+              <li><a href="#"><span class="icon-twitter"></span></a></li>
+              <li><a href="#"><span class="icon-facebook"></span></a></li>
+              <li><a href="#"><span class="icon-linkedin"></span></a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="row mt-5">
+        <div class="col-12 text-center small text-muted">
+          <div>
+            Distributed by
+            <a href="https://www.quantumsofttechnologies.com/" target="_blank">QuantumSoft Technologies</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- /.site-footer -->
+
+  <!-- Preloader -->
+  <div id="overlayer"></div>
+  <div class="loader">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/tiny-slider.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/counter.js"></script>
+  <script src="js/custom.js"></script>
+  <script>
+    function showPopup(event) {
+      event.preventDefault(); // prevent actual form submission
+      document.getElementById("popup").style.display = "block";
+      document.getElementById("overlay").style.display = "block";
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+    }
+  </script>
+</body>
+
+</html>

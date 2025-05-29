@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Property | Real Estate Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3f37c9;
+            --dark: #1e1e24;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f72585;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        /* body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f5f7fb;
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    } */
+
+        /* Sidebar Styles */
+        /* .sidebar {
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem 1rem;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      height: 100vh;
+      width: 250px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      padding: 0 0.75rem;
+    }
+
+    .brand-icon {
+      font-size: 1.75rem;
+      color: white;
+    }
+
+    .brand-text {
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .nav-item {
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link {
+      color: white;
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+    }
+
+    .nav-icon {
+      width: 24px;
+      text-align: center;
+    } */
+
+        /* Main Content Styles */
+        .main-content {
+            grid-column: 2;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-icon {
+            color: var(--primary);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-section-icon {
+            color: var(--primary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-label-icon {
+            color: var(--gray);
+            width: 20px;
+            text-align: center;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .btn-save {
+            background-color: var(--primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-save:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            font-size: 1rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                grid-column: 1;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+
+        /* Tag Input Styles */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        /* Image Preview */
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--light-gray);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <!-- <div class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <div class="brand-text">EstatePro</div>
+      </div>
+      
+      <nav>
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+            <div>Dashboard</div>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="#" class="nav-link active">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div>Properties</div>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <div class="nav-icon"><i class="fas fa-users"></i></div>
+            <div>Clients</div>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <div class="nav-icon"><i class="fas fa-user-tie"></i></div>
+            <div>Agents</div>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <div class="nav-icon"><i class="fas fa-file-contract"></i></div>
+            <div>Contracts</div>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <div class="nav-icon"><i class="fas fa-cog"></i></div>
+            <div>Settings</div>
+          </a>
+        </div>
+      </nav>
+    </div> -->
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">
+                    <i class="fas fa-edit page-icon"></i>
+                    Update Property
+                </h1>
+
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <div>John Doe</div>
+                </div>
+            </div>
+
+            <form id="updatePropertyForm">
+                <div class="form-card">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-info-circle form-section-icon"></i>
+                        Basic Information
+                    </h2>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title" class="form-label">
+                                <i class="fas fa-heading form-label-icon"></i>
+                                Property Title
+                            </label>
+                            <input type="text" class="form-control" id="title" value="Luxury Villa with Ocean View"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type" class="form-label">
+                                <i class="fas fa-home form-label-icon"></i>
+                                Property Type
+                            </label>
+                            <select class="form-select" id="type" required>
+                                <option value="">Select type</option>
+                                <option value="House" selected>House</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Villa">Villa</option>
+                                <option value="Condo">Condo</option>
+                                <option value="Townhouse">Townhouse</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price" class="form-label">
+                                <i class="fas fa-dollar-sign form-label-icon"></i>
+                                Price
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="price" value="1250000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status" class="form-label">
+                                <i class="fas fa-tag form-label-icon"></i>
+                                Status
+                            </label>
+                            <select class="form-select" id="status" required>
+                                <option value="For Sale" selected>For Sale</option>
+                                <option value="For Rent">For Rent</option>
+                                <option value="Sold">Sold</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Off Market">Off Market</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="location" class="form-label">
+                                <i class="fas fa-map-marker-alt form-label-icon"></i>
+                                Location
+                            </label>
+                            <input type="text" class="form-control" id="location" value="123 Ocean Drive, Miami, FL"
+                                required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-align-left form-label-icon"></i>
+                                Description
+                            </label>
+                            <textarea class="form-control" id="description" rows="4"
+                                required>This stunning luxury villa offers breathtaking ocean views from every room. Featuring 5 bedrooms, 6.5 bathrooms, and over 8,000 sqft of living space. The property includes a private beach access, infinity pool, and smart home technology throughout.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-cogs form-section-icon"></i>
+                        Features & Amenities
+                    </h2>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="bedrooms" class="form-label">
+                                <i class="fas fa-bed form-label-icon"></i>
+                                Bedrooms
+                            </label>
+                            <input type="number" class="form-control" id="bedrooms" value="5" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bathrooms" class="form-label">
+                                <i class="fas fa-bath form-label-icon"></i>
+                                Bathrooms
+                            </label>
+                            <input type="number" class="form-control" id="bathrooms" value="6.5" step="0.5" min="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="area" class="form-label">
+                                <i class="fas fa-ruler-combined form-label-icon"></i>
+                                Area (sqft)
+                            </label>
+                            <input type="number" class="form-control" id="area" value="8200">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="yearBuilt" class="form-label">
+                                <i class="fas fa-calendar-alt form-label-icon"></i>
+                                Year Built
+                            </label>
+                            <input type="number" class="form-control" id="yearBuilt" value="2018">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="amenities" class="form-label">
+                                <i class="fas fa-swimming-pool form-label-icon"></i>
+                                Amenities
+                            </label>
+                            <input type="text" class="form-control" id="amenitiesInput"
+                                placeholder="Add amenities (comma separated)">
+                            <div class="tag-container" id="amenitiesContainer">
+                                <div class="tag">
+                                    Swimming Pool <i class="fas fa-times tag-remove"></i>
+                                </div>
+                                <div class="tag">
+                                    Gym <i class="fas fa-times tag-remove"></i>
+                                </div>
+                                <div class="tag">
+                                    Smart Home <i class="fas fa-times tag-remove"></i>
+                                </div>
+                                <div class="tag">
+                                    Ocean View <i class="fas fa-times tag-remove"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-images form-section-icon"></i>
+                        Media & Images
+                    </h2>
+
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="images" class="form-label">
+                                <i class="fas fa-link form-label-icon"></i>
+                                Image URLs
+                            </label>
+                            <input type="text" class="form-control" id="imagesInput"
+                                placeholder="Add image URLs (comma separated)">
+                            <div class="image-preview-container" id="imagePreviewContainer">
+                                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6"
+                                    class="image-preview">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+                                    class="image-preview">
+                                <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6"
+                                    class="image-preview">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-user-tie form-section-icon"></i>
+                        Agent Information
+                    </h2>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="agentId" class="form-label">
+                                <i class="fas fa-id-badge form-label-icon"></i>
+                                Agent ID
+                            </label>
+                            <input type="number" class="form-control" id="agentId" value="1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="agentName" class="form-label">
+                                <i class="fas fa-user form-label-icon"></i>
+                                Agent Name
+                            </label>
+                            <input type="text" class="form-control" id="agentName" value="John Doe" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="fas fa-times btn-icon"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-save">
+                        <i class="fas fa-save btn-icon"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tag management for amenities
+            const amenitiesInput = document.getElementById('amenitiesInput');
+            const amenitiesContainer = document.getElementById('amenitiesContainer');
+
+            amenitiesInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    const value = this.value.trim();
+                    if (value) {
+                        addTag(value);
+                        this.value = '';
+                    }
+                }
+            });
+
+            // Handle tag removal
+            amenitiesContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    e.target.parentElement.remove();
+                }
+            });
+
+            function addTag(value) {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `${value} <i class="fas fa-times tag-remove"></i>`;
+                amenitiesContainer.appendChild(tag);
+            }
+
+            // Image URL management
+            const imagesInput = document.getElementById('imagesInput');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+            imagesInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    const value = this.value.trim();
+                    if (value) {
+                        addImagePreview(value);
+                        this.value = '';
+                    }
+                }
+            });
+
+            function addImagePreview(url) {
+                const img = document.createElement('img');
+                img.className = 'image-preview';
+                img.src = url;
+                imagePreviewContainer.appendChild(img);
+            }
+
+            // Form submission
+            document.getElementById('updatePropertyForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Collect all amenities
+                const amenityTags = Array.from(document.querySelectorAll('#amenitiesContainer .tag'));
+                const amenities = amenityTags.map(tag => tag.textContent.trim().replace('×', '').trim());
+
+                // Collect all image URLs
+                const images = Array.from(document.querySelectorAll('#imagePreviewContainer .image-preview'))
+                    .map(img => img.src);
+
+                const propertyId = 1; // Replace with dynamic value if needed
+
+                const data = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    location: document.getElementById('location').value,
+                    price: parseFloat(document.getElementById('price').value),
+                    type: document.getElementById('type').value,
+                    status: document.getElementById('status').value,
+                    bedrooms: parseInt(document.getElementById('bedrooms').value) || 0,
+                    bathrooms: parseFloat(document.getElementById('bathrooms').value) || 0,
+                    area: parseInt(document.getElementById('area').value) || 0,
+                    yearBuilt: parseInt(document.getElementById('yearBuilt').value) || 0,
+                    amenities: amenities,
+                    images: images,
+                    agent: {
+                        agentId: parseInt(document.getElementById('agentId').value)
+                    }
+                };
+
+                console.log('Submitting:', data); // For debugging
+
+                fetch(`http://localhost:8081/api/properties/${propertyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Failed to update property');
+                        return res.json();
+                    })
+                    .then(response => {
+                        alert('Property updated successfully!');
+                        console.log(response);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Error updating property: ' + err.message);
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

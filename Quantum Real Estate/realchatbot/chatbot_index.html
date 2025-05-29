@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real Estate Assist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #f5f6fa;
+            --chat-bubble-user: #dfe6ff;
+            --chat-bubble-bot: #ffffff;
+            --success-color: #00b894;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            
+        }
+
+        .app-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+            position: relative;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulse 15s infinite linear;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .app-header h1 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-header p {
+            opacity: 0.9;
+            margin-bottom: 0;
+            position: relative;
+        }
+
+        .chat-container {
+            padding: 1.5rem;
+            height: 400px;
+            overflow-y: auto;
+            background-color: white;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30,30 Q50,10 70,30 T90,50 Q70,70 50,90 T10,50 Q30,30 50,10 Z" fill="none" stroke="%23f1f2f6" stroke-width="0.5"/></svg>');
+            background-size: 200px;
+            background-position: center;
+            background-attachment: local;
+        }
+
+        .chat-message {
+            display: flex;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 20px;
+            position: relative;
+            word-wrap: break-word;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .bot-bubble {
+            background-color: var(--chat-bubble-bot);
+            border-bottom-left-radius: 5px;
+            margin-left: 0.5rem;
+            border: 1px solid #eee;
+        }
+
+        .user-bubble {
+            background-color: var(--chat-bubble-user);
+            border-bottom-right-radius: 5px;
+            margin-right: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #eee;
+            position: relative;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            border-radius: 25px;
+            padding: 0.9rem 1.5rem;
+            border: 2px solid #eee;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            background-color: var(--light-color);
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            margin-left: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(108, 92, 231, 0.4);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .option-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-button:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-button.selected {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .property-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: white;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 1.5rem 1rem;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            border-radius: 3px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 0.8rem 1.2rem;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #b2bec3;
+            border-radius: 50%;
+            margin: 0 3px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingAnimation {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+
+            30% {
+                transform: translateY(-5px);
+                opacity: 1;
+            }
+        }
+
+        .welcome-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeOut 1s ease-in-out 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .welcome-logo {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-15px);
+            }
+        }
+
+        .welcome-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--chat-bubble-user);
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.8rem;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .message-content {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .property-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        .price-tag {
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .suggested-search {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .suggested-search h6 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        /* Animation classes */
+        .bounce-in {
+            animation: bounceIn 0.5s;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .app-container {
+                margin: 0;
+                border-radius: 0;
+                height: 100vh;
+            }
+
+            .chat-container {
+                height: calc(100vh - 200px);
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+        }
+
+        /* Add these styles to your existing CSS */
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #6c5ce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .contact-buttons .disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .reset-button {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            z-index: 1000;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+            /* Hidden by default */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Welcome Animation -->
+    <div class="welcome-animation">
+        <div class="welcome-logo">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="welcome-text">Real Estate Assist</div>
+    </div>
+
+    <div class="container py-4">
+        <div class="app-container">
+            <div class="app-header">
+                <img src="/images/Chatbot_logo.png"
+                    style="height: 50px; margin-right: 600px; border-radius: 19px;  margin-bottom: -68px;margin-left: 149px;width: 55px;">
+                <h1><i class="fas fa- me-2"></i>Real Estate Assist</h1>
+                <p>Smart Companion For Finding The Perfect Home</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="search-progress"></div>
+            </div>
+
+            <div class="chat-container" id="chat-container">
+                <!-- Messages will appear here -->
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chat-query"
+                    placeholder="Ask me about properties, locations, prices..." onkeypress="handleKeyPress(event)">
+                <button class="send-button" onclick="handleChatbotSearch()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="search-results" class="mt-4"></div>
+    </div>
+
+    <!-- Floating action button -->
+    <div class="floating-action pulse" onclick="showQuickHelp()">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <script>
+        // Enhanced property data
+        const propertyData = {
+            locations: ['Pune', 'Mumbai', 'Bangalore', 'Hyderabad', 'Delhi NCR', 'Amravati'],
+            sub_area: {
+                'Pune': [
+                    'Kharadi', 'Shivajinagar', 'Baner', 'Sinhgad Road', 'Koregaon Park',
+                    'Hinjewadi', 'Wakad', 'Viman Nagar'
+                ],
+                'Mumbai': [
+                    'Bandra', 'Juhu', 'Powai', 'Lower Parel', 'Andheri West', 'Worli'
+                ],
+                'Bangalore': [
+                    'Whitefield', 'Koramangala', 'Indiranagar', 'Sarjapur Road', 'HSR Layout', 'MG Road'
+                ],
+                'Hyderabad': [
+                    'Gachibowli', 'Jubilee Hills', 'Banjara Hills', 'Hitech City', 'Kondapur', 'Manikonda'
+                ],
+                'Delhi NCR': [
+                    'Gurgaon', 'Noida', 'Greater Kailash', 'Saket', 'Dwarka', 'Vasant Kunj'
+                ],
+                'Amravati': [
+                    'Kathora', 'Harshraj', 'Pote', 'Mahakal Nagar', 'Rangoli Lawn', 'Keshav Phata',
+                    'Shegaon Naka', 'Ram Nagar', 'Rathi Nagar', 'Rahatgaon', 'Mahakal Nagar',
+                    'Sai Nagar', 'Parvati Nagar', 'Dastur Nagar', 'Jalaram Nagar',
+                    'Badnera', 'Juni Vasti', 'Navi Vasti',
+                ]
+            },
+
+
+            acquisitionTypes: ['Buy', 'Rent', 'Lease', 'PG/Hostel'],
+            propertyTypes: ['1 BHK', '2 BHK', '3 BHK', '4 BHK'],
+            priceRanges: {
+                'Buy': ['<= 50 Lac', '50 Lac - 1 Cr', '1 Cr - 1.5 Cr', '1.5 Cr - 2 Cr', '> 2 Cr'],
+                'Rent': ['<= 15k', '15k - 30k', '30k - 50k', '50k - 1L', '> 1L'],
+                'Lease': ['<= 50 Lac', '50 Lac - 1 Cr', '1 Cr - 1.5 Cr', '1.5 Cr - 2 Cr', '> 2 Cr'],
+                'PG/Hostel': ['<= 15k', '15k - 30k', '30k - 50k', '50k - 1L', '> 1L']
+            },
+            amenities: ['Swimming Pool', 'Gym', 'Park', 'Security', 'Power Backup', 'Club House'],
+            statuses: ['Ready to Move', 'Under Construction', 'New Launch', 'Resale'],
+            furnishings: ['Furnished', 'Semi-Furnished', 'Unfurnished']
+        };
+
+        // Creative greetings and prompts
+        const greetings = [
+            "Hello there! 👋 I'm your Real Estate Assist. Let's find your dream home!",
+            "Welcome to Real Estate Assist! 🏡 Where should we begin our search today?",
+            "Hi! I'm here to help you navigate the property market. What's on your wishlist?",
+            "Greetings! 🌟 Let's make your property hunt exciting and successful!",
+            "Hello future homeowner! 🏠 Let's discover your perfect place together!"
+        ];
+
+        const quickPrompts = [
+            "I need a 4 BHK for Lease with Ready to Move Unfurnished in Pune.",
+            "Any flats to buy in Hyderabad.",
+            "I need a 4 BHK for rent with Furnished in Delhi NCR.",
+            "I need a 2 BHK for Buy with Furnished in Bangalore.",
+            "I need a 2 BHK for Buy with Furnished in  baner,pune.",
+            "I need a 2 BHK for Buy with Furnished in Hyderabad.",
+            "I need a 4 BHK for Rent with Furnished in Hyderabad.",
+            "I need a 3 BHK for Buy with New Launch Furnished in Bangalore.",
+            "I need a 2 BHK for Rent with Ready to Move Furnished in Bangalore.",
+            "I need a 4 BHK for Buy with Under Construction Unfurnished in Hyderabad.",
+            "I need a 2 BHK for Rent with Resale Semi-Furnished in Hyderabad",
+            "I need a 4 BHK for Buy with Resale Unfurnished in Delhi NCR.",
+            "I need a Rent property with Ready to Move with Semi-Furnished in Hyderabad.",
+            "I need a 2BHK Rent property with Ready to Move with Semi-Furnished in Hyderabad under price 50k.",
+            "I need a 2BHK PG/Hostel property with Ready to Move with Unfurnished in Pune under price 50k.",
+            "show me a 4BHK Lease property with Ready to Move with Unfurnished in Mumbai.",
+            "show me a 4bhk lease property with ready to move with unfurnished in mumbai."
+        ];
+
+        const botPersonality = [
+            "I've analyzed thousands of properties to find your perfect match!",
+            "Based on current market trends, I have some great options for you!",
+            "Your dream home is just a few questions away!",
+            "I'm excited to help you with this important decision!",
+            "Let me put my real estate expertise to work for you!"
+        ];
+
+        let currentCriteria = null;
+        let searchCriteria = {
+            city: '',
+            sub_area: '',
+            acquisitionType: '',
+            propertyType: '',
+            priceRange: '',
+            status: '',
+            furnishing: '',
+            amenities: []
+        };
+
+        let userName = '';
+        let conversationState = 'greeting';
+
+        // Initialize the chat
+        setTimeout(() => {
+            showTypingIndicator();
+            setTimeout(() => {
+                addBotMessage(greetings[Math.floor(Math.random() * greetings.length)]);
+                showQuickSuggestions();
+            }, 1500);
+        }, 500);
+
+        function addBotMessage(message, options = null, isHtml = false) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message bot-message bounce-in';
+
+            let messageContent = `
+      <div class="message-content">
+        <div class="bot-avatar">PF</div>
+        <div>
+          <div class="message-bubble bot-bubble">
+    `;
+
+            if (isHtml) {
+                messageContent += message;
+            } else {
+                messageContent += `<div>${message}</div>`;
+            }
+
+            if (options) {
+                messageContent += `<div class="options-container mt-2">`;
+                options.forEach(option => {
+                    messageContent += `<div class="option-button" onclick="handleOptionSelect('${option.replace(/'/g, "\\'")}')">${option}</div>`;
+                });
+                messageContent += `</div>`;
+            }
+
+            messageContent += `
+            <div class="message-time">${getCurrentTime()}</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+            messageDiv.innerHTML = messageContent;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addUserMessage(message) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message user-message bounce-in';
+            messageDiv.innerHTML = `
+      <div class="message-content">
+        <div>
+          <div class="message-bubble user-bubble">
+            <div>${message}</div>
+            <div class="message-time">${getCurrentTime()}</div>
+          </div>
+        </div>
+        <div class="user-avatar">${userName ? userName.charAt(0).toUpperCase() : 'Y'}</div>
+      </div>
+    `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            const chatContainer = document.getElementById('chat-container');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message bot-message';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+      <div class="message-content">
+        <div class="bot-avatar">PF</div>
+        <div class="message-bubble bot-bubble">
+          <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+    `;
+            chatContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function scrollToBottom() {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                handleChatbotSearch();
+            }
+        }
+
+        function showQuickSuggestions() {
+            const suggestions = [...quickPrompts];
+            let html = `
+      <div class="suggested-search">
+        <h6><i class="fas fa-lightbulb me-2"></i>Try these searches:</h6>
+        <div class="options-container">
+    `;
+
+            // Shuffle and take 4 random prompts
+            suggestions.sort(() => 0.5 - Math.random()).slice(0, 4).forEach(prompt => {
+                html += `<div class="option-button" onclick="handleQuickQuestion('${prompt.replace(/'/g, "\\'")}')">${prompt}</div>`;
+            });
+
+            html += `</div></div>`;
+            addBotMessage(html, null, true);
+        }
+
+        function showQuickHelp() {
+            addBotMessage(`
+      <div class="suggested-search">
+        <h6><i class="fas fa-question-circle me-2"></i>How can I help?</h6>
+        <p>You can ask me about:</p>
+        <ul>
+          <li>Properties in specific areas</li>
+          <li>Price trends and comparisons</li>
+          <li>Best locations for your needs</li>
+          <li>Property recommendations</li>
+          <li>Market insights</li>
+        </ul>
+        <p>Try saying: <em>"Show 3 BHK flats in Bangalore under 1.5 Cr"</em></p>
+      </div>
+    `, null, true);
+        }
+
+        function handleQuickQuestion(question) {
+            document.getElementById('chat-query').value = question;
+            handleChatbotSearch();
+        }
+
+        function handleOptionSelect(option) {
+            if (currentCriteria) {
+                searchCriteria[currentCriteria] = option;
+                addUserMessage(option);
+                updateProgressBar();
+
+                // Special handling for acquisition type as it affects price ranges
+                if (currentCriteria === 'acquisitionType') {
+                    searchCriteria.priceRange = '';
+                }
+
+                askNextQuestion();
+            }
+        }
+
+        function updateProgressBar() {
+            const totalCriteria = Object.keys(searchCriteria).length;
+            let filledCriteria = 0;
+
+            for (const key in searchCriteria) {
+                if (Array.isArray(searchCriteria[key])) {
+                    if (searchCriteria[key].length > 0) filledCriteria++;
+                } else if (searchCriteria[key]) filledCriteria++;
+            }
+
+            const progressPercentage = (filledCriteria / totalCriteria) * 100;
+            document.getElementById('search-progress').style.width = `${progressPercentage}%`;
+        }
+
+        function askNextQuestion() {
+            setTimeout(() => {
+                hideTypingIndicator();
+
+                const personality = botPersonality[Math.floor(Math.random() * botPersonality.length)];
+
+                if (!searchCriteria.city) {
+                    currentCriteria = 'city';
+                    addBotMessage(`${personality} Let's start with location. Which city are you interested in?`,
+                        (propertyData.locations));
+                } else if (!searchCriteria.sub_area) {
+                    currentCriteria = 'sub_area';
+                    const subAreas = propertyData.sub_area[searchCriteria.city] || [];
+                    addBotMessage("Which area in " + searchCriteria.city + " are you interested in?",
+                        subAreas);
+                }
+                else if (!searchCriteria.propertyType) {
+                    currentCriteria = 'propertyType';
+                    addBotMessage("What type of property are you dreaming of?",
+                        propertyData.propertyTypes);
+                }
+                else if (!searchCriteria.acquisitionType) {
+                    currentCriteria = 'acquisitionType';
+                    addBotMessage("Are you looking to buy, rent, lease, or PG/Hostel?",
+                        propertyData.acquisitionTypes);
+                }
+                else if (!searchCriteria.priceRange) {
+                    currentCriteria = 'priceRange';
+                    const ranges = propertyData.priceRanges[searchCriteria.acquisitionType];
+                    addBotMessage("What's your comfortable budget range?", ranges);
+                }
+                else if (!searchCriteria.status) {
+                    currentCriteria = 'status';
+                    addBotMessage("Do you have any preference about the property status?",
+                        propertyData.statuses);
+                }
+                else if (!searchCriteria.furnishing) {
+                    currentCriteria = 'furnishing';
+                    addBotMessage("How would you like the property to be furnished?",
+                        propertyData.furnishings);
+                }
+                else if (searchCriteria.amenities.length === 0) {
+                    currentCriteria = 'amenities';
+                    addBotMessage("Any must-have amenities? (You can select multiple)",
+                        propertyData.amenities);
+                }
+                else {
+                    showPropertyResults();
+                }
+            }, 1000);
+        }
+
+        function handleChatbotSearch() {
+            const query = document.getElementById('chat-query').value.trim();
+            if (!query) return;
+
+            addUserMessage(query);
+            document.getElementById('chat-query').value = '';
+            showTypingIndicator();
+
+            setTimeout(() => {
+                hideTypingIndicator();
+
+                // Simple NLP simulation
+                const queryLower = query.toLowerCase();
+
+                // Detect greeting
+                if (queryLower.match(/\b(hi|hello|hey)\b/)) {
+                    addBotMessage(greetings[Math.floor(Math.random() * greetings.length)]);
+                    showQuickSuggestions();
+                    return;
+                }
+
+                // Detect name
+                if (queryLower.match(/my name is|i am|call me/)) {
+                    const nameMatch = query.match(/(?:my name is|i am|call me) (\w+)/i);
+                    if (nameMatch && nameMatch[1]) {
+                        userName = nameMatch[1];
+                        addBotMessage(`Nice to meet you, ${userName}! 😊 How can I assist you with your property search today?`);
+                    }
+                    return;
+                }
+
+                // Detect thank you
+                if (queryLower.match(/\b(thanks|thank you|appreciate)\b/)) {
+                    addBotMessage("You're very welcome! 😊 Is there anything else I can help you with?");
+                    return;
+                }
+                for (const [city, subAreas] of Object.entries(propertyData.sub_area)) {
+                    for (const sub of subAreas) {
+                        if (queryLower.includes(sub.toLowerCase())) {
+                            searchCriteria.sub_area = sub;
+                            if (!searchCriteria.city) {
+                                searchCriteria.city = city; // ✅ Auto-assign correct city
+                            }
+                            break;
+                        }
+                    }
+                    if (searchCriteria.sub_area) break;
+                }
+
+                // If city is still empty, check city names directly
+                if (!searchCriteria.city) {
+                    for (const city of propertyData.locations) {
+                        if (queryLower.includes(city.toLowerCase())) {
+                            searchCriteria.city = city;
+                            break;
+                        }
+                    }
+                }
+
+
+
+
+
+                // Detect acquisition type
+                if (queryLower.includes('buy') || queryLower.includes('rental')) {
+                    searchCriteria.acquisitionType = 'Buy';
+                } else if (queryLower.includes('rent') || queryLower.includes('purchase')) {
+                    searchCriteria.acquisitionType = 'Rent';
+                } else if (queryLower.includes('lease')) {
+                    searchCriteria.acquisitionType = 'Lease';
+                } else if (queryLower.includes('pg/hostel')) {
+                    searchCriteria.acquisitionType = 'PG/Hostel'
+                }
+                // Detect BHK
+                const bhkMatch = query.match(/\d\s?(BHK|bhk|bed|bedroom)/i);
+                if (bhkMatch) {
+                    searchCriteria.propertyType = bhkMatch[0].replace(/(bed|bedroom)/i, 'BHK').toUpperCase();
+                }
+
+                // Detect price
+                if (queryLower.includes('under') || queryLower.includes('less than') || queryLower.includes('more than')) {
+                    if (searchCriteria.acquisitionType === 'Rent') {
+                        searchCriteria.priceRange = '<= 15k';
+                    } else if (searchCriteria.acquisitionType === 'PG/Hostel') {
+                        searchCriteria.priceRange = '<= 15k';
+                    } else if (searchCriteria.acquisitionType === 'Lease') {
+                        searchCriteria.priceRange = '<= 2 Lac';
+
+                    } else {
+                        searchCriteria.priceRange = '<= 50 Lac';
+                    }
+
+                } else if (queryLower.match(/\d+\s?(lac|lakh|lakhs)/i)) {
+                    const lacMatch = query.match(/(\d+)\s?(lac|lakh|lakhs)/i);
+                    const amount = parseInt(lacMatch[1]);
+                    if (amount <= 50) {
+                        searchCriteria.priceRange = '<= 50 Lac';
+                    } else if (amount <= 100) {
+                        searchCriteria.priceRange = '50 Lac - 1 Cr';
+                    }
+                } else if (queryLower.match(/\d+\s?(cr|crore|cr.)/i)) {
+                    const crMatch = query.match(/(\d+)\s?(cr|crore|cr.)/i);
+                    const amount = parseInt(crMatch[1]);
+                    if (amount <= 1) {
+                        searchCriteria.priceRange = '50 Lac - 1 Cr';
+                    } else if (amount <= 1.5) {
+                        searchCriteria.priceRange = '1 Cr - 1.5 Cr';
+                    } else {
+                        searchCriteria.priceRange = '> 1.5 Cr';
+                    }
+                } else if (queryLower.match(/\d+\s?(lac|lakh|lakhs)/i)) {
+                    const lacMatch = query.match(/(\d+)\s?(lac|lakh|lakhs)/i);
+                    const amount = parseInt(lacMatch[2]);
+                    if (amount <= 50) {
+                        searchCriteria.priceRange = '<= 50 Lac';
+                    } else if (amount <= 100) {
+                        searchCriteria.priceRange = '50 Lac - 1 Cr';
+                    }
+                } else if (queryLower.match(/\d+\s?(cr|crore|cr.)/i)) {
+                    const crMatch = query.match(/(\d+)\s?(cr|crore|cr.)/i);
+                    const amount = parseInt(crMatch[2]);
+                    if (amount <= 1) {
+                        searchCriteria.priceRange = '50 Lac - 1 Cr';
+                    } else if (amount <= 1.5) {
+                        searchCriteria.priceRange = '1 Cr - 1.5 Cr';
+                    } else {
+                        searchCriteria.priceRange = '> 1.5 Cr';
+                    }
+                }
+
+                // Detect status
+                if (queryLower.includes('ready') || queryLower.includes('move in')) {
+                    searchCriteria.status = 'Ready to Move';
+                } else if (queryLower.includes('under construction')) {
+                    searchCriteria.status = 'Under Construction';
+                } else if (queryLower.includes('resale') || queryLower.includes('re-sale')) {
+                    searchCriteria.status = 'Resale';
+                } else if (queryLower.includes('new launch') || queryLower.includes('launch project')) {
+                    searchCriteria.status = 'New Launch';
+                }
+
+                // Detect furnishing
+                if (queryLower.includes('semi-furnished')) {
+                    searchCriteria.furnishing = 'Semi-Furnished';
+                } else if (queryLower.includes('unfurnished')) {
+                    searchCriteria.furnishing = 'Unfurnished';
+                } else if (queryLower.includes('furnished')) {
+                    searchCriteria.furnishing = 'Furnished';
+                }
+                updateProgressBar();
+
+                // Check if we have enough info to show results
+                const filledCriteria = Object.values(searchCriteria).filter(val =>
+                    Array.isArray(val) ? val.length > 0 : val
+                ).length;
+
+                if (filledCriteria >= 3) {
+                    addBotMessage("I've noted your preferences. Let me find some properties for you...");
+                    setTimeout(showPropertyResults, 1500);
+                } else {
+                    askNextQuestion();
+                }
+            }, 1500);
+        }
+
+        async function showPropertyResults() {
+            showTypingIndicator();
+
+            setTimeout(async () => {
+                hideTypingIndicator();
+
+                const resultsDiv = document.getElementById('search-results');
+                resultsDiv.innerHTML = ''; // Clear previous results
+
+                // ✅ Show city, sub-area, BHK (just number), acquisition type, and furnishing
+                const criteriaDisplay = [
+                    searchCriteria.city || '',
+                    searchCriteria.sub_area || '',
+                    searchCriteria.propertyType?.replace(' BHK', '') || '',
+                    searchCriteria.acquisitionType || '',
+                    searchCriteria.furnishing || ''
+                ].filter(Boolean);
+
+
+
+                try {
+                    let apiUrl = `http://localhost:3001/api/properties?`;
+
+                    if (searchCriteria.city) {
+                        apiUrl += `city=${encodeURIComponent(searchCriteria.city)}&`;
+                    }
+                    if (searchCriteria.sub_area) {
+                        apiUrl += `sub_area=${encodeURIComponent(searchCriteria.sub_area)}&`;
+                    }
+                    if (searchCriteria.propertyType) {
+                        const bhkNumber = searchCriteria.propertyType.split(' ')[0];
+                        apiUrl += `bhk=${encodeURIComponent(bhkNumber)}&`;
+                    }
+                    if (searchCriteria.acquisitionType) {
+                        apiUrl += `acquisitionType=${encodeURIComponent(searchCriteria.acquisitionType)}&`;
+                    }
+                    if (searchCriteria.status) {
+                        apiUrl += `status=${encodeURIComponent(searchCriteria.status)}&`;
+                    }
+                    if (searchCriteria.furnishing) {
+                        apiUrl += `furnishing=${encodeURIComponent(searchCriteria.furnishing)}&`;
+                    }
+                    if (searchCriteria.property_name) {
+                        apiUrl += `property_name=${encodeURIComponent(searchCriteria.property_name)}&`;
+                    }
+                    if (searchCriteria.priceRangeMin && searchCriteria.priceRangeMax) {
+                        apiUrl += `priceMin=${searchCriteria.priceRangeMin}&priceMax=${searchCriteria.priceRangeMax}&`;
+                    }
+
+                    apiUrl = apiUrl.replace(/&$/, '');
+
+                    console.log('Fetching properties from:', apiUrl);
+
+                    const response = await fetch(apiUrl);
+                    const properties = await response.json();
+
+                    if (properties.length === 0) {
+                        resultsDiv.innerHTML = "<p>No properties found matching your criteria.</p>";
+                        return;
+                    }
+
+                    properties.forEach((property) => {
+                        const propertyCard = `
+                <div class="property-card mt-4">
+                    <div class="property-image" style="background-image: url('https://source.unsplash.com/random/800x600/?home,${property.city}')">
+                        <div class="property-badge">${property.acquisitionType || 'Featured'}</div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${property.title}</h5>
+                        <p class="card-text text-muted">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>${property.sub_area}, ${property.city}
+                        </p>
+                        <div class="property-feature">
+                            <div class="feature-icon"><i class="fas fa-ruler-combined"></i></div>
+                            <div>${property.area}</div>
+                        </div>
+                        <div class="property-feature">
+                            <div class="feature-icon"><i class="fas fa-bed"></i></div>
+                            <div>${property.bhk} BHK • ${property.bathrooms} Bathrooms</div>
+                        </div>
+                        <div class="property-feature">
+                            <div class="feature-icon"><i class="fas fa-star"></i></div>
+                            <div>${property.status || 'Ready to Move'}, ${property.furnishing || 'Semi-Furnished'}</div>
+                        </div>
+                        <div class="price-tag mt-3">
+                            ₹${property.price}
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-outline-primary" onclick="showPropertyDetails(${property.id})">
+                                <i class="fas fa-search me-2"></i>View Details
+                            </button>
+                            <button class="btn btn-primary" onclick="contactAgent(${property.id})">
+                                <i class="fas fa-phone me-2"></i>Contact Agent
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                        resultsDiv.innerHTML += propertyCard;
+                    });
+
+                    addBotMessage(`
+                <div>Here are some excellent properties matching your criteria! 🎉</div>
+                <div class="mt-2">Would you like to:</div>
+                <div class="options-container mt-2">
+                    <div class="option-button" onclick="refineSearch()">Refine my search</div>
+                    <div class="option-button" onclick="showMoreProperties()">Show more properties</div>
+                    <div class="option-button" onclick="handleRestart()">Start a new search</div>
+                </div>
+            `, null, true);
+
+                } catch (error) {
+                    console.error('Failed to fetch properties:', error);
+                    resultsDiv.innerHTML = "<p class='text-danger'>Something went wrong while fetching properties. Please try again later.</p>";
+                }
+            }, 2000);
+        }
+
+        function getPriceDisplay(forVilla = false) {
+            if (searchCriteria.priceRange) {
+                return searchCriteria.priceRange;
+            }
+
+            if (searchCriteria.acquisitionType === 'Rent') {
+                return `₹${Math.floor(15 + Math.random() * 10)}k - ₹${Math.floor(30 + Math.random() * 20)}k/month`;
+            } else {
+                if (forVilla) {
+                    return `₹${Math.floor(1.8 + Math.random() * 0.5)} Cr - ₹${Math.floor(2.5 + Math.random() * 1)} Cr`;
+                }
+                return `₹${Math.floor(50 + Math.random() * 20)} Lac - ₹${Math.floor(80 + Math.random() * 40)} Lac`;
+            }
+        }
+
+
+
+        async function showPropertyDetails(propertyId) {
+            const resultsDiv = document.getElementById('search-results');
+
+            try {
+                const response = await fetch(`http://localhost:3001/api/property/${propertyId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch property details.');
+                }
+
+                const property = await response.json();
+
+                // Safe parsing
+                const amenities = Array.isArray(property.amenities)
+                    ? property.amenities
+                    : (property.amenities || '').split(',').map(a => a.trim());
+
+                const features = Array.isArray(property.features)
+                    ? property.features
+                    : (property.features || '').split(',').map(f => f.trim());
+
+                const builtYear = parseInt(property.builtYear || property.built_year || '');
+                const builtYearsAgo = !isNaN(builtYear)
+                    ? `${new Date().getFullYear() - builtYear} years ago`
+                    : 'N/A';
+
+                const modalHtml = `
+      <div class="modal fade" id="propertyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">${property.title || 'Property Details'}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="property-image" style="height: 250px; background-image: url('https://source.unsplash.com/random/800x600/?home,${property.city || 'real-estate'}')"></div>
+                  <div class="row mt-3">
+                    <div class="col-4 text-center">
+                      <div class="feature-icon mx-auto"><i class="fas fa-ruler-combined"></i></div>
+                      <div class="mt-1">${property.area || 'N/A'}</div>
+                    </div>
+                    <div class="col-4 text-center">
+                      <div class="feature-icon mx-auto"><i class="fas fa-bed"></i></div>
+                      <div class="mt-1">${property.bhk || 'N/A'} BHK</div>
+                    </div>
+                    <div class="col-4 text-center">
+                      <div class="feature-icon mx-auto"><i class="fas fa-calendar-alt"></i></div>
+                      <div class="mt-1">Built ${builtYearsAgo}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h6>Property Details</h6>
+                  <p>${property.property_name || 'No description available.'}</p>
+                  <p>${property.description || 'No description available.'}</p>
+                  
+                  <div class="mt-3">
+                    <h6>Address</h6>
+                    <p><i class="fas fa-map-marker-alt text-primary me-2"></i> <a href= ${property.location_url || 'Not available'}>View On Map</a></p>
+                  </div>
+
+                  <div class="row mt-3">
+                    <div class="col-6">
+                      <h6>Key Features</h6>
+                      <ul class="list-unstyled">
+                        ${features.map(f => `<li><i class="fas fa-check text-success me-2"></i>${f}</li>`).join('')}
+                      </ul>
+                    </div>
+                    <div class="col-6">
+                      <h6>Amenities</h6>
+                      <ul class="list-unstyled">
+                        ${amenities.map(a => `<li><i class="fas fa-check text-success me-2"></i>${a}</li>`).join('')}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="contactAgent(${propertyId})">
+                <i class="fas fa-phone me-2"></i>Contact Agent
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+                // Show modal
+                const modalDiv = document.createElement('div');
+                modalDiv.innerHTML = modalHtml;
+                document.body.appendChild(modalDiv);
+
+                const modal = new bootstrap.Modal(document.getElementById('propertyModal'));
+                modal.show();
+
+                document.getElementById('propertyModal').addEventListener('hidden.bs.modal', function () {
+                    modalDiv.remove();
+                });
+
+            } catch (error) {
+                console.error('Failed to fetch property details:', error);
+                resultsDiv.innerHTML = "<p class='text-danger'>Something went wrong while loading property details.</p>";
+            }
+        }
+
+
+        async function contactAgent(propertyId) {
+            try {
+                console.log('Initiating contactAgent for property:', propertyId);
+                showTypingIndicator();
+
+                // API call
+                const apiUrl = `http://localhost:3001/api/agent/${propertyId}`;
+                console.log('Fetching agent from:', apiUrl);
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const agent = await response.json();
+                console.log('Received agent data:', agent);
+                hideTypingIndicator();
+
+                // Modal template with fallbacks
+                const modalHtml = `
+        <div class="modal fade" id="agentModal" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Contact Agent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body text-center">
+                <!-- Avatar -->
+                <div class="agent-avatar mb-3">
+                  ${agent.name?.charAt(0) || agent.agent_name?.charAt(0) || 'A'}
+                </div>
+                
+                <!-- Agent Details -->
+                <h4>${agent.name || agent.agent_name || 'Property Agent'}</h4>
+                <p class="text-muted">
+                  ${agent.experience || agent.agent_experience || 'Experienced Agent'}
+                </p>
+                <p class="text-primary">
+                  <i class="fas fa-building me-2"></i>
+                  ${agent.company || agent.agent_company || 'Certified Broker'}
+                </p>
+
+                <!-- Contact Buttons -->
+                <div class="contact-buttons mt-4">
+                  <a href="tel:${agent.phone || agent.agent_phone}" 
+                    class="btn btn-success btn-lg w-100 mb-3 ${!(agent.phone || agent.agent_phone) ? 'disabled' : ''}">
+                    <i class="fas fa-phone me-2"></i>
+                    ${agent.phone || agent.agent_phone || 'Phone Not Available'}
+                  </a>
+                  
+                  <a href="mailto:${agent.email || agent.fake_email}" 
+                    class="btn btn-outline-primary w-100 ${!(agent.email || agent.fake_email) ? 'disabled' : ''}">
+                    <i class="fas fa-envelope me-2"></i>
+                    ${agent.email || agent.fake_email || 'Email Not Available'}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+
+                // Add modal to DOM
+                const modalWrapper = document.createElement('div');
+                modalWrapper.innerHTML = modalHtml;
+                document.body.appendChild(modalWrapper);
+
+                // Initialize modal
+                const agentModal = new bootstrap.Modal(document.getElementById('agentModal'));
+                agentModal.show();
+
+                // Cleanup after close
+                document.getElementById('agentModal').addEventListener('hidden.bs.modal', () => {
+                    modalWrapper.remove();
+                });
+
+            } catch (error) {
+                console.error('Agent contact error:', error);
+                hideTypingIndicator();
+                addBotMessage("Oops! We're having trouble connecting to the agent. Please try again later.");
+
+                // Show error to user
+                const errorHtml = `
+          <div class="alert alert-danger mt-3">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Failed to load agent details: ${error.message}
+          </div>
+        `;
+                document.getElementById('search-results').insertAdjacentHTML('beforeend', errorHtml);
+            }
+        }
+
+        function showMoreProperties() {
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addBotMessage("Here are 3 more properties that might interest you:");
+
+                // In a real app, you would fetch more properties from your database
+                // For this demo, we'll just show a message
+                addBotMessage("To implement in a real application: This would connect to a property database API to fetch additional listings matching the search criteria.");
+            }, 1500);
+        }
+
+        function handleRestart() {
+            searchCriteria = {
+                city: '',
+                acquisitionType: '',
+                propertyType: '',
+                priceRange: '',
+                status: '',
+                furnishing: '',
+                amenities: []
+            };
+
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-progress').style.width = '0%';
+
+            showTypingIndicator();
+            setTimeout(() => {
+                addBotMessage(greetings[Math.floor(Math.random() * greetings.length)]);
+                showQuickSuggestions();
+            }, 1500);
+        }
+
+        addBotMessage("Let's start fresh! What are you looking for in your dream property?");
+        showQuickSuggestions();
+
+
+        // Initialize Bootstrap tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+
+
+    </script>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <button class="reset-button" id="resetChatButton" onclick="handleRestart()">
+        <i class="fas fa-sync-alt me-2"></i>Reset Search</button>
+
+</body>
+
+</html>

@@ -1,0 +1,3307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* General Styles */
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --info-color: #4895ef;
+            --warning-color: #f8961e;
+            --danger-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        /* Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100%;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-header p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-menu li:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .sidebar-menu li.active {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .sidebar-menu li.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--primary-color);
+        }
+        
+        .sidebar-menu .badge {
+            margin-left: auto;
+            background: var(--danger-color);
+            font-size: 0.7rem;
+        }
+        
+        #logout {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            color: var(--danger-color);
+        }
+        
+        #logout:hover {
+            background: rgba(247, 37, 133, 0.1);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+        
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notifications {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        
+        .notifications i {
+            font-size: 1.2rem;
+            color: var(--gray-color);
+        }
+        
+        .notifications .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+        }
+        
+        .user {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user span {
+            font-weight: 500;
+        }
+        
+        /* Dashboard Sections */
+        .dashboard-section {
+            padding: 25px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+        
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.bg-primary {
+            background: var(--primary-color);
+        }
+        
+        .stat-icon.bg-success {
+            background: var(--success-color);
+        }
+        
+        .stat-icon.bg-warning {
+            background: var(--warning-color);
+        }
+        
+        .stat-icon.bg-danger {
+            background: var(--danger-color);
+        }
+        
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--dark-color);
+        }
+        
+        .stat-info p {
+            margin: 5px 0 0;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        /* Activity Feed */
+        .activity-feed {
+            margin-top: 15px;
+        }
+        
+        .feed-item {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feed-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .feed-content {
+            flex: 1;
+        }
+        
+        .feed-content p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .feed-content p strong {
+            color: var(--dark-color);
+        }
+        
+        .feed-content small {
+            color: var(--gray-color);
+            font-size: 0.8rem;
+        }
+        
+        /* Quick Actions */
+        .quick-action-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .quick-action-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        .quick-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .quick-action-btn:hover i {
+            color: white;
+        }
+        
+        /* Listings Table */
+        .listings-table {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .listings-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .listings-table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        
+        .property-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .property-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .property-info h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .property-info p {
+            margin: 5px 0 0;
+            color: var(--gray-color);
+            font-size: 0.85rem;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+        
+        .badge.bg-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .badge.bg-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .badge.bg-danger {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        /* Add Property Form */
+        #add-property-form .card {
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        #add-property-form .card-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+        }
+        
+        #add-property-form .card-header h5 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--dark-color);
+        }
+        
+        #add-property-form .card-body {
+            padding: 20px;
+        }
+        
+        .amenities-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        /* Performance Charts */
+        #viewsChart, #inquiriesChart, #conversionChart {
+            width: 100% !important;
+        }
+        
+        .top-property {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .top-property:last-child {
+            border-bottom: none;
+        }
+        
+        .top-property .property-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .top-property .property-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .top-property .property-info h6 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .top-property .property-info p {
+            margin: 3px 0;
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .progress {
+            height: 6px;
+            margin-top: 5px;
+            background: #f0f0f0;
+        }
+        
+        .performance-table th, .performance-table td {
+            padding: 12px 15px;
+        }
+        
+        /* Messages Section */
+        .messages-sidebar {
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .search-messages {
+            position: relative;
+        }
+        
+        .search-messages input {
+            width: 100%;
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .search-messages i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .message-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .message-item {
+            display: flex;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .message-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .message-item.active {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .message-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .message-preview {
+            flex: 1;
+        }
+        
+        .message-preview h6 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .message-preview p {
+            margin: 3px 0;
+            font-size: 0.85rem;
+            color: var(--gray-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .message-preview small {
+            color: var(--gray-color);
+            font-size: 0.75rem;
+        }
+        
+        .message-preview .badge {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .message-detail {
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .message-recipient {
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-recipient img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .message-recipient h6 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .message-recipient p {
+            margin: 3px 0 0;
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .message-actions button {
+            margin-left: 5px;
+        }
+        
+        .message-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            max-width: 70%;
+        }
+        
+        .message.received {
+            margin-right: auto;
+        }
+        
+        .message.sent {
+            margin-left: auto;
+        }
+        
+        .message-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .message-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .message-info h6 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .message-info small {
+            margin-left: 10px;
+            color: var(--gray-color);
+            font-size: 0.8rem;
+        }
+        
+        .message-text {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+        }
+        
+        .message.sent .message-text {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .message-reply {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .message-reply textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: none;
+            margin-bottom: 10px;
+            min-height: 80px;
+        }
+        
+        .reply-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .attachment-options button {
+            margin-right: 5px;
+        }
+        
+        /* Bookings Table */
+        .bookings-table {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .bookings-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .bookings-table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        
+        .guest-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .guest-info img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .guest-info h6 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .date-info p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .date-info small {
+            color: var(--gray-color);
+            font-size: 0.8rem;
+        }
+        
+        /* Reviews Section */
+        .overall-rating {
+            text-align: center;
+            padding: 30px 20px;
+            height: 100%;
+        }
+        
+        .overall-rating h3 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--dark-color);
+        }
+        
+        .overall-rating .stars {
+            margin: 10px 0;
+            font-size: 1.5rem;
+            color: #ffc107;
+        }
+        
+        .overall-rating p {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+        }
+        
+        .rating-bars {
+            margin-top: 20px;
+        }
+        
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .rating-bar span:first-child {
+            width: 70px;
+            font-size: 0.9rem;
+        }
+        
+        .rating-bar span:last-child {
+            width: 30px;
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin: 0 10px;
+        }
+        
+        .bar {
+            height: 100%;
+            border-radius: 4px;
+            background: #ffc107;
+        }
+        
+        .review-list {
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+        
+        .review-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .reviewer {
+            display: flex;
+            align-items: center;
+        }
+        
+        .reviewer img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .reviewer h6 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .reviewer small {
+            color: var(--gray-color);
+            font-size: 0.8rem;
+        }
+        
+        .rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
+        
+        .review-content h5 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .review-content p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .review-response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .review-response strong {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+        }
+        
+        .review-response p {
+            margin: 8px 0 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        /* Settings Section */
+        .profile-picture img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar-header h3 span, 
+            .sidebar-header p,
+            .sidebar-menu li span {
+                display: none;
+            }
+            
+            .sidebar-menu li {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            
+            .sidebar-menu li i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .search-box {
+                width: 200px;
+            }
+            
+            .user span {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .search-box {
+                width: 150px;
+            }
+            
+            .notifications {
+                margin-right: 10px;
+            }
+            
+            .amenities-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .messages-sidebar {
+                height: auto;
+                margin-bottom: 20px;
+            }
+            
+            .message-detail {
+                height: auto;
+            }
+            
+            .message {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .section-header .btn, 
+            .section-header .form-select {
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .property-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .property-info img {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .listings-table td {
+                padding: 10px 5px;
+            }
+            
+            .listings-table .btn {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-home"></i> PropertyPro</h3>
+                <p>Seller Dashboard</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</li>
+                <li data-section="listings"><i class="fas fa-list"></i> My Listings</li>
+                <li data-section="add-property"><i class="fas fa-plus-circle"></i> Add Property</li>
+                <li data-section="performance"><i class="fas fa-chart-line"></i> Performance</li>
+                <li data-section="messages"><i class="fas fa-envelope"></i> Messages <span class="badge bg-danger">3</span></li>
+                <li data-section="bookings"><i class="fas fa-calendar-check"></i> Bookings</li>
+                <li data-section="reviews"><i class="fas fa-star"></i> Reviews</li>
+                <li data-section="settings"><i class="fas fa-cog"></i> Settings</li>
+                <li id="logout"><i class="fas fa-sign-out-alt"></i> Logout</li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <div class="top-nav">
+                <div class="search-box">
+                    <input type="text" placeholder="Search..." id="global-search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="user-info">
+                    <div class="notifications" id="notifications-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">5</span>
+                    </div>
+                    <div class="user" id="user-dropdown">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                        <span>John Doe</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Dropdown -->
+            <div class="dropdown-menu dropdown-menu-end p-0" id="notifications-dropdown" style="display: none; position: absolute; right: 20px; top: 60px; width: 350px; max-height: 400px; overflow-y: auto;">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Notifications</h6>
+                        <small><a href="#" class="text-primary">Mark all as read</a></small>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary rounded-circle p-2 text-white">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">New booking request</h6>
+                                        <p class="mb-0">Sarah Johnson wants to book your villa</p>
+                                        <small class="text-muted">10 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-success rounded-circle p-2 text-white">
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">New review received</h6>
+                                        <p class="mb-0">Michael Brown left a 5-star review</p>
+                                        <small class="text-muted">2 hours ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-info rounded-circle p-2 text-white">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">New message</h6>
+                                        <p class="mb-0">Emily Wilson sent you a message</p>
+                                        <small class="text-muted">1 day ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-warning rounded-circle p-2 text-white">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Upcoming booking</h6>
+                                        <p class="mb-0">Your cabin is booked for tomorrow</p>
+                                        <small class="text-muted">2 days ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-danger rounded-circle p-2 text-white">
+                                            <i class="fas fa-exclamation"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Payment received</h6>
+                                        <p class="mb-0">$1,200 payment for downtown apartment</p>
+                                        <small class="text-muted">3 days ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="#" class="text-primary">View all notifications</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Dropdown -->
+            <div class="dropdown-menu dropdown-menu-end p-0" id="user-dropdown-menu" style="display: none; position: absolute; right: 20px; top: 60px; width: 200px;">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="rounded-circle mb-2" width="80" height="80">
+                        <h6 class="mb-0">John Doe</h6>
+                        <small class="text-muted">Property Seller</small>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i> Profile</a>
+                        <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-cog me-2"></i> Settings</a>
+                        <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i> Messages</a>
+                        <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-question-circle me-2"></i> Help</a>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-sm btn-danger w-100" id="logout-btn"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Sections -->
+            <div class="dashboard-section" id="overview-section">
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Total Properties</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,245</h3>
+                            <p>Total Views</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>18</h3>
+                            <p>Active Bookings</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>4.8</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Recent Activity</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-feed">
+                                    <div class="feed-item">
+                                        <div class="feed-icon">
+                                            <i class="fas fa-envelope text-primary"></i>
+                                        </div>
+                                        <div class="feed-content">
+                                            <p><strong>New inquiry</strong> for your property at 123 Main St</p>
+                                            <small>10 minutes ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="feed-item">
+                                        <div class="feed-icon">
+                                            <i class="fas fa-calendar-alt text-success"></i>
+                                        </div>
+                                        <div class="feed-content">
+                                            <p><strong>Booking confirmed</strong> for Lakeside Villa</p>
+                                            <small>2 hours ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="feed-item">
+                                        <div class="feed-icon">
+                                            <i class="fas fa-star text-warning"></i>
+                                        </div>
+                                        <div class="feed-content">
+                                            <p><strong>New review</strong> received for Downtown Apartment</p>
+                                            <small>5 hours ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="feed-item">
+                                        <div class="feed-icon">
+                                            <i class="fas fa-home text-info"></i>
+                                        </div>
+                                        <div class="feed-content">
+                                            <p><strong>Property viewed</strong> 25 times today</p>
+                                            <small>1 day ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Quick Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="quick-action-btn" id="quick-add-property">
+                                    <i class="fas fa-plus"></i> Add New Property
+                                </button>
+                                <button class="quick-action-btn" id="quick-update-listing">
+                                    <i class="fas fa-edit"></i> Update Listing
+                                </button>
+                                <button class="quick-action-btn" id="quick-manage-bookings">
+                                    <i class="fas fa-calendar"></i> Manage Bookings
+                                </button>
+                                <button class="quick-action-btn" id="quick-view-reports">
+                                    <i class="fas fa-chart-pie"></i> View Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listings Section -->
+            <div class="dashboard-section" id="listings-section" style="display: none;">
+                <div class="section-header">
+                    <h2>My Property Listings</h2>
+                    <button class="btn btn-primary" id="add-new-listing-btn">
+                        <i class="fas fa-plus"></i> Add New Listing
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table listings-table">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Views</th>
+                                <th>Bookings</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <div>
+                                            <h5>Luxury Villa in Malibu</h5>
+                                            <p>Malibu, California</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Villa</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>$1,200,000</td>
+                                <td>245</td>
+                                <td>12</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary edit-listing-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger delete-listing-btn"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary view-listing-btn"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <div>
+                                            <h5>Modern Apartment Downtown</h5>
+                                            <p>New York, NY</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Apartment</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>$750,000</td>
+                                <td>189</td>
+                                <td>8</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary edit-listing-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger delete-listing-btn"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary view-listing-btn"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <div>
+                                            <h5>Cozy Mountain Cabin</h5>
+                                            <p>Aspen, Colorado</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Cabin</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                                <td>$450,000</td>
+                                <td>97</td>
+                                <td>3</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary edit-listing-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger delete-listing-btn"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary view-listing-btn"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <div>
+                                            <h5>Beachfront Condo</h5>
+                                            <p>Miami, Florida</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Condo</td>
+                                <td><span class="badge bg-danger">Inactive</span></td>
+                                <td>$650,000</td>
+                                <td>320</td>
+                                <td>15</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary edit-listing-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger delete-listing-btn"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary view-listing-btn"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Property Section -->
+            <div class="dashboard-section" id="add-property-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Add New Property</h2>
+                </div>
+                
+                <form id="add-property-form">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Basic Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="property-title" class="form-label">Property Title*</label>
+                                        <input type="text" class="form-control" id="property-title" placeholder="e.g. Beautiful 3-Bedroom Apartment in Downtown" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="property-description" class="form-label">Description*</label>
+                                        <textarea class="form-control" id="property-description" rows="5" required></textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="property-type" class="form-label">Property Type*</label>
+                                            <select class="form-select" id="property-type" required>
+                                                <option value="">Select Type</option>
+                                                <option value="apartment">Apartment</option>
+                                                <option value="house">House</option>
+                                                <option value="villa">Villa</option>
+                                                <option value="condo">Condo</option>
+                                                <option value="land">Land</option>
+                                                <option value="commercial">Commercial</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="listing-type" class="form-label">Listing Type*</label>
+                                            <select class="form-select" id="listing-type" required>
+                                                <option value="">Select Type</option>
+                                                <option value="sale">For Sale</option>
+                                                <option value="rent">For Rent</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="bedrooms" class="form-label">Bedrooms</label>
+                                            <input type="number" class="form-control" id="bedrooms" min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="bathrooms" class="form-label">Bathrooms</label>
+                                            <input type="number" class="form-control" id="bathrooms" min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="area" class="form-label">Area (sq ft)</label>
+                                            <input type="number" class="form-control" id="area" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Location</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="property-address" class="form-label">Address*</label>
+                                        <input type="text" class="form-control" id="property-address" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="city" class="form-label">City*</label>
+                                            <input type="text" class="form-control" id="city" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="state" class="form-label">State/Province*</label>
+                                            <input type="text" class="form-control" id="state" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="zip" class="form-label">ZIP/Postal Code</label>
+                                            <input type="text" class="form-control" id="zip">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="country" class="form-label">Country*</label>
+                                        <select class="form-select" id="country" required>
+                                            <option value="">Select Country</option>
+                                            <option value="US">United States</option>
+                                            <option value="CA">Canada</option>
+                                            <option value="UK">United Kingdom</option>
+                                            <option value="AU">Australia</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Pricing</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="price" class="form-label">Price*</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="price" min="0" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="price-type" class="form-label">Price Type</label>
+                                            <select class="form-select" id="price-type">
+                                                <option value="fixed">Fixed Price</option>
+                                                <option value="negotiable">Negotiable</option>
+                                                <option value="auction">Auction</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="display-price">
+                                        <label class="form-check-label" for="display-price">Display price on listing</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Media</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="property-images" class="form-label">Upload Images*</label>
+                                        <input type="file" class="form-control" id="property-images" multiple accept="image/*" required>
+                                        <small class="text-muted">Upload at least 3 images (max 10)</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="featured-image" class="form-label">Featured Image*</label>
+                                        <input type="file" class="form-control" id="featured-image" accept="image/*" required>
+                                        <small class="text-muted">This will be the main image displayed for your property</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="virtual-tour" class="form-label">Virtual Tour (URL)</label>
+                                        <input type="url" class="form-control" id="virtual-tour" placeholder="https://">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Publish</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" id="status">
+                                            <option value="draft">Draft</option>
+                                            <option value="publish">Publish</option>
+                                            <option value="pending">Pending Review</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Save & Publish</button>
+                                        <button type="button" class="btn btn-outline-secondary" id="save-draft-btn">Save Draft</button>
+                                        <button type="button" class="btn btn-outline-danger" id="cancel-add-property">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Features & Amenities</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="amenities-list">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="air-conditioning">
+                                            <label class="form-check-label" for="air-conditioning">Air Conditioning</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="heating">
+                                            <label class="form-check-label" for="heating">Heating</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="parking">
+                                            <label class="form-check-label" for="parking">Parking</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="pool">
+                                            <label class="form-check-label" for="pool">Swimming Pool</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="gym">
+                                            <label class="form-check-label" for="gym">Gym</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="laundry">
+                                            <label class="form-check-label" for="laundry">Laundry</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="wifi">
+                                            <label class="form-check-label" for="wifi">WiFi</label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="security">
+                                            <label class="form-check-label" for="security">Security System</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Additional Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="year-built" class="form-label">Year Built</label>
+                                        <input type="number" class="form-control" id="year-built" min="1800" max="2023">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="garage" class="form-label">Garage</label>
+                                        <select class="form-select" id="garage">
+                                            <option value="0">None</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3+</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="floors" class="form-label">Floors</label>
+                                        <input type="number" class="form-control" id="floors" min="1" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Performance Section -->
+            <div class="dashboard-section" id="performance-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Property Performance</h2>
+                    <div class="date-filter">
+                        <select class="form-select" id="performance-date-filter">
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>Last 90 days</option>
+                            <option>This year</option>
+                            <option>Custom range</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Views & Engagement</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="viewsChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Top Performing Properties</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="top-property">
+                                    <div class="property-img">
+                                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                    </div>
+                                    <div class="property-info">
+                                        <h6>Luxury Villa in Malibu</h6>
+                                        <p>1,245 views</p>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="top-property">
+                                    <div class="property-img">
+                                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                    </div>
+                                    <div class="property-info">
+                                        <h6>Modern Apartment Downtown</h6>
+                                        <p>987 views</p>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="top-property">
+                                    <div class="property-img">
+                                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                    </div>
+                                    <div class="property-info">
+                                        <h6>Cozy Mountain Cabin</h6>
+                                        <p>756 views</p>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 50%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Inquiries by Property</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="inquiriesChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Booking Conversion Rate</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="conversionChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Detailed Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table performance-table">
+                                <thead>
+                                    <tr>
+                                        <th>Property</th>
+                                        <th>Views</th>
+                                        <th>Inquiries</th>
+                                        <th>Bookings</th>
+                                        <th>Conversion</th>
+                                        <th>Avg. Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Luxury Villa in Malibu</td>
+                                        <td>1,245</td>
+                                        <td>48</td>
+                                        <td>12</td>
+                                        <td>25%</td>
+                                        <td>4.8</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Modern Apartment Downtown</td>
+                                        <td>987</td>
+                                        <td>32</td>
+                                        <td>8</td>
+                                        <td>25%</td>
+                                        <td>4.5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cozy Mountain Cabin</td>
+                                        <td>756</td>
+                                        <td>15</td>
+                                        <td>3</td>
+                                        <td>20%</td>
+                                        <td>4.7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Beachfront Condo</td>
+                                        <td>320</td>
+                                        <td>22</td>
+                                        <td>5</td>
+                                        <td>23%</td>
+                                        <td>4.3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div class="dashboard-section" id="messages-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Messages</h2>
+                    <button class="btn btn-primary" id="new-message-btn">
+                        <i class="fas fa-plus"></i> New Message
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card messages-sidebar">
+                            <div class="card-header">
+                                <div class="search-messages">
+                                    <input type="text" placeholder="Search messages..." id="message-search">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="message-list" id="message-list">
+                                    <div class="message-item active" data-message-id="1">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <h6>Sarah Johnson</h6>
+                                            <p>Interested in the Malibu villa...</p>
+                                            <small>2 hours ago</small>
+                                            <span class="badge bg-danger">3</span>
+                                        </div>
+                                    </div>
+                                    <div class="message-item" data-message-id="2">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <h6>Michael Brown</h6>
+                                            <p>Regarding the booking for next month...</p>
+                                            <small>1 day ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="message-item" data-message-id="3">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <h6>Emily Wilson</h6>
+                                            <p>Can we schedule a viewing for...</p>
+                                            <small>2 days ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="message-item" data-message-id="4">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <h6>David Miller</h6>
+                                            <p>Thanks for the quick response...</p>
+                                            <small>3 days ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="message-item" data-message-id="5">
+                                        <div class="message-avatar">
+                                            <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="User">
+                                        </div>
+                                        <div class="message-preview">
+                                            <h6>Jessica Davis</h6>
+                                            <p>I have some questions about the lease...</p>
+                                            <small>1 week ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card message-detail">
+                            <div class="card-header">
+                                <div class="message-header">
+                                    <div class="message-recipient">
+                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                                        <div>
+                                            <h6>Sarah Johnson</h6>
+                                            <p>Regarding: Luxury Villa in Malibu</p>
+                                        </div>
+                                    </div>
+                                    <div class="message-actions">
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="message-content" id="message-content">
+                                    <div class="message received">
+                                        <div class="message-info">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                                            <div>
+                                                <h6>Sarah Johnson</h6>
+                                                <small>Today, 10:30 AM</small>
+                                            </div>
+                                        </div>
+                                        <div class="message-text">
+                                            <p>Hello, I'm very interested in your luxury villa in Malibu. Could you tell me more about the amenities and if it's available for the last two weeks of August? Also, is the price negotiable?</p>
+                                        </div>
+                                    </div>
+                                    <div class="message sent">
+                                        <div class="message-info">
+                                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                                            <div>
+                                                <h6>You</h6>
+                                                <small>Today, 11:15 AM</small>
+                                            </div>
+                                        </div>
+                                        <div class="message-text">
+                                            <p>Hi Sarah, thanks for your interest in the property. The villa has a private pool, beach access, and all modern amenities. It is available for those dates. The price is slightly negotiable depending on the length of stay.</p>
+                                        </div>
+                                    </div>
+                                    <div class="message received">
+                                        <div class="message-info">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                                            <div>
+                                                <h6>Sarah Johnson</h6>
+                                                <small>Today, 11:45 AM</small>
+                                            </div>
+                                        </div>
+                                        <div class="message-text">
+                                            <p>That sounds great! Could we arrange a virtual tour before I make a decision? Also, what would be the best price you could offer for a 14-night stay?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message-reply">
+                                    <textarea class="form-control" placeholder="Type your reply here..." id="message-reply"></textarea>
+                                    <div class="reply-actions">
+                                        <div class="attachment-options">
+                                            <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-paperclip"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-image"></i></button>
+                                        </div>
+                                        <button class="btn btn-primary" id="send-message-btn">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Section -->
+            <div class="dashboard-section" id="bookings-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Bookings</h2>
+                    <div class="booking-filter">
+                        <select class="form-select" id="booking-filter">
+                            <option>All Bookings</option>
+                            <option>Upcoming</option>
+                            <option>Completed</option>
+                            <option>Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Property</th>
+                                <th>Guest</th>
+                                <th>Dates</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#BK-1001</td>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <h6>Luxury Villa in Malibu</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="guest-info">
+                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Guest">
+                                        <h6>Sarah Johnson</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="date-info">
+                                        <p>Aug 15 - Aug 29, 2023</p>
+                                        <small>14 nights</small>
+                                    </div>
+                                </td>
+                                <td>$12,600</td>
+                                <td><span class="badge bg-success">Confirmed</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary booking-details-btn">Details</button>
+                                    <button class="btn btn-sm btn-outline-secondary booking-message-btn">Message</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#BK-1002</td>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <h6>Modern Apartment Downtown</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="guest-info">
+                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Guest">
+                                        <h6>Michael Brown</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="date-info">
+                                        <p>Sep 5 - Sep 12, 2023</p>
+                                        <small>7 nights</small>
+                                    </div>
+                                </td>
+                                <td>$3,500</td>
+                                <td><span class="badge bg-success">Confirmed</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary booking-details-btn">Details</button>
+                                    <button class="btn btn-sm btn-outline-secondary booking-message-btn">Message</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#BK-1003</td>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <h6>Cozy Mountain Cabin</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="guest-info">
+                                        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Guest">
+                                        <h6>Emily Wilson</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="date-info">
+                                        <p>Jul 20 - Jul 27, 2023</p>
+                                        <small>7 nights</small>
+                                    </div>
+                                </td>
+                                <td>$2,100</td>
+                                <td><span class="badge bg-info">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary booking-details-btn">Details</button>
+                                    <button class="btn btn-sm btn-outline-secondary booking-message-btn">Message</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#BK-1004</td>
+                                <td>
+                                    <div class="property-info">
+                                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property">
+                                        <h6>Beachfront Condo</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="guest-info">
+                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Guest">
+                                        <h6>David Miller</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="date-info">
+                                        <p>Jun 10 - Jun 17, 2023</p>
+                                        <small>7 nights</small>
+                                    </div>
+                                </td>
+                                <td>$2,450</td>
+                                <td><span class="badge bg-info">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary booking-details-btn">Details</button>
+                                    <button class="btn btn-sm btn-outline-secondary booking-message-btn">Message</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="dashboard-section" id="reviews-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Reviews & Ratings</h2>
+                    <div class="review-filter">
+                        <select class="form-select" id="review-filter">
+                            <option>All Reviews</option>
+                            <option>5 Stars</option>
+                            <option>4 Stars</option>
+                            <option>3 Stars</option>
+                            <option>2 Stars</option>
+                            <option>1 Star</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card overall-rating">
+                            <div class="card-body">
+                                <h3>4.8</h3>
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <p>Based on 24 reviews</p>
+                                
+                                <div class="rating-bars">
+                                    <div class="rating-bar">
+                                        <span>5 Stars</span>
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 75%;"></div>
+                                        </div>
+                                        <span>18</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span>4 Stars</span>
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 20%;"></div>
+                                        </div>
+                                        <span>5</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span>3 Stars</span>
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 5%;"></div>
+                                        </div>
+                                        <span>1</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span>2 Stars</span>
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 0%;"></div>
+                                        </div>
+                                        <span>0</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span>1 Star</span>
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 0%;"></div>
+                                        </div>
+                                        <span>0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card review-list">
+                            <div class="card-body">
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <div class="reviewer">
+                                            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Reviewer">
+                                            <div>
+                                                <h6>Emily Wilson</h6>
+                                                <small>July 28, 2023</small>
+                                            </div>
+                                        </div>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <div class="review-content">
+                                        <h5>Cozy Mountain Cabin</h5>
+                                        <p>We had an amazing stay at the cabin! The location was perfect, the views were breathtaking, and the cabin had everything we needed. The owner was very responsive and helpful. Would definitely recommend!</p>
+                                    </div>
+                                    <div class="review-response">
+                                        <strong>Your response:</strong>
+                                        <p>Thank you, Emily! We're so glad you enjoyed your stay. You were wonderful guests and we'd love to host you again anytime.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <div class="reviewer">
+                                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Reviewer">
+                                            <div>
+                                                <h6>Michael Brown</h6>
+                                                <small>June 15, 2023</small>
+                                            </div>
+                                        </div>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <div class="review-content">
+                                        <h5>Modern Apartment Downtown</h5>
+                                        <p>Fantastic apartment in a great location. Very clean and modern with all the amenities you could need. The host was extremely helpful with local recommendations. Will definitely book again!</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <div class="reviewer">
+                                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Reviewer">
+                                            <div>
+                                                <h6>Sarah Johnson</h6>
+                                                <small>May 22, 2023</small>
+                                            </div>
+                                        </div>
+                                        <div class="rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <div class="review-content">
+                                        <h5>Luxury Villa in Malibu</h5>
+                                        <p>Beautiful property with stunning ocean views. The villa was spacious and well-equipped. Only reason for not giving 5 stars was that the pool heating wasn't working during our stay, but otherwise perfect.</p>
+                                    </div>
+                                    <div class="review-response">
+                                        <strong>Your response:</strong>
+                                        <p>Thank you for your feedback, Sarah. We apologize for the pool heater issue - it has since been repaired. We'd love to host you again with a discount to make up for the inconvenience.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-outline-primary" id="load-more-reviews">Load More Reviews</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="dashboard-section" id="settings-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Account Settings</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Profile</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="profile-picture text-center mb-4">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="rounded-circle" id="profile-image">
+                                    <button class="btn btn-sm btn-outline-primary mt-2" id="change-profile-image">Change Photo</button>
+                                    <input type="file" id="profile-image-upload" style="display: none;">
+                                </div>
+                                <form id="profile-form">
+                                    <div class="mb-3">
+                                        <label for="full-name" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="full-name" value="John Doe">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" value="john.doe@example.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="phone" value="+1 (555) 123-4567">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bio" class="form-label">Bio</label>
+                                        <textarea class="form-control" id="bio" rows="3">Professional property manager with over 10 years of experience in luxury rentals and sales.</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Account Security</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="password-form">
+                                    <div class="mb-3">
+                                        <label for="current-password" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" id="current-password">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="new-password" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="new-password">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirm-password" class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirm-password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Notification Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="notifications-form">
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="email-notifications" checked>
+                                        <label class="form-check-label" for="email-notifications">Email Notifications</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="sms-notifications">
+                                        <label class="form-check-label" for="sms-notifications">SMS Notifications</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="inquiry-alerts" checked>
+                                        <label class="form-check-label" for="inquiry-alerts">New Inquiry Alerts</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="booking-alerts" checked>
+                                        <label class="form-check-label" for="booking-alerts">Booking Alerts</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="review-alerts" checked>
+                                        <label class="form-check-label" for="review-alerts">New Review Alerts</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h5>Danger Zone</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Deactivate Account</h6>
+                                    <p>Your account will be temporarily disabled. You can reactivate it by logging in again.</p>
+                                    <button class="btn btn-outline-danger" id="deactivate-account-btn">Deactivate Account</button>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Delete Account</h6>
+                                    <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+                                    <button class="btn btn-danger" id="delete-account-btn">Delete Account</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listing Details Modal -->
+    <div class="modal fade" id="listingDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="listingModalTitle">Luxury Villa in Malibu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="listingCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="d-block w-100" alt="Property">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="d-block w-100" alt="Property">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="d-block w-100" alt="Property">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Details</h6>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Property Type
+                                    <span class="badge bg-primary">Villa</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Bedrooms
+                                    <span>4</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Bathrooms
+                                    <span>3.5</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Area
+                                    <span>3,200 sq ft</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Year Built
+                                    <span>2018</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Amenities</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-group list-group-flush mb-3">
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Swimming Pool</li>
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Air Conditioning</li>
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Heating</li>
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> WiFi</li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-group list-group-flush mb-3">
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Garage</li>
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Security System</li>
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Laundry</li>
+                                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Gym</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Description</h6>
+                        <p>This stunning luxury villa in Malibu offers breathtaking ocean views from every room. The property features an open floor plan with floor-to-ceiling windows, a gourmet kitchen with high-end appliances, and a spacious master suite with a private balcony. The outdoor area includes an infinity pool, hot tub, and multiple seating areas perfect for entertaining. Located just steps from the beach, this is the perfect retreat for those seeking luxury and relaxation.</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Location</h6>
+                            <p>123 Ocean View Drive, Malibu, CA 90265</p>
+                            <div id="propertyMap" style="height: 200px; background-color: #f5f5f5; border-radius: 4px;"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Pricing</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Listing Price
+                                    <span class="fw-bold">$1,200,000</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Price Type
+                                    <span>Fixed Price</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Status
+                                    <span class="badge bg-success">Active</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Views
+                                    <span>245</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Bookings
+                                    <span>12</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Edit Listing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Details Modal -->
+    <div class="modal fade" id="bookingDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Booking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Guest" class="rounded-circle me-3" width="80" height="80">
+                        <div>
+                            <h6 class="mb-0">Sarah Johnson</h6>
+                            <p class="text-muted mb-0">sarah.johnson@example.com</p>
+                            <p class="text-muted mb-0">+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6>Property Information</h6>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property" class="rounded me-3" width="80" height="80">
+                                    <div>
+                                        <h6 class="mb-0">Luxury Villa in Malibu</h6>
+                                        <p class="text-muted mb-0">Malibu, California</p>
+                                        <p class="text-muted mb-0">4 bedrooms, 3.5 bathrooms</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Booking Dates</h6>
+                            <p>Aug 15 - Aug 29, 2023 (14 nights)</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Total Amount</h6>
+                            <p>$12,600</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Booking Status</h6>
+                            <p><span class="badge bg-success">Confirmed</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Payment Status</h6>
+                            <p><span class="badge bg-success">Paid in Full</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Special Requests</h6>
+                        <p class="text-muted">Guest has requested early check-in at 1 PM and a bottle of champagne upon arrival for their anniversary.</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Booking Notes</h6>
+                        <textarea class="form-control" rows="3" placeholder="Add any notes about this booking..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this listing? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Message Modal -->
+    <div class="modal fade" id="newMessageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-message-form">
+                        <div class="mb-3">
+                            <label for="recipient" class="form-label">To</label>
+                            <select class="form-select" id="recipient" required>
+                                <option value="">Select recipient</option>
+                                <option value="1">Sarah Johnson</option>
+                                <option value="2">Michael Brown</option>
+                                <option value="3">Emily Wilson</option>
+                                <option value="4">David Miller</option>
+                                <option value="5">Jessica Davis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-content" class="form-label">Message</label>
+                            <textarea class="form-control" id="message-content" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-attachments" class="form-label">Attachments</label>
+                            <input type="file" class="form-control" id="message-attachments" multiple>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="send-new-message-btn">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Deletion Modal -->
+    <div class="modal fade" id="accountDeletionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Delete Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to permanently delete your account? This action cannot be undone. All your data, including properties, bookings, and messages will be permanently removed.</p>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="confirm-deletion">
+                        <label class="form-check-label" for="confirm-deletion">
+                            I understand that this action is irreversible
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password-confirmation" class="form-label">Enter your password to confirm</label>
+                        <input type="password" class="form-control" id="password-confirmation" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm-account-deletion-btn" disabled>Delete My Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize variables
+        let currentSection = 'overview';
+        let viewsChart, inquiriesChart, conversionChart;
+        let activeMessageId = 1;
+        
+        // Sidebar navigation
+        const menuItems = document.querySelectorAll('.sidebar-menu li');
+        const dashboardSections = document.querySelectorAll('.dashboard-section');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items
+                menuItems.forEach(i => i.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Hide all dashboard sections
+                dashboardSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show the selected section
+                const sectionId = this.getAttribute('data-section') + '-section';
+                document.getElementById(sectionId).style.display = 'block';
+                currentSection = this.getAttribute('data-section');
+                
+                // Initialize charts if performance section is shown
+                if (currentSection === 'performance') {
+                    initCharts();
+                }
+            });
+        });
+        
+        // Add new listing button
+        const addNewListingBtn = document.getElementById('add-new-listing-btn');
+        if (addNewListingBtn) {
+            addNewListingBtn.addEventListener('click', function() {
+                // Hide all dashboard sections
+                dashboardSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show add property section
+                document.getElementById('add-property-section').style.display = 'block';
+                
+                // Update active menu item
+                menuItems.forEach(i => i.classList.remove('active'));
+                document.querySelector('.sidebar-menu li[data-section="add-property"]').classList.add('active');
+                currentSection = 'add-property';
+            });
+        }
+        
+        // Quick action buttons
+        document.getElementById('quick-add-property').addEventListener('click', function() {
+            menuItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('.sidebar-menu li[data-section="add-property"]').classList.add('active');
+            dashboardSections.forEach(section => section.style.display = 'none');
+            document.getElementById('add-property-section').style.display = 'block';
+            currentSection = 'add-property';
+        });
+        
+        document.getElementById('quick-update-listing').addEventListener('click', function() {
+            menuItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('.sidebar-menu li[data-section="listings"]').classList.add('active');
+            dashboardSections.forEach(section => section.style.display = 'none');
+            document.getElementById('listings-section').style.display = 'block';
+            currentSection = 'listings';
+        });
+        
+        document.getElementById('quick-manage-bookings').addEventListener('click', function() {
+            menuItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('.sidebar-menu li[data-section="bookings"]').classList.add('active');
+            dashboardSections.forEach(section => section.style.display = 'none');
+            document.getElementById('bookings-section').style.display = 'block';
+            currentSection = 'bookings';
+        });
+        
+        document.getElementById('quick-view-reports').addEventListener('click', function() {
+            menuItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('.sidebar-menu li[data-section="performance"]').classList.add('active');
+            dashboardSections.forEach(section => section.style.display = 'none');
+            document.getElementById('performance-section').style.display = 'block';
+            currentSection = 'performance';
+            initCharts();
+        });
+        
+        // Logout buttons
+        const logoutBtn = document.getElementById('logout');
+        const logoutBtn2 = document.getElementById('logout-btn');
+        
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                alert('You have been logged out successfully.');
+                // In a real app, you would redirect to login page
+                // window.location.href = 'login.html';
+            });
+        }
+        
+        if (logoutBtn2) {
+            logoutBtn2.addEventListener('click', function() {
+                alert('You have been logged out successfully.');
+                // In a real app, you would redirect to login page
+                // window.location.href = 'login.html';
+            });
+        }
+        
+        // Notifications dropdown
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        
+        if (notificationsBtn && notificationsDropdown) {
+            notificationsBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationsDropdown.style.display = notificationsDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+        
+        // User dropdown
+        const userDropdown = document.getElementById('user-dropdown');
+        const userDropdownMenu = document.getElementById('user-dropdown-menu');
+        
+        if (userDropdown && userDropdownMenu) {
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdownMenu.style.display = userDropdownMenu.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function() {
+            if (notificationsDropdown) notificationsDropdown.style.display = 'none';
+            if (userDropdownMenu) userDropdownMenu.style.display = 'none';
+        });
+        
+        // Property form submission
+        const addPropertyForm = document.getElementById('add-property-form');
+        if (addPropertyForm) {
+            addPropertyForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Property has been added successfully!');
+                // Reset form
+                this.reset();
+                // Show listings section
+                menuItems.forEach(i => i.classList.remove('active'));
+                document.querySelector('.sidebar-menu li[data-section="listings"]').classList.add('active');
+                dashboardSections.forEach(section => section.style.display = 'none');
+                document.getElementById('listings-section').style.display = 'block';
+                currentSection = 'listings';
+            });
+        }
+        
+        // Save draft button
+        document.getElementById('save-draft-btn').addEventListener('click', function() {
+            alert('Draft saved successfully!');
+        });
+        
+        // Cancel add property button
+        document.getElementById('cancel-add-property').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                addPropertyForm.reset();
+                menuItems.forEach(i => i.classList.remove('active'));
+                document.querySelector('.sidebar-menu li[data-section="listings"]').classList.add('active');
+                dashboardSections.forEach(section => section.style.display = 'none');
+                document.getElementById('listings-section').style.display = 'block';
+                currentSection = 'listings';
+            }
+        });
+        
+        // Listing actions
+        document.querySelectorAll('.edit-listing-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Edit listing functionality would open the edit form here.');
+            });
+        });
+        
+        document.querySelectorAll('.delete-listing-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+                deleteModal.show();
+            });
+        });
+        
+        document.querySelectorAll('.view-listing-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const listingModal = new bootstrap.Modal(document.getElementById('listingDetailsModal'));
+                listingModal.show();
+            });
+        });
+        
+        // Confirm delete button
+        document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+            alert('Listing has been deleted successfully.');
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal'));
+            deleteModal.hide();
+        });
+        
+        // Booking actions
+        document.querySelectorAll('.booking-details-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bookingModal = new bootstrap.Modal(document.getElementById('bookingDetailsModal'));
+                bookingModal.show();
+            });
+        });
+        
+        document.querySelectorAll('.booking-message-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Switch to messages section and activate the corresponding message
+                menuItems.forEach(i => i.classList.remove('active'));
+                document.querySelector('.sidebar-menu li[data-section="messages"]').classList.add('active');
+                dashboardSections.forEach(section => section.style.display = 'none');
+                document.getElementById('messages-section').style.display = 'block';
+                currentSection = 'messages';
+                
+                // In a real app, we would filter messages for this booking
+                alert('Messages related to this booking would be shown.');
+            });
+        });
+        
+        // Message functionality
+        document.querySelectorAll('.message-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all message items
+                document.querySelectorAll('.message-item').forEach(i => i.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Update message content based on selected message
+                activeMessageId = this.getAttribute('data-message-id');
+                // In a real app, we would fetch the message content from the server
+                updateMessageContent(activeMessageId);
+            });
+        });
+        
+        // New message button
+        document.getElementById('new-message-btn').addEventListener('click', function() {
+            const newMessageModal = new bootstrap.Modal(document.getElementById('newMessageModal'));
+            newMessageModal.show();
+        });
+        
+        // Send message button
+        document.getElementById('send-message-btn').addEventListener('click', function() {
+            const replyText = document.getElementById('message-reply').value;
+            if (replyText.trim() === '') {
+                alert('Please enter a message.');
+                return;
+            }
+            
+            // Add the new message to the conversation
+            const messageContent = document.getElementById('message-content');
+            const newMessage = document.createElement('div');
+            newMessage.className = 'message sent';
+            newMessage.innerHTML = `
+                <div class="message-info">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                    <div>
+                        <h6>You</h6>
+                        <small>Just now</small>
+                    </div>
+                </div>
+                <div class="message-text">
+                    <p>${replyText}</p>
+                </div>
+            `;
+            messageContent.appendChild(newMessage);
+            
+            // Clear the reply textarea
+            document.getElementById('message-reply').value = '';
+            
+            // Scroll to bottom
+            messageContent.scrollTop = messageContent.scrollHeight;
+            
+            // In a real app, we would send the message to the server
+            alert('Message sent successfully!');
+        });
+        
+        // Send new message button
+        document.getElementById('send-new-message-btn').addEventListener('click', function() {
+            const recipient = document.getElementById('recipient').value;
+            const subject = document.getElementById('subject').value;
+            const content = document.getElementById('message-content').value;
+            
+            if (!recipient || !subject || !content) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            // In a real app, we would send the message to the server
+            alert('Message sent successfully!');
+            
+            // Close the modal
+            const newMessageModal = bootstrap.Modal.getInstance(document.getElementById('newMessageModal'));
+            newMessageModal.hide();
+            
+            // Reset the form
+            document.getElementById('new-message-form').reset();
+        });
+        
+        // Profile image change
+        document.getElementById('change-profile-image').addEventListener('click', function() {
+            document.getElementById('profile-image-upload').click();
+        });
+        
+        document.getElementById('profile-image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profile-image').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Profile form submission
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Profile updated successfully!');
+        });
+        
+        // Password form submission
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const currentPass = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            
+            if (newPass !== confirmPass) {
+                alert('New password and confirmation do not match.');
+                return;
+            }
+            
+            // In a real app, we would validate current password and update it
+            alert('Password changed successfully!');
+            this.reset();
+        });
+        
+        // Notifications form submission
+        document.getElementById('notifications-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Notification settings saved successfully!');
+        });
+        
+        // Deactivate account button
+        document.getElementById('deactivate-account-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to deactivate your account? You can reactivate by logging in again.')) {
+                alert('Account has been deactivated. You will be logged out.');
+                // In a real app, we would deactivate the account and redirect to login
+                // window.location.href = 'login.html';
+            }
+        });
+        
+        // Delete account button
+        document.getElementById('delete-account-btn').addEventListener('click', function() {
+            const accountDeletionModal = new bootstrap.Modal(document.getElementById('accountDeletionModal'));
+            accountDeletionModal.show();
+        });
+        
+        // Confirm account deletion checkbox
+        document.getElementById('confirm-deletion').addEventListener('change', function() {
+            document.getElementById('confirm-account-deletion-btn').disabled = !this.checked;
+        });
+        
+        // Confirm account deletion button
+        document.getElementById('confirm-account-deletion-btn').addEventListener('click', function() {
+            const password = document.getElementById('password-confirmation').value;
+            if (!password) {
+                alert('Please enter your password to confirm.');
+                return;
+            }
+            
+            // In a real app, we would verify the password and delete the account
+            alert('Your account has been permanently deleted. You will be redirected to the home page.');
+            const accountDeletionModal = bootstrap.Modal.getInstance(document.getElementById('accountDeletionModal'));
+            accountDeletionModal.hide();
+            // window.location.href = 'index.html';
+        });
+        
+        // Global search functionality
+        document.getElementById('global-search').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim().toLowerCase();
+                if (query === '') return;
+                
+                // In a real app, we would search across all data
+                alert(`Searching for: ${query}\nIn a real app, this would show search results.`);
+            }
+        });
+        
+        // Message search functionality
+        document.getElementById('message-search').addEventListener('keyup', function(e) {
+            const query = this.value.trim().toLowerCase();
+            const messageItems = document.querySelectorAll('.message-item');
+            
+            messageItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        });
+        
+        // Booking filter
+        document.getElementById('booking-filter').addEventListener('change', function() {
+            const filter = this.value.toLowerCase();
+            const bookingRows = document.querySelectorAll('.bookings-table tbody tr');
+            
+            bookingRows.forEach(row => {
+                const status = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+                if (filter === 'all bookings') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = status.includes(filter) ? '' : 'none';
+                }
+            });
+        });
+        
+        // Review filter
+        document.getElementById('review-filter').addEventListener('change', function() {
+            const filter = this.value.toLowerCase();
+            const reviewItems = document.querySelectorAll('.review-item');
+            
+            if (filter === 'all reviews') {
+                reviewItems.forEach(item => item.style.display = '');
+                return;
+            }
+            
+            reviewItems.forEach(item => {
+                const stars = item.querySelectorAll('.rating i.fa-star').length;
+                let show = false;
+                
+                if (filter === '5 stars' && stars === 5) show = true;
+                else if (filter === '4 stars' && stars === 4) show = true;
+                else if (filter === '3 stars' && stars === 3) show = true;
+                else if (filter === '2 stars' && stars === 2) show = true;
+                else if (filter === '1 star' && stars === 1) show = true;
+                
+                item.style.display = show ? '' : 'none';
+            });
+        });
+        
+        // Load more reviews button
+        document.getElementById('load-more-reviews').addEventListener('click', function() {
+            // In a real app, we would load more reviews from the server
+            alert('Loading more reviews...');
+        });
+        
+        // Performance date filter
+        document.getElementById('performance-date-filter').addEventListener('change', function() {
+            // In a real app, we would filter the performance data
+            alert(`Showing data for: ${this.value}`);
+            initCharts(); // Refresh charts with filtered data
+        });
+        
+        // Function to update message content
+        function updateMessageContent(messageId) {
+            // In a real app, we would fetch the message content from the server
+            // For demo purposes, we'll just show a placeholder
+            const messageContent = document.getElementById('message-content');
+            messageContent.innerHTML = `
+                <div class="message received">
+                    <div class="message-info">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                        <div>
+                            <h6>Sarah Johnson</h6>
+                            <small>Today, 10:30 AM</small>
+                        </div>
+                    </div>
+                    <div class="message-text">
+                        <p>This is the message content for message ID ${messageId}. In a real application, this would be loaded from the server.</p>
+                    </div>
+                </div>
+                <div class="message sent">
+                    <div class="message-info">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                        <div>
+                            <h6>You</h6>
+                            <small>Today, 11:15 AM</small>
+                        </div>
+                    </div>
+                    <div class="message-text">
+                        <p>This is your reply to message ID ${messageId}.</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Initialize charts
+        function initCharts() {
+            // Destroy existing charts if they exist
+            if (viewsChart) viewsChart.destroy();
+            if (inquiriesChart) inquiriesChart.destroy();
+            if (conversionChart) conversionChart.destroy();
+            
+            // Views Chart
+            const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+            viewsChart = new Chart(viewsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Property Views',
+                        data: [120, 190, 170, 220, 240, 280, 320],
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        borderColor: 'rgba(67, 97, 238, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Inquiries Chart
+            const inquiriesCtx = document.getElementById('inquiriesChart').getContext('2d');
+            inquiriesChart = new Chart(inquiriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Luxury Villa', 'Downtown Apt', 'Mountain Cabin', 'Beach Condo'],
+                    datasets: [{
+                        label: 'Inquiries',
+                        data: [48, 32, 15, 22],
+                        backgroundColor: [
+                            'rgba(67, 97, 238, 0.7)',
+                            'rgba(76, 201, 240, 0.7)',
+                            'rgba(72, 149, 239, 0.7)',
+                            'rgba(248, 150, 30, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(67, 97, 238, 1)',
+                            'rgba(76, 201, 240, 1)',
+                            'rgba(72, 149, 239, 1)',
+                            'rgba(248, 150, 30, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Conversion Chart
+            const conversionCtx = document.getElementById('conversionChart').getContext('2d');
+            conversionChart = new Chart(conversionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bookings', 'Inquiries', 'Views'],
+                    datasets: [{
+                        data: [28, 117, 2408],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.7)',
+                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(108, 117, 125, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>

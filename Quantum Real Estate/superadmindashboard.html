@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Responsive Admin Dashboard</title>
+  <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+    }
+ 
+    .sidebar {
+      position: fixed;
+      height: 100%;
+      width: 250px;
+      background: #11101d;
+      padding-top: 20px;
+      overflow-y: auto;
+    }
+ 
+    .sidebar .logo-details {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      padding: 20px 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+ 
+    .sidebar .logo-details i {
+      margin-right: 10px;
+    }
+ 
+    .sidebar .nav-links {
+      list-style: none;
+      padding: 0;
+    }
+ 
+    .sidebar .nav-links li a {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      padding: 12px 20px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+ 
+    .sidebar .nav-links li a:hover,
+    .sidebar .nav-links li a.active {
+      background-color: #1d1b31;
+    }
+ 
+    .sidebar .nav-links i {
+      margin-right: 10px;
+    }
+ 
+    .home-section {
+      margin-left: 250px;
+      padding: 20px;
+    }
+ 
+    nav {
+      background-color: #fff;
+      padding: 15px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+ 
+    .sidebar-button {
+      display: flex;
+      align-items: center;
+    }
+ 
+    .sidebar-button i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+ 
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #f1f1f1;
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+ 
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+ 
+    #iframe-container {
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+ 
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-quora'></i>
+      <span class="logo_name">ADMIN</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="" data-section="dashboard" class="active"><i class="bx bx-grid-alt"></i> Dashboard</a></li>
+      <li><a href="" data-section="search"><i class='bx bx-search-alt'></i> Search Properties</a></li>
+      <li><a href="adminregister.html" data-section="adminregister"><i class='bx bx-user-plus'></i> Admin Register</a></li>
+      <li><a href="admindashboard.html" data-section="admindashboard"><i class='bx bxs-dashboard'></i> Admin Dashboard</a></li>
+      <li><a href="agentdashboard.html" data-section="agent"><i class='bx bx-user'></i> Agent</a></li>
+      <li><a href="buyerdashboard.html" data-section="buyer"><i class='bx bx-user'></i> Buyer</a></li>
+      <li><a href="sellerdashboard.html" data-section="seller"><i class='bx bx-user'></i> Seller</a></li>
+      <li><a href="getproperties.html" data-section="properties"><i class='bx bx-building-house'></i> Properties</a></li>
+      <li><a href="favourite.html" data-section="favourite"><i class='bx bx-heart'></i> Favourite</a></li>
+      <li><a href="visit.html" data-section="visit"><i class='bx bx-calendar'></i> Visit</a></li>
+      <li><a href="message.html" data-section="message"><i class='bx bx-message'></i> Message</a></li>
+      <li><a href="booking.html" data-section="booking"><i class='bx bx-book'></i> Booking</a></li>
+      <li><a href="review.html" data-section="review"><i class='bx bx-star'></i> Review</a></li>
+      <li><a href="settings.html" data-section="settings"><i class='bx bx-cog'></i> Settings</a></li>
+      <li><a href="logout.html" data-section="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+    </ul>
+  </div>
+ 
+  <!-- Main Content -->
+  <section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class="bx bx-menu sidebarBtn"></i>
+        <span class="dashboard">Dashboard</span>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Search..." />
+        <i class="bx bx-search"></i>
+      </div>
+    </nav>
+ 
+    <div id="iframe-container">
+      <iframe id="content-iframe" src="card.html"></iframe>
+    </div>
+  </section>
+ 
+  <!-- JavaScript -->
+  <script>
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarBtn = document.querySelector(".sidebarBtn");
+    const iframe = document.getElementById("content-iframe");
+ 
+    sidebarBtn.onclick = function () {
+      sidebar.classList.toggle("active");
+      if (sidebar.classList.contains("active")) {
+        sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+      } else {
+        sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+      }
+    };
+ 
+    const links = document.querySelectorAll(".nav-links a[data-section]");
+    links.forEach(link => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+ 
+        links.forEach(item => item.classList.remove("active"));
+        this.classList.add("active");
+ 
+        const href = this.getAttribute("href");
+        iframe.src = href;
+      });
+    });
+  </script>
+ 
+</body>
+</html>
+ 
+ 

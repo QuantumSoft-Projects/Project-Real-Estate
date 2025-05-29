@@ -1,0 +1,2622 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - Property Finder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .sidebar-menu a i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            color: var(--dark-color);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-actions .notification {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-icon.bookings {
+            background-color: var(--primary-color);
+        }
+
+        .card-icon.favorites {
+            background-color: var(--success-color);
+        }
+
+        .card-icon.messages {
+            background-color: var(--warning-color);
+        }
+
+        .card-icon.visits {
+            background-color: var(--danger-color);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-header h3 {
+            color: var(--dark-color);
+        }
+
+        .section-header a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .section-header a:hover {
+            text-decoration: underline;
+        }
+
+        /* Property Cards */
+        .property-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .property-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .property-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .property-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .property-card:hover .property-image img {
+            transform: scale(1.05);
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .property-details {
+            padding: 15px;
+        }
+
+        .property-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .property-address {
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .property-features {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .property-features span {
+            display: flex;
+            align-items: center;
+        }
+
+        .property-features i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+
+        .property-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .action-link.danger {
+            color: var(--danger-color);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .close-modal:hover {
+            color: var(--dark-color);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: var(--dark-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Booking Modal Styles */
+        .booking-summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .booking-summary h4 {
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .booking-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .booking-total {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Message Modal Styles */
+        .message-content {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .message-reply {
+            margin-top: 20px;
+        }
+
+        /* Search Filters */
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-header h3, .sidebar-header p, .sidebar-menu a span {
+                display: none;
+            }
+
+            .sidebar-menu a {
+                justify-content: center;
+                padding: 12px 0;
+            }
+
+            .sidebar-menu a i {
+                margin-right: 0;
+                font-size: 1.3rem;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .dashboard-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .property-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Property Finder</h3>
+                <p>Buyer Dashboard</p>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="#" class="sidebar-link active" data-section="dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="search"><i class="fas fa-search"></i> <span>Search Properties</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="favorites"><i class="fas fa-heart"></i> <span>Favorites</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="visits"><i class="fas fa-calendar-alt"></i> <span>Visits</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="messages"><i class="fas fa-envelope"></i> <span>Messages</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="bookings"><i class="fas fa-file-contract"></i> <span>Bookings</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="reviews"><i class="fas fa-star"></i> <span>Reviews</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-section="settings"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                    <li><a href="#" class="sidebar-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="user-actions">
+                    <div class="notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                        <span>John Doe</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="dashboard-section active" id="dashboard-section">
+                <!-- Dashboard Cards -->
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 id="upcomingVisitsCount">5</h3>
+                                <p>Upcoming Visits</p>
+                            </div>
+                            <div class="card-icon visits">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 id="favoritesCount">12</h3>
+                                <p>Saved Properties</p>
+                            </div>
+                            <div class="card-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 id="messagesCount">8</h3>
+                                <p>New Messages</p>
+                            </div>
+                            <div class="card-icon messages">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 id="bookingsCount">3</h3>
+                                <p>Active Bookings</p>
+                            </div>
+                            <div class="card-icon bookings">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Properties Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Recommended Properties</h3>
+                        <a href="#" id="viewAllRecommended">View All</a>
+                    </div>
+                    <div class="property-cards" id="recommendedProperties">
+                        <!-- Recommended properties will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Upcoming Visits Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Upcoming Visits</h3>
+                        <a href="#" id="scheduleVisitBtn">Schedule New Visit</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="upcomingVisitsTable">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Date & Time</th>
+                                    <th>Agent</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Visits will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Messages Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Recent Messages</h3>
+                        <a href="#" id="viewAllMessages">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="recentMessagesTable">
+                            <thead>
+                                <tr>
+                                    <th>From</th>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Messages will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Properties Section -->
+            <div class="dashboard-section" id="search-section">
+                <div class="section-header">
+                    <h3>Search Properties</h3>
+                </div>
+                <div class="search-filters">
+                    <div class="form-group">
+                        <label for="searchLocation">Location</label>
+                        <input type="text" id="searchLocation" class="form-control" placeholder="Enter city, neighborhood, or ZIP">
+                    </div>
+                    <div class="form-group">
+                        <label for="propertyType">Property Type</label>
+                        <select id="propertyType" class="form-control">
+                            <option value="">Any Type</option>
+                            <option value="house">House</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="condo">Condo</option>
+                            <option value="townhouse">Townhouse</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="priceRange">Price Range</label>
+                        <select id="priceRange" class="form-control">
+                            <option value="">Any Price</option>
+                            <option value="0-100000">$0 - $100,000</option>
+                            <option value="100000-200000">$100,000 - $200,000</option>
+                            <option value="200000-300000">$200,000 - $300,000</option>
+                            <option value="300000-500000">$300,000 - $500,000</option>
+                            <option value="500000+">$500,000+</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="searchPropertiesBtn">Search Properties</button>
+                </div>
+                <div class="property-cards" id="search-results">
+                    <p class="no-results">Use the filters above to search for properties</p>
+                </div>
+            </div>
+
+            <!-- Favorites Section -->
+            <div class="dashboard-section" id="favorites-section">
+                <div class="section-header">
+                    <h3>Saved Properties</h3>
+                </div>
+                <div class="property-cards" id="favoritesList">
+                    <!-- Favorites will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Visits Section -->
+            <div class="dashboard-section" id="visits-section">
+                <div class="section-header">
+                    <h3>Scheduled Visits</h3>
+                    <a href="#" id="scheduleVisitBtn2">Schedule New Visit</a>
+                </div>
+                <div class="table-responsive">
+                    <table id="allVisitsTable">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Date & Time</th>
+                                <th>Agent</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- All visits will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div class="dashboard-section" id="messages-section">
+                <div class="section-header">
+                    <h3>Messages</h3>
+                </div>
+                <div class="table-responsive">
+                    <table id="allMessagesTable">
+                        <thead>
+                            <tr>
+                                <th>From</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- All messages will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bookings Section -->
+            <div class="dashboard-section" id="bookings-section">
+                <div class="section-header">
+                    <h3>Your Bookings</h3>
+                </div>
+                <div class="table-responsive">
+                    <table id="bookingsTable">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Bookings will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="dashboard-section" id="reviews-section">
+                <div class="section-header">
+                    <h3>Your Reviews</h3>
+                </div>
+                <div class="property-cards" id="reviewsList">
+                    <!-- Reviews will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="dashboard-section" id="settings-section">
+                <div class="section-header">
+                    <h3>Account Settings</h3>
+                </div>
+                <form id="settingsForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-control" value="John">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-control" value="Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" value="john.doe@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" class="form-control" value="(123) 456-7890">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Change Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                    </div>
+                    <div class="form-group">
+                        <label>Notification Preferences</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="emailNotifications" checked> Email notifications</label>
+                            <label><input type="checkbox" id="smsNotifications" checked> SMS notifications</label>
+                            <label><input type="checkbox" id="pushNotifications"> Push notifications</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Visit Modal -->
+    <div class="modal" id="scheduleVisitModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h3>Schedule Property Visit</h3>
+            </div>
+            <form id="visitForm">
+                <div class="form-group">
+                    <label for="visitProperty">Property</label>
+                    <select id="visitProperty" class="form-control" required>
+                        <option value="">Select Property</option>
+                        <!-- Properties will be loaded here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="visitDate">Date</label>
+                    <input type="date" id="visitDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="visitTime">Time</label>
+                    <input type="time" id="visitTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="visitMessage">Message (Optional)</label>
+                    <textarea id="visitMessage" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelVisitBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Schedule Visit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Visit Modal -->
+    <div class="modal" id="viewVisitModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h3>Visit Details</h3>
+            </div>
+            <div class="visit-details">
+                <div class="form-group">
+                    <label>Property:</label>
+                    <p id="viewVisitProperty"></p>
+                </div>
+                <div class="form-group">
+                    <label>Date & Time:</label>
+                    <p id="viewVisitDateTime"></p>
+                </div>
+                <div class="form-group">
+                    <label>Agent:</label>
+                    <p id="viewVisitAgent"></p>
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <p id="viewVisitStatus"></p>
+                </div>
+                <div class="form-group">
+                    <label>Message:</label>
+                    <p id="viewVisitMessage"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="closeVisitModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Property Modal -->
+    <div class="modal" id="bookPropertyModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h3>Book Property</h3>
+            </div>
+            <form id="bookingForm">
+                <input type="hidden" id="bookingPropertyId">
+                <div class="booking-summary">
+                    <h4>Property Details</h4>
+                    <div class="booking-summary-item">
+                        <span>Address:</span>
+                        <span id="bookingPropertyAddress"></span>
+                    </div>
+                    <div class="booking-summary-item">
+                        <span>Type:</span>
+                        <span id="bookingPropertyType"></span>
+                    </div>
+                    <div class="booking-summary-item">
+                        <span>Price:</span>
+                        <span id="bookingPropertyPrice"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bookingType">Booking Type</label>
+                    <select id="bookingType" class="form-control" required>
+                        <option value="">Select Type</option>
+                        <option value="rental">Rental</option>
+                        <option value="purchase">Purchase</option>
+                    </select>
+                </div>
+                <div class="form-group" id="startDateGroup">
+                    <label for="bookingStartDate">Start Date</label>
+                    <input type="date" id="bookingStartDate" class="form-control">
+                </div>
+                <div class="form-group" id="endDateGroup">
+                    <label for="bookingEndDate">End Date</label>
+                    <input type="date" id="bookingEndDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="bookingMessage">Special Requests</label>
+                    <textarea id="bookingMessage" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelBookingBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Booking Modal -->
+    <div class="modal" id="viewBookingModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h3>Booking Details</h3>
+            </div>
+            <div class="booking-details">
+                <div class="booking-summary">
+                    <h4>Property Information</h4>
+                    <div class="booking-summary-item">
+                        <span>Address:</span>
+                        <span id="viewBookingAddress"></span>
+                    </div>
+                    <div class="booking-summary-item">
+                        <span>Type:</span>
+                        <span id="viewBookingPropertyType"></span>
+                    </div>
+                </div>
+                <div class="booking-summary">
+                    <h4>Booking Information</h4>
+                    <div class="booking-summary-item">
+                        <span>Type:</span>
+                        <span id="viewBookingType"></span>
+                    </div>
+                    <div class="booking-summary-item" id="viewBookingStartDateItem">
+                        <span>Start Date:</span>
+                        <span id="viewBookingStartDate"></span>
+                    </div>
+                    <div class="booking-summary-item" id="viewBookingEndDateItem">
+                        <span>End Date:</span>
+                        <span id="viewBookingEndDate"></span>
+                    </div>
+                    <div class="booking-summary-item">
+                        <span>Amount:</span>
+                        <span id="viewBookingAmount"></span>
+                    </div>
+                    <div class="booking-summary-item">
+                        <span>Status:</span>
+                        <span id="viewBookingStatus"></span>
+                    </div>
+                    <div class="booking-summary-item">
+                        <span>Date Booked:</span>
+                        <span id="viewBookingDate"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Special Requests:</label>
+                    <p id="viewBookingMessage"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="closeBookingModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Message Modal -->
+    <div class="modal" id="viewMessageModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h3>Message</h3>
+            </div>
+            <div class="message-content">
+                <div class="message-meta">
+                    <span id="messageFrom"></span>
+                    <span id="messageDate"></span>
+                </div>
+                <h4 id="messageSubject"></h4>
+                <p id="messageBody"></p>
+            </div>
+            <div class="message-reply">
+                <h4>Reply</h4>
+                <textarea id="messageReply" class="form-control" rows="3" placeholder="Type your reply here..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelReplyBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="sendReplyBtn">Send Reply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Review Modal -->
+    <div class="modal" id="addReviewModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h3>Add Review</h3>
+            </div>
+            <form id="reviewForm">
+                <input type="hidden" id="reviewPropertyId">
+                <div class="form-group">
+                    <label for="reviewRating">Rating</label>
+                    <select id="reviewRating" class="form-control" required>
+                        <option value="">Select Rating</option>
+                        <option value="5">5 Stars - Excellent</option>
+                        <option value="4">4 Stars - Very Good</option>
+                        <option value="3">3 Stars - Good</option>
+                        <option value="2">2 Stars - Fair</option>
+                        <option value="1">1 Star - Poor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reviewTitle">Title</label>
+                    <input type="text" id="reviewTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="reviewText">Review</label>
+                    <textarea id="reviewText" class="form-control" rows="5" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelReviewBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample data for the application
+            const sampleData = {
+                user: {
+                    id: 1,
+                    firstName: "John",
+                    lastName: "Doe",
+                    email: "john.doe@example.com",
+                    phone: "(123) 456-7890",
+                    profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
+                    notifications: {
+                        email: true,
+                        sms: true,
+                        push: false
+                    }
+                },
+                properties: [
+                    {
+                        id: 1,
+                        address: "123 Main St, Anytown, USA",
+                        price: 450000,
+                        priceDisplay: "$450,000",
+                        type: "house",
+                        beds: 3,
+                        baths: 2,
+                        sqft: 1800,
+                        image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        listingType: "sale",
+                        description: "Beautiful family home with spacious rooms and a large backyard.",
+                        agent: "Jane Smith",
+                        isFavorite: true
+                    },
+                    {
+                        id: 2,
+                        address: "456 Oak Ave, Somewhere, USA",
+                        price: 2500,
+                        priceDisplay: "$2,500/mo",
+                        type: "apartment",
+                        beds: 2,
+                        baths: 1,
+                        sqft: 1200,
+                        image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        listingType: "rent",
+                        description: "Modern apartment with great amenities in a prime location.",
+                        agent: "Mike Johnson",
+                        isFavorite: false
+                    },
+                    {
+                        id: 3,
+                        address: "789 Pine Rd, Nowhere, USA",
+                        price: 320000,
+                        priceDisplay: "$320,000",
+                        type: "house",
+                        beds: 4,
+                        baths: 3,
+                        sqft: 2200,
+                        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        listingType: "sale",
+                        description: "Spacious home with modern kitchen and large master suite.",
+                        agent: "Sarah Williams",
+                        isFavorite: true
+                    },
+                    {
+                        id: 4,
+                        address: "101 Maple Dr, Anywhere, USA",
+                        price: 1800,
+                        priceDisplay: "$1,800/mo",
+                        type: "condo",
+                        beds: 1,
+                        baths: 1,
+                        sqft: 800,
+                        image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        listingType: "rent",
+                        description: "Cozy condo perfect for singles or couples in a great neighborhood.",
+                        agent: "Robert Brown",
+                        isFavorite: false
+                    },
+                    {
+                        id: 5,
+                        address: "202 Elm St, Everywhere, USA",
+                        price: 550000,
+                        priceDisplay: "$550,000",
+                        type: "townhouse",
+                        beds: 3,
+                        baths: 2.5,
+                        sqft: 2000,
+                        image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        listingType: "sale",
+                        description: "Luxury townhouse with modern finishes and community amenities.",
+                        agent: "Emily Davis",
+                        isFavorite: false
+                    }
+                ],
+                visits: [
+                    {
+                        id: 1,
+                        propertyId: 1,
+                        propertyAddress: "123 Main St, Anytown",
+                        date: "2023-06-15",
+                        time: "14:00",
+                        agent: "Jane Smith",
+                        status: "confirmed",
+                        message: "Looking forward to showing you this beautiful property!"
+                    },
+                    {
+                        id: 2,
+                        propertyId: 2,
+                        propertyAddress: "456 Oak Ave, Somewhere",
+                        date: "2023-06-18",
+                        time: "10:00",
+                        agent: "Mike Johnson",
+                        status: "pending",
+                        message: "Please confirm your availability for this visit."
+                    },
+                    {
+                        id: 3,
+                        propertyId: 3,
+                        propertyAddress: "789 Pine Rd, Nowhere",
+                        date: "2023-06-20",
+                        time: "16:30",
+                        agent: "Sarah Williams",
+                        status: "confirmed",
+                        message: "The owner will be present during the visit."
+                    },
+                    {
+                        id: 4,
+                        propertyId: 4,
+                        propertyAddress: "101 Maple Dr, Anywhere",
+                        date: "2023-06-22",
+                        time: "11:00",
+                        agent: "Robert Brown",
+                        status: "pending",
+                        message: ""
+                    }
+                ],
+                messages: [
+                    {
+                        id: 1,
+                        from: "Jane Smith (Agent)",
+                        subject: "Confirmation for property visit",
+                        body: "Hello John, I'm confirming our appointment to view the property at 123 Main St on June 15th at 2:00 PM. Please let me know if you have any questions before our meeting.",
+                        date: "2023-06-10",
+                        read: true
+                    },
+                    {
+                        id: 2,
+                        from: "Mike Johnson (Agent)",
+                        subject: "New properties matching your criteria",
+                        body: "Hi John, I found a few new listings that match what you're looking for. There's a great apartment on Oak Ave that just came on the market. Would you like me to schedule a visit?",
+                        date: "2023-06-08",
+                        read: true
+                    },
+                    {
+                        id: 3,
+                        from: "Property Finder Team",
+                        subject: "Your recent booking confirmation",
+                        body: "Dear John, This email confirms your recent booking for the property at 123 Main St. Your lease agreement has been processed and is available in your account.",
+                        date: "2023-06-05",
+                        read: true
+                    },
+                    {
+                        id: 4,
+                        from: "Sarah Williams (Agent)",
+                        subject: "Follow-up on your inquiry",
+                        body: "Hello John, I wanted to follow up on your inquiry about the property on Pine Rd. Are you still interested in scheduling a visit? I have some availability next week.",
+                        date: "2023-06-07",
+                        read: false
+                    },
+                    {
+                        id: 5,
+                        from: "Robert Brown (Agent)",
+                        subject: "Available times for visit",
+                        body: "Hi John, Here are the available times to view the condo on Maple Dr. Please let me know which works best for you: June 22 at 11 AM or June 23 at 3 PM.",
+                        date: "2023-06-05",
+                        read: false
+                    }
+                ],
+                bookings: [
+                    {
+                        id: 1,
+                        propertyId: 1,
+                        propertyAddress: "123 Main St, Anytown",
+                        propertyType: "house",
+                        bookingType: "rental",
+                        startDate: "2023-07-01",
+                        endDate: "2024-06-30",
+                        amount: "$2,500/mo",
+                        status: "active",
+                        dateBooked: "2023-05-20",
+                        message: "I would like to request a 1-year lease with the option to renew."
+                    },
+                    {
+                        id: 2,
+                        propertyId: 2,
+                        propertyAddress: "456 Oak Ave, Somewhere",
+                        propertyType: "apartment",
+                        bookingType: "purchase",
+                        startDate: null,
+                        endDate: null,
+                        amount: "$450,000",
+                        status: "pending",
+                        dateBooked: "2023-06-01",
+                        message: "I'm interested in making an offer on this property."
+                    },
+                    {
+                        id: 3,
+                        propertyId: 3,
+                        propertyAddress: "789 Pine Rd, Nowhere",
+                        propertyType: "house",
+                        bookingType: "rental",
+                        startDate: "2023-08-01",
+                        endDate: "2024-07-31",
+                        amount: "$2,200/mo",
+                        status: "active",
+                        dateBooked: "2023-05-15",
+                        message: ""
+                    }
+                ],
+                reviews: [
+                    {
+                        id: 1,
+                        propertyId: 1,
+                        propertyAddress: "123 Main St, Anytown, USA",
+                        propertyImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        rating: 4.5,
+                        date: "2023-06-15",
+                        title: "Great family home",
+                        review: "Great property with amazing views. The neighborhood is quiet and the amenities are excellent."
+                    },
+                    {
+                        id: 2,
+                        propertyId: 2,
+                        propertyAddress: "456 Oak Ave, Somewhere, USA",
+                        propertyImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                        rating: 3.0,
+                        date: "2023-05-28",
+                        title: "Needs some updates",
+                        review: "Decent property but needs some maintenance. The kitchen appliances were outdated."
+                    }
+                ]
+            };
+
+            // Initialize the application with sample data
+            let appData = JSON.parse(JSON.stringify(sampleData));
+
+            // DOM elements
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const dashboardSections = document.querySelectorAll('.dashboard-section');
+            const pageTitle = document.getElementById('pageTitle');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const notification = document.querySelector('.notification');
+            const userProfile = document.querySelector('.user-profile');
+            const scheduleVisitBtns = document.querySelectorAll('[id^="scheduleVisitBtn"]');
+            const scheduleVisitModal = document.getElementById('scheduleVisitModal');
+            const closeModal = document.querySelectorAll('.close-modal');
+            const cancelVisitBtn = document.getElementById('cancelVisitBtn');
+            const visitForm = document.getElementById('visitForm');
+            const viewVisitModal = document.getElementById('viewVisitModal');
+            const closeVisitModalBtn = document.getElementById('closeVisitModalBtn');
+            const bookPropertyModal = document.getElementById('bookPropertyModal');
+            const bookingForm = document.getElementById('bookingForm');
+            const cancelBookingBtn = document.getElementById('cancelBookingBtn');
+            const viewBookingModal = document.getElementById('viewBookingModal');
+            const closeBookingModalBtn = document.getElementById('closeBookingModalBtn');
+            const viewMessageModal = document.getElementById('viewMessageModal');
+            const cancelReplyBtn = document.getElementById('cancelReplyBtn');
+            const sendReplyBtn = document.getElementById('sendReplyBtn');
+            const addReviewModal = document.getElementById('addReviewModal');
+            const reviewForm = document.getElementById('reviewForm');
+            const cancelReviewBtn = document.getElementById('cancelReviewBtn');
+            const searchPropertiesBtn = document.getElementById('searchPropertiesBtn');
+            const viewAllRecommended = document.getElementById('viewAllRecommended');
+            const viewAllMessages = document.getElementById('viewAllMessages');
+
+            // Count elements
+            const upcomingVisitsCount = document.getElementById('upcomingVisitsCount');
+            const favoritesCount = document.getElementById('favoritesCount');
+            const messagesCount = document.getElementById('messagesCount');
+            const bookingsCount = document.getElementById('bookingsCount');
+
+            // Initialize the dashboard
+            function initDashboard() {
+                // Set user profile
+                document.querySelector('.user-profile span').textContent = `${appData.user.firstName} ${appData.user.lastName}`;
+                document.getElementById('firstName').value = appData.user.firstName;
+                document.getElementById('lastName').value = appData.user.lastName;
+                document.getElementById('email').value = appData.user.email;
+                document.getElementById('phone').value = appData.user.phone;
+                document.getElementById('emailNotifications').checked = appData.user.notifications.email;
+                document.getElementById('smsNotifications').checked = appData.user.notifications.sms;
+                document.getElementById('pushNotifications').checked = appData.user.notifications.push;
+
+                // Update counts
+                updateCounts();
+
+                // Load recommended properties
+                loadRecommendedProperties();
+
+                // Load upcoming visits
+                loadUpcomingVisits();
+
+                // Load recent messages
+                loadRecentMessages();
+
+                // Load favorites
+                loadFavorites();
+
+                // Load all visits
+                loadAllVisits();
+
+                // Load all messages
+                loadAllMessages();
+
+                // Load bookings
+                loadBookings();
+
+                // Load reviews
+                loadReviews();
+
+                // Populate visit property dropdown
+                populateVisitPropertyDropdown();
+            }
+
+            // Update dashboard counts
+            function updateCounts() {
+                // Upcoming visits count (only confirmed and pending)
+                const upcomingVisits = appData.visits.filter(visit => visit.status !== 'cancelled');
+                upcomingVisitsCount.textContent = upcomingVisits.length;
+
+                // Favorites count
+                const favorites = appData.properties.filter(property => property.isFavorite);
+                favoritesCount.textContent = favorites.length;
+
+                // Messages count (unread)
+                const unreadMessages = appData.messages.filter(message => !message.read);
+                messagesCount.textContent = unreadMessages.length;
+
+                // Bookings count (active)
+                const activeBookings = appData.bookings.filter(booking => booking.status === 'active');
+                bookingsCount.textContent = activeBookings.length;
+            }
+
+            // Load recommended properties
+            function loadRecommendedProperties() {
+                const recommendedPropertiesContainer = document.getElementById('recommendedProperties');
+                recommendedPropertiesContainer.innerHTML = '';
+
+                // Get 3 random properties as recommendations
+                const recommended = [...appData.properties].sort(() => 0.5 - Math.random()).slice(0, 3);
+
+                recommended.forEach(property => {
+                    const propertyCard = createPropertyCard(property);
+                    recommendedPropertiesContainer.appendChild(propertyCard);
+                });
+            }
+
+            // Load upcoming visits
+            function loadUpcomingVisits() {
+                const upcomingVisitsTable = document.getElementById('upcomingVisitsTable').querySelector('tbody');
+                upcomingVisitsTable.innerHTML = '';
+
+                // Get upcoming visits (not cancelled)
+                const upcomingVisits = appData.visits.filter(visit => visit.status !== 'cancelled');
+
+                upcomingVisits.forEach(visit => {
+                    const row = document.createElement('tr');
+                    
+                    const propertyCell = document.createElement('td');
+                    propertyCell.textContent = visit.propertyAddress;
+                    
+                    const dateCell = document.createElement('td');
+                    const visitDate = new Date(`${visit.date}T${visit.time}`);
+                    dateCell.textContent = visitDate.toLocaleString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    const agentCell = document.createElement('td');
+                    agentCell.textContent = visit.agent;
+                    
+                    const statusCell = document.createElement('td');
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = `status status-${visit.status}`;
+                    statusSpan.textContent = visit.status.charAt(0).toUpperCase() + visit.status.slice(1);
+                    statusCell.appendChild(statusSpan);
+                    
+                    const actionsCell = document.createElement('td');
+                    const detailsLink = document.createElement('a');
+                    detailsLink.href = '#';
+                    detailsLink.className = 'action-link';
+                    detailsLink.textContent = 'Details';
+                    detailsLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewVisitDetails(visit.id);
+                    });
+                    
+                    const cancelLink = document.createElement('a');
+                    cancelLink.href = '#';
+                    cancelLink.className = 'action-link danger';
+                    cancelLink.textContent = 'Cancel';
+                    cancelLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        cancelVisit(visit.id);
+                    });
+                    
+                    actionsCell.appendChild(detailsLink);
+                    actionsCell.appendChild(cancelLink);
+                    
+                    row.appendChild(propertyCell);
+                    row.appendChild(dateCell);
+                    row.appendChild(agentCell);
+                    row.appendChild(statusCell);
+                    row.appendChild(actionsCell);
+                    
+                    upcomingVisitsTable.appendChild(row);
+                });
+            }
+
+            // Load recent messages
+            function loadRecentMessages() {
+                const recentMessagesTable = document.getElementById('recentMessagesTable').querySelector('tbody');
+                recentMessagesTable.innerHTML = '';
+
+                // Get 3 most recent messages
+                const recentMessages = [...appData.messages]
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 3);
+
+                recentMessages.forEach(message => {
+                    const row = document.createElement('tr');
+                    
+                    const fromCell = document.createElement('td');
+                    fromCell.textContent = message.from;
+                    
+                    const subjectCell = document.createElement('td');
+                    subjectCell.textContent = message.subject;
+                    
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = new Date(message.date).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    
+                    const actionsCell = document.createElement('td');
+                    const viewLink = document.createElement('a');
+                    viewLink.href = '#';
+                    viewLink.className = 'action-link';
+                    viewLink.textContent = 'View';
+                    viewLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewMessageDetails(message.id);
+                    });
+                    
+                    actionsCell.appendChild(viewLink);
+                    
+                    row.appendChild(fromCell);
+                    row.appendChild(subjectCell);
+                    row.appendChild(dateCell);
+                    row.appendChild(actionsCell);
+                    
+                    recentMessagesTable.appendChild(row);
+                });
+            }
+
+            // Load favorites
+            function loadFavorites() {
+                const favoritesList = document.getElementById('favoritesList');
+                favoritesList.innerHTML = '';
+
+                const favorites = appData.properties.filter(property => property.isFavorite);
+
+                if (favorites.length === 0) {
+                    favoritesList.innerHTML = '<p class="no-results">You have no saved properties yet.</p>';
+                    return;
+                }
+
+                favorites.forEach(property => {
+                    const propertyCard = createPropertyCard(property, true);
+                    favoritesList.appendChild(propertyCard);
+                });
+            }
+
+            // Load all visits
+            function loadAllVisits() {
+                const allVisitsTable = document.getElementById('allVisitsTable').querySelector('tbody');
+                allVisitsTable.innerHTML = '';
+
+                appData.visits.forEach(visit => {
+                    const row = document.createElement('tr');
+                    
+                    const propertyCell = document.createElement('td');
+                    propertyCell.textContent = visit.propertyAddress;
+                    
+                    const dateCell = document.createElement('td');
+                    const visitDate = new Date(`${visit.date}T${visit.time}`);
+                    dateCell.textContent = visitDate.toLocaleString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    const agentCell = document.createElement('td');
+                    agentCell.textContent = visit.agent;
+                    
+                    const statusCell = document.createElement('td');
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = `status status-${visit.status}`;
+                    statusSpan.textContent = visit.status.charAt(0).toUpperCase() + visit.status.slice(1);
+                    statusCell.appendChild(statusSpan);
+                    
+                    const actionsCell = document.createElement('td');
+                    const detailsLink = document.createElement('a');
+                    detailsLink.href = '#';
+                    detailsLink.className = 'action-link';
+                    detailsLink.textContent = 'Details';
+                    detailsLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewVisitDetails(visit.id);
+                    });
+                    
+                    const cancelLink = document.createElement('a');
+                    cancelLink.href = '#';
+                    cancelLink.className = 'action-link danger';
+                    cancelLink.textContent = visit.status === 'cancelled' ? 'Remove' : 'Cancel';
+                    cancelLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (visit.status === 'cancelled') {
+                            removeVisit(visit.id);
+                        } else {
+                            cancelVisit(visit.id);
+                        }
+                    });
+                    
+                    actionsCell.appendChild(detailsLink);
+                    actionsCell.appendChild(cancelLink);
+                    
+                    row.appendChild(propertyCell);
+                    row.appendChild(dateCell);
+                    row.appendChild(agentCell);
+                    row.appendChild(statusCell);
+                    row.appendChild(actionsCell);
+                    
+                    allVisitsTable.appendChild(row);
+                });
+            }
+
+            // Load all messages
+            function loadAllMessages() {
+                const allMessagesTable = document.getElementById('allMessagesTable').querySelector('tbody');
+                allMessagesTable.innerHTML = '';
+
+                // Sort by date (newest first)
+                const sortedMessages = [...appData.messages].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                sortedMessages.forEach(message => {
+                    const row = document.createElement('tr');
+                    
+                    const fromCell = document.createElement('td');
+                    fromCell.textContent = message.from;
+                    if (!message.read) {
+                        fromCell.style.fontWeight = 'bold';
+                    }
+                    
+                    const subjectCell = document.createElement('td');
+                    subjectCell.textContent = message.subject;
+                    if (!message.read) {
+                        subjectCell.style.fontWeight = 'bold';
+                    }
+                    
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = new Date(message.date).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    if (!message.read) {
+                        dateCell.style.fontWeight = 'bold';
+                    }
+                    
+                    const actionsCell = document.createElement('td');
+                    const viewLink = document.createElement('a');
+                    viewLink.href = '#';
+                    viewLink.className = 'action-link';
+                    viewLink.textContent = 'View';
+                    viewLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewMessageDetails(message.id);
+                    });
+                    
+                    actionsCell.appendChild(viewLink);
+                    
+                    row.appendChild(fromCell);
+                    row.appendChild(subjectCell);
+                    row.appendChild(dateCell);
+                    row.appendChild(actionsCell);
+                    
+                    allMessagesTable.appendChild(row);
+                });
+            }
+
+            // Load bookings
+            function loadBookings() {
+                const bookingsTable = document.getElementById('bookingsTable').querySelector('tbody');
+                bookingsTable.innerHTML = '';
+
+                appData.bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    
+                    const propertyCell = document.createElement('td');
+                    propertyCell.textContent = booking.propertyAddress;
+                    
+                    const typeCell = document.createElement('td');
+                    typeCell.textContent = booking.bookingType.charAt(0).toUpperCase() + booking.bookingType.slice(1);
+                    
+                    const startDateCell = document.createElement('td');
+                    startDateCell.textContent = booking.startDate ? 
+                        new Date(booking.startDate).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        }) : 'N/A';
+                    
+                    const endDateCell = document.createElement('td');
+                    endDateCell.textContent = booking.endDate ? 
+                        new Date(booking.endDate).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        }) : 'N/A';
+                    
+                    const amountCell = document.createElement('td');
+                    amountCell.textContent = booking.amount;
+                    
+                    const statusCell = document.createElement('td');
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = `status status-${booking.status}`;
+                    statusSpan.textContent = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
+                    statusCell.appendChild(statusSpan);
+                    
+                    const actionsCell = document.createElement('td');
+                    const detailsLink = document.createElement('a');
+                    detailsLink.href = '#';
+                    detailsLink.className = 'action-link';
+                    detailsLink.textContent = 'Details';
+                    detailsLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewBookingDetails(booking.id);
+                    });
+                    
+                    const cancelLink = document.createElement('a');
+                    cancelLink.href = '#';
+                    cancelLink.className = 'action-link danger';
+                    cancelLink.textContent = 'Cancel';
+                    cancelLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        cancelBooking(booking.id);
+                    });
+                    
+                    actionsCell.appendChild(detailsLink);
+                    actionsCell.appendChild(cancelLink);
+                    
+                    row.appendChild(propertyCell);
+                    row.appendChild(typeCell);
+                    row.appendChild(startDateCell);
+                    row.appendChild(endDateCell);
+                    row.appendChild(amountCell);
+                    row.appendChild(statusCell);
+                    row.appendChild(actionsCell);
+                    
+                    bookingsTable.appendChild(row);
+                });
+            }
+
+            // Load reviews
+            function loadReviews() {
+                const reviewsList = document.getElementById('reviewsList');
+                reviewsList.innerHTML = '';
+
+                if (appData.reviews.length === 0) {
+                    reviewsList.innerHTML = '<p class="no-results">You have not submitted any reviews yet.</p>';
+                    return;
+                }
+
+                appData.reviews.forEach(review => {
+                    const propertyCard = document.createElement('div');
+                    propertyCard.className = 'property-card';
+                    
+                    propertyCard.innerHTML = `
+                        <div class="property-image">
+                            <img src="${review.propertyImage}" alt="Property">
+                        </div>
+                        <div class="property-details">
+                            <div class="property-address">${review.propertyAddress}</div>
+                            <div class="property-features">
+                                <span><i class="fas fa-star"></i> ${review.rating}/5.0</span>
+                                <span>${new Date(review.date).toLocaleDateString('en-US', {
+                                    month: 'long',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                })}</span>
+                            </div>
+                            <div class="property-description">
+                                <h4>${review.title}</h4>
+                                <p>${review.review}</p>
+                            </div>
+                            <div class="property-actions">
+                                <button class="btn btn-outline">Edit Review</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    reviewsList.appendChild(propertyCard);
+                });
+            }
+
+            // Create property card element
+            function createPropertyCard(property, isFavoriteView = false) {
+                const propertyCard = document.createElement('div');
+                propertyCard.className = 'property-card';
+                propertyCard.dataset.id = property.id;
+                
+                const badgeText = property.listingType === 'sale' ? 'For Sale' : 'For Rent';
+                
+                propertyCard.innerHTML = `
+                    <div class="property-image">
+                        <img src="${property.image}" alt="Property">
+                        <span class="property-badge">${badgeText}</span>
+                    </div>
+                    <div class="property-details">
+                        <div class="property-price">${property.priceDisplay}</div>
+                        <div class="property-address">${property.address}</div>
+                        <div class="property-features">
+                            <span><i class="fas fa-bed"></i> ${property.beds} Beds</span>
+                            <span><i class="fas fa-bath"></i> ${property.baths} Baths</span>
+                            <span><i class="fas fa-ruler-combined"></i> ${property.sqft} sqft</span>
+                        </div>
+                        <div class="property-actions">
+                            <button class="btn btn-outline ${property.isFavorite ? 'saved' : ''}">
+                                <i class="fas fa-heart"></i> ${property.isFavorite ? 'Saved' : 'Save'}
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-calendar-alt"></i> Visit
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners to buttons
+                const saveBtn = propertyCard.querySelector('.btn-outline');
+                const visitBtn = propertyCard.querySelector('.btn-primary');
+                
+                saveBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleFavorite(property.id, saveBtn);
+                });
+                
+                visitBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openScheduleVisitModal(property.id);
+                });
+                
+                // If this is the favorites view, add a book button
+                if (isFavoriteView) {
+                    const actionsDiv = propertyCard.querySelector('.property-actions');
+                    const bookBtn = document.createElement('button');
+                    bookBtn.className = 'btn btn-primary';
+                    bookBtn.innerHTML = '<i class="fas fa-file-contract"></i> Book';
+                    bookBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openBookPropertyModal(property.id);
+                    });
+                    actionsDiv.appendChild(bookBtn);
+                }
+                
+                return propertyCard;
+            }
+
+            // Populate visit property dropdown
+            function populateVisitPropertyDropdown() {
+                const visitPropertySelect = document.getElementById('visitProperty');
+                visitPropertySelect.innerHTML = '<option value="">Select Property</option>';
+                
+                appData.properties.forEach(property => {
+                    const option = document.createElement('option');
+                    option.value = property.id;
+                    option.textContent = property.address;
+                    visitPropertySelect.appendChild(option);
+                });
+            }
+
+            // Toggle favorite status
+            function toggleFavorite(propertyId, button) {
+                const property = appData.properties.find(p => p.id === propertyId);
+                if (property) {
+                    property.isFavorite = !property.isFavorite;
+                    
+                    if (property.isFavorite) {
+                        button.innerHTML = '<i class="fas fa-heart"></i> Saved';
+                        button.classList.add('saved');
+                        alert(`Added ${property.address} to saved properties`);
+                    } else {
+                        button.innerHTML = '<i class="fas fa-heart"></i> Save';
+                        button.classList.remove('saved');
+                        alert(`Removed ${property.address} from saved properties`);
+                    }
+                    
+                    // Update favorites count
+                    const favorites = appData.properties.filter(p => p.isFavorite);
+                    favoritesCount.textContent = favorites.length;
+                    
+                    // Reload favorites section if it's active
+                    if (document.getElementById('favorites-section').classList.contains('active')) {
+                        loadFavorites();
+                    }
+                }
+            }
+
+            // Open schedule visit modal
+            function openScheduleVisitModal(propertyId = null) {
+                const visitPropertySelect = document.getElementById('visitProperty');
+                
+                if (propertyId) {
+                    visitPropertySelect.value = propertyId;
+                }
+                
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('visitDate').min = today;
+                
+                scheduleVisitModal.style.display = 'flex';
+            }
+
+            // View visit details
+            function viewVisitDetails(visitId) {
+                const visit = appData.visits.find(v => v.id === visitId);
+                if (!visit) return;
+                
+                document.getElementById('viewVisitProperty').textContent = visit.propertyAddress;
+                
+                const visitDate = new Date(`${visit.date}T${visit.time}`);
+                document.getElementById('viewVisitDateTime').textContent = visitDate.toLocaleString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                document.getElementById('viewVisitAgent').textContent = visit.agent;
+                
+                const statusSpan = document.createElement('span');
+                statusSpan.className = `status status-${visit.status}`;
+                statusSpan.textContent = visit.status.charAt(0).toUpperCase() + visit.status.slice(1);
+                document.getElementById('viewVisitStatus').innerHTML = '';
+                document.getElementById('viewVisitStatus').appendChild(statusSpan);
+                
+                document.getElementById('viewVisitMessage').textContent = visit.message || 'No message provided';
+                
+                viewVisitModal.style.display = 'flex';
+            }
+
+            // Cancel visit
+            function cancelVisit(visitId) {
+                if (confirm('Are you sure you want to cancel this visit?')) {
+                    const visit = appData.visits.find(v => v.id === visitId);
+                    if (visit) {
+                        visit.status = 'cancelled';
+                        
+                        // Update counts
+                        updateCounts();
+                        
+                        // Reload visits tables
+                        loadUpcomingVisits();
+                        loadAllVisits();
+                        
+                        alert('Visit has been cancelled.');
+                    }
+                }
+            }
+
+            // Remove visit
+            function removeVisit(visitId) {
+                if (confirm('Are you sure you want to remove this cancelled visit?')) {
+                    appData.visits = appData.visits.filter(v => v.id !== visitId);
+                    
+                    // Update counts
+                    updateCounts();
+                    
+                    // Reload visits tables
+                    loadUpcomingVisits();
+                    loadAllVisits();
+                }
+            }
+
+            // Open book property modal
+            function openBookPropertyModal(propertyId) {
+                const property = appData.properties.find(p => p.id === propertyId);
+                if (!property) return;
+                
+                document.getElementById('bookingPropertyId').value = property.id;
+                document.getElementById('bookingPropertyAddress').textContent = property.address;
+                document.getElementById('bookingPropertyType').textContent = property.type.charAt(0).toUpperCase() + property.type.slice(1);
+                document.getElementById('bookingPropertyPrice').textContent = property.priceDisplay;
+                
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('bookingStartDate').min = today;
+                document.getElementById('bookingEndDate').min = today;
+                
+                bookPropertyModal.style.display = 'flex';
+            }
+
+            // View booking details
+            function viewBookingDetails(bookingId) {
+                const booking = appData.bookings.find(b => b.id === bookingId);
+                if (!booking) return;
+                
+                document.getElementById('viewBookingAddress').textContent = booking.propertyAddress;
+                document.getElementById('viewBookingPropertyType').textContent = booking.propertyType.charAt(0).toUpperCase() + booking.propertyType.slice(1);
+                document.getElementById('viewBookingType').textContent = booking.bookingType.charAt(0).toUpperCase() + booking.bookingType.slice(1);
+                
+                if (booking.startDate) {
+                    document.getElementById('viewBookingStartDate').textContent = new Date(booking.startDate).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    document.getElementById('viewBookingStartDateItem').style.display = 'flex';
+                } else {
+                    document.getElementById('viewBookingStartDateItem').style.display = 'none';
+                }
+                
+                if (booking.endDate) {
+                    document.getElementById('viewBookingEndDate').textContent = new Date(booking.endDate).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    document.getElementById('viewBookingEndDateItem').style.display = 'flex';
+                } else {
+                    document.getElementById('viewBookingEndDateItem').style.display = 'none';
+                }
+                
+                document.getElementById('viewBookingAmount').textContent = booking.amount;
+                
+                const statusSpan = document.createElement('span');
+                statusSpan.className = `status status-${booking.status}`;
+                statusSpan.textContent = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
+                document.getElementById('viewBookingStatus').innerHTML = '';
+                document.getElementById('viewBookingStatus').appendChild(statusSpan);
+                
+                document.getElementById('viewBookingDate').textContent = new Date(booking.dateBooked).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                document.getElementById('viewBookingMessage').textContent = booking.message || 'No special requests';
+                
+                viewBookingModal.style.display = 'flex';
+            }
+
+            // Cancel booking
+            function cancelBooking(bookingId) {
+                if (confirm('Are you sure you want to cancel this booking?')) {
+                    const booking = appData.bookings.find(b => b.id === bookingId);
+                    if (booking) {
+                        booking.status = 'cancelled';
+                        
+                        // Update counts
+                        updateCounts();
+                        
+                        // Reload bookings table
+                        loadBookings();
+                        
+                        alert('Booking has been cancelled.');
+                    }
+                }
+            }
+
+            // View message details
+            function viewMessageDetails(messageId) {
+                const message = appData.messages.find(m => m.id === messageId);
+                if (!message) return;
+                
+                // Mark as read
+                message.read = true;
+                
+                // Update counts
+                updateCounts();
+                
+                // Reload messages tables
+                loadRecentMessages();
+                loadAllMessages();
+                
+                document.getElementById('messageFrom').textContent = message.from;
+                document.getElementById('messageDate').textContent = new Date(message.date).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                document.getElementById('messageSubject').textContent = message.subject;
+                document.getElementById('messageBody').textContent = message.body;
+                document.getElementById('messageReply').value = '';
+                
+                viewMessageModal.style.display = 'flex';
+            }
+
+            // Search properties
+            function searchProperties() {
+                const location = document.getElementById('searchLocation').value.toLowerCase();
+                const propertyType = document.getElementById('propertyType').value;
+                const priceRange = document.getElementById('priceRange').value;
+                
+                const searchResultsContainer = document.getElementById('search-results');
+                searchResultsContainer.innerHTML = '';
+                
+                let results = [...appData.properties];
+                
+                // Filter by location
+                if (location) {
+                    results = results.filter(property => 
+                        property.address.toLowerCase().includes(location)
+                    );
+                }
+                
+                // Filter by property type
+                if (propertyType) {
+                    results = results.filter(property => 
+                        property.type === propertyType
+                    );
+                }
+                
+                // Filter by price range
+                if (priceRange) {
+                    if (priceRange === '500000+') {
+                        results = results.filter(property => 
+                            property.listingType === 'sale' && property.price >= 500000
+                        );
+                    } else {
+                        const [min, max] = priceRange.split('-').map(Number);
+                        results = results.filter(property => {
+                            if (property.listingType === 'sale') {
+                                return property.price >= min && property.price <= max;
+                            } else {
+                                // For rentals, we'll just check monthly price
+                                return property.price >= min/1000 && property.price <= max/1000;
+                            }
+                        });
+                    }
+                }
+                
+                if (results.length === 0) {
+                    searchResultsContainer.innerHTML = '<p class="no-results">No properties match your search criteria.</p>';
+                    return;
+                }
+                
+                results.forEach(property => {
+                    const propertyCard = createPropertyCard(property);
+                    searchResultsContainer.appendChild(propertyCard);
+                });
+            }
+
+            // Sidebar navigation functionality
+            function showSection(sectionId) {
+                dashboardSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                const activeSection = document.getElementById(`${sectionId}-section`);
+                if (activeSection) {
+                    activeSection.classList.add('active');
+                }
+                
+                // Update page title
+                const activeLink = document.querySelector(`.sidebar-link[data-section="${sectionId}"]`);
+                if (activeLink) {
+                    const linkText = activeLink.querySelector('span').textContent;
+                    pageTitle.textContent = linkText;
+                }
+            }
+            
+            // Add click event listeners to sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show the corresponding section
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Logout button functionality
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    alert('You have been logged out successfully.');
+                    // In a real app, you would redirect to login page
+                    // window.location.href = '/login';
+                }
+            });
+            
+            // Notification click
+            notification.addEventListener('click', function() {
+                alert('You have 3 new notifications');
+            });
+            
+            // User profile click
+            userProfile.addEventListener('click', function() {
+                // Show settings section
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('.sidebar-link[data-section="settings"]').classList.add('active');
+                showSection('settings');
+            });
+            
+            // Open modal when Schedule New Visit button is clicked
+            scheduleVisitBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openScheduleVisitModal();
+                });
+            });
+            
+            // Close modals when X is clicked
+            closeModal.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+            
+            // Close modal when Cancel button is clicked
+            cancelVisitBtn.addEventListener('click', function() {
+                scheduleVisitModal.style.display = 'none';
+            });
+            
+            // Close visit modal
+            closeVisitModalBtn.addEventListener('click', function() {
+                viewVisitModal.style.display = 'none';
+            });
+            
+            // Close booking modal
+            cancelBookingBtn.addEventListener('click', function() {
+                bookPropertyModal.style.display = 'none';
+            });
+            
+            // Close booking details modal
+            closeBookingModalBtn.addEventListener('click', function() {
+                viewBookingModal.style.display = 'none';
+            });
+            
+            // Close message modal
+            cancelReplyBtn.addEventListener('click', function() {
+                viewMessageModal.style.display = 'none';
+            });
+            
+            // Close review modal
+            cancelReviewBtn.addEventListener('click', function() {
+                addReviewModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside the modal content
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+            
+            // Visit form submission
+            visitForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const propertyId = parseInt(document.getElementById('visitProperty').value);
+                const property = appData.properties.find(p => p.id === propertyId);
+                if (!property) {
+                    alert('Please select a property');
+                    return;
+                }
+                
+                const date = document.getElementById('visitDate').value;
+                const time = document.getElementById('visitTime').value;
+                const message = document.getElementById('visitMessage').value;
+                
+                // Create new visit
+                const newVisit = {
+                    id: appData.visits.length + 1,
+                    propertyId: property.id,
+                    propertyAddress: property.address,
+                    date: date,
+                    time: time,
+                    agent: property.agent,
+                    status: 'pending',
+                    message: message
+                };
+                
+                appData.visits.push(newVisit);
+                
+                // Show success message
+                alert('Visit scheduled successfully!');
+                
+                // Close the modal
+                scheduleVisitModal.style.display = 'none';
+                
+                // Reset the form
+                visitForm.reset();
+                
+                // Update counts
+                updateCounts();
+                
+                // Reload visits tables
+                loadUpcomingVisits();
+                loadAllVisits();
+            });
+            
+            // Booking form submission
+            bookingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const propertyId = parseInt(document.getElementById('bookingPropertyId').value);
+                const property = appData.properties.find(p => p.id === propertyId);
+                if (!property) return;
+                
+                const bookingType = document.getElementById('bookingType').value;
+                if (!bookingType) {
+                    alert('Please select a booking type');
+                    return;
+                }
+                
+                const startDate = document.getElementById('bookingStartDate').value;
+                const endDate = document.getElementById('bookingEndDate').value;
+                const message = document.getElementById('bookingMessage').value;
+                
+                // Validate dates for rentals
+                if (bookingType === 'rental' && (!startDate || !endDate)) {
+                    alert('Please select both start and end dates for rentals');
+                    return;
+                }
+                
+                if (bookingType === 'rental' && new Date(startDate) >= new Date(endDate)) {
+                    alert('End date must be after start date');
+                    return;
+                }
+                
+                // Create new booking
+                const newBooking = {
+                    id: appData.bookings.length + 1,
+                    propertyId: property.id,
+                    propertyAddress: property.address,
+                    propertyType: property.type,
+                    bookingType: bookingType,
+                    startDate: bookingType === 'rental' ? startDate : null,
+                    endDate: bookingType === 'rental' ? endDate : null,
+                    amount: property.priceDisplay,
+                    status: 'pending',
+                    dateBooked: new Date().toISOString().split('T')[0],
+                    message: message
+                };
+                
+                appData.bookings.push(newBooking);
+                
+                // Show success message
+                alert('Booking submitted successfully!');
+                
+                // Close the modal
+                bookPropertyModal.style.display = 'none';
+                
+                // Reset the form
+                bookingForm.reset();
+                
+                // Update counts
+                updateCounts();
+                
+                // Reload bookings table
+                loadBookings();
+            });
+            
+            // Send reply to message
+            sendReplyBtn.addEventListener('click', function() {
+                const replyText = document.getElementById('messageReply').value;
+                if (!replyText.trim()) {
+                    alert('Please enter your reply');
+                    return;
+                }
+                
+                // In a real app, you would send this to the server
+                alert('Reply sent successfully!');
+                
+                // Close the modal
+                viewMessageModal.style.display = 'none';
+            });
+            
+            // Review form submission
+            reviewForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const propertyId = parseInt(document.getElementById('reviewPropertyId').value);
+                const property = appData.properties.find(p => p.id === propertyId);
+                if (!property) return;
+                
+                const rating = document.getElementById('reviewRating').value;
+                if (!rating) {
+                    alert('Please select a rating');
+                    return;
+                }
+                
+                const title = document.getElementById('reviewTitle').value;
+                if (!title.trim()) {
+                    alert('Please enter a title for your review');
+                    return;
+                }
+                
+                const reviewText = document.getElementById('reviewText').value;
+                if (!reviewText.trim()) {
+                    alert('Please enter your review');
+                    return;
+                }
+                
+                // Create new review
+                const newReview = {
+                    id: appData.reviews.length + 1,
+                    propertyId: property.id,
+                    propertyAddress: property.address,
+                    propertyImage: property.image,
+                    rating: parseFloat(rating),
+                    date: new Date().toISOString().split('T')[0],
+                    title: title,
+                    review: reviewText
+                };
+                
+                appData.reviews.push(newReview);
+                
+                // Show success message
+                alert('Review submitted successfully!');
+                
+                // Close the modal
+                addReviewModal.style.display = 'none';
+                
+                // Reset the form
+                reviewForm.reset();
+                
+                // Reload reviews
+                loadReviews();
+            });
+            
+            // Settings form submission
+            const settingsForm = document.getElementById('settingsForm');
+            settingsForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Update user data
+                appData.user.firstName = document.getElementById('firstName').value;
+                appData.user.lastName = document.getElementById('lastName').value;
+                appData.user.email = document.getElementById('email').value;
+                appData.user.phone = document.getElementById('phone').value;
+                appData.user.notifications.email = document.getElementById('emailNotifications').checked;
+                appData.user.notifications.sms = document.getElementById('smsNotifications').checked;
+                appData.user.notifications.push = document.getElementById('pushNotifications').checked;
+                
+                // Update profile name in header
+                document.querySelector('.user-profile span').textContent = `${appData.user.firstName} ${appData.user.lastName}`;
+                
+                // Check if password was changed
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (password || confirmPassword) {
+                    if (password !== confirmPassword) {
+                        alert('Passwords do not match');
+                        return;
+                    }
+                    
+                    // In a real app, you would update the password
+                    alert('Password changed successfully!');
+                    
+                    // Clear password fields
+                    document.getElementById('password').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                }
+                
+                alert('Settings saved successfully!');
+            });
+            
+            // Search properties button
+            searchPropertiesBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchProperties();
+            });
+            
+            // View all recommended properties
+            viewAllRecommended.addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('.sidebar-link[data-section="search"]').classList.add('active');
+                showSection('search');
+            });
+            
+            // View all messages
+            viewAllMessages.addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('.sidebar-link[data-section="messages"]').classList.add('active');
+                showSection('messages');
+            });
+            
+            // Show/hide date fields based on booking type
+            const bookingTypeSelect = document.getElementById('bookingType');
+            const startDateGroup = document.getElementById('startDateGroup');
+            const endDateGroup = document.getElementById('endDateGroup');
+            
+            bookingTypeSelect.addEventListener('change', function() {
+                if (this.value === 'rental') {
+                    startDateGroup.style.display = 'block';
+                    endDateGroup.style.display = 'block';
+                } else {
+                    startDateGroup.style.display = 'none';
+                    endDateGroup.style.display = 'none';
+                }
+            });
+            
+            // Initialize the dashboard
+            initDashboard();
+        });
+    </script>
+</body>
+</html>

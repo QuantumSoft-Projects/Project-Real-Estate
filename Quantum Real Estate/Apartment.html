@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apartment Listing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      overflow: hidden;
+    }
+    header {
+      background: #35424a;
+      color: #ffffff;
+      padding: 20px 0;
+      text-align: center;
+    }
+    .apartment {
+      background: #ffffff;
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .slideshow {
+      position: relative;
+      max-height: 500px;
+    }
+    .slideshow img {
+      width: 100%;
+      border-radius: 10px;
+      display: none;
+    }
+    .slideshow img.active {
+      display: block;
+    }
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .nav-button.left {
+      left: 10px;
+    }
+    .nav-button.right {
+      right: 10px;
+    }
+    .apartment h2 {
+      color: #333;
+    }
+    .contact {
+      background: #35424a;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Apartment Listings</h1>
+  </header>
+  <div class="container">
+    <div class="apartment">
+      <div class="slideshow">
+        <img class="slide active" src="https://images.pexels.com/photos/439391/pexels-photo-439391.jpeg" alt="Living Room">
+        <img class="slide" src="https://img.freepik.com/premium-photo/close-ups-hotel-double-room-scene_1417-29435.jpg" alt="Bedroom">
+        <img class="slide" src="https://img.freepik.com/premium-photo/modern-stylish-hotel-rooms_1417-8489.jpg" alt="Bedroom">
+        <img class="slide" src="https://media.istockphoto.com/id/1159561072/photo/elegant-bathroom-interior.jpg" alt="Bathroom">
+        <img class="slide" src="https://media.istockphoto.com/id/534497980/photo/modern-bathroom.jpg" alt="Bathroom">
+        <button class="nav-button left" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-button right" onclick="changeSlide(1)">&#10095;</button>
+      </div>
+      <h2>Modern Apartment in the City</h2>
+      <p>2 Bedrooms | 2 Bathrooms | $1,200/month</p>
+      <p>A beautiful and spacious apartment located in the heart of downtown.</p>
+    </div>
+  </div>
+  <footer class="contact">
+    <p>Contact us at: ketans@quantumsofttechnologies.com</p>
+  </footer>
+ 
+  <script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll(".slide");
+ 
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove("active");
+        if (i === index) slide.classList.add("active");
+      });
+    }
+ 
+    function changeSlide(n) {
+      slideIndex += n;
+      if (slideIndex >= slides.length) slideIndex = 0;
+      if (slideIndex < 0) slideIndex = slides.length - 1;
+      showSlide(slideIndex);
+    }
+  </script>
+</body>
+</html>
+ 
+ 
